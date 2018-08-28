@@ -1,0 +1,58 @@
+
+\begin{section}{Approach}
+\label{sec:approach}
+
+% INSERT FIGURE FOR THE ARCHITECTURE OF THE SYSTEM HERE
+%\begin{figure}[ht!]
+%	\centering
+%	\includegraphics[width=0.48\textwidth]{figures/system_arch.png}
+%	\caption{Architecture of our adaptive system with safety guarantees.}
+%	\label{fig:arch}
+%\end{figure}
+
+\subsection{Adaptive}
+
+\subsection{Detection}
+
+
+
+\subsection{Estimation}
+
+ %As measurement uncertainty increases due to sensors with higher noise, an more effective method to estimate the true position of the vehicle is needed to guarantee safety. 
+ %As the noise levels of the uncompromised sensors change, an alteration of the system's motion needs to occur due to changing uncertainties. To maintain safety throughout the environment, velocity and the amount of past sensor data is changed to compensate for these extra uncertainties. To guarantee the safety of the system, confidence intervals will be used, which will adapt over time with the changing parameters. Given the knowledge of the confidence percentage $ \bm{CI} $, sensor noise standard deviation $ \bm{\sigma_p} $, the number of sensor data samples $ \bm{N} $, and the mean of the data samples $ \bm{\bar{x}}_{x,y} $, a confidence interval of a certain percentage can be calculated:
+%this will give an estimation with a specific confidence percentage that the system is within this central positional point and a estimated radius.
+
+%NEED TO INCLUDE EQUATION TO SHOW HOW WE ESTIMATED A STATIC CASE BY TRANSLATING THE PAST DATA POINTS RIGHT HERE!
+
+
+%For a more accurate confidence interval, additional uncertainties and information need to be accounted for. Actuator uncertainty and stopping distance for the given dynamical system need to be included. With a known actuator uncertainty $ \bm{\sigma}_a $, velocity measurements $ \bm{v}_{(0:N-1)} $, and sampling rate $ \bm{T}_s $,
+%	\begin{equation}
+%		\bm{E}_{a|N} = \bm{\sigma}_a*\bm{v}_{(0:N-1)}*\bm{T}_s
+%	\end{equation}
+%an additional layer of uncertainty will be added onto $\bm{CI}_{x,y|N}$.
+%Additionally, a distance for the system to stop in time to prevent collision is formulated in (WRITE SECTION).
+
+
+\subsection{Sensor Removal}
+
+
+\subsection{Adaptive Motion Planning}
+
+% INSERT ALGORITHM FOR REPLANNING VELOCITY
+%\begin{algorithm}
+%   \caption{Adaptive Motion for Safety Guarantee} 
+%   \label{alg:adapt_motion} 
+%    \begin{algorithmic}[1]
+	
+%	\State Known Information N, \sigma, z^{*}
+%	\State Collect all previous N positions, velocities, and angles
+%	\State Calculate Confidence interval for psuedo-static case
+%	\State Calculate the initial reachable tube $ R(\boldsymbol{x}_0, \bm{u}(t), t \in [t_s, t_s+T] ) $
+%	\State Calculate $ t_{s+1} $    
+
+%	\end{algorithmic}
+%\end{algorithm}
+
+
+
+\end{section} 

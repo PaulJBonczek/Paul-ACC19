@@ -1,0 +1,17 @@
+
+\begin{section}{Simulation Results}
+\label{sec:simulation}
+
+The case study for this paper is with a ground vehicle experiencing the effects of sensor and process noise, while also succumbing to wind disturbances. The vehicle will be traveling along a preplanned desired trajectory with assumed to be known obstacles nearby. While the vehicle is traveling, the model will be experiencing dynamical changes due to a changing environment while also having its sensors compromised. (Show a figure, or more, of the vehicle within the environment showing the path and obstacles). The continuous time model for velocity is represented with parameters for damping forces $\bm{b}$ and vehicle mass $\bm{m}$:
+\begin{equation}
+\bm{\dot{x}}(t) = \begin{bmatrix} 0 & 1 \\
+  0 & -\frac{b}{m} \end{bmatrix}x(t) + \begin{bmatrix} 0  \\  \frac{1}{m} \end{bmatrix}u(t)
+\end{equation}
+The continuous time model for steering with parameters yaw moment of inertia$I_z$, distance from COG to front tires $l_f$, distance from COG to rear tires $l_r$, cornering stiffness of front tires $C_f$, cornering stiffness of rear tires $C_r$, and forward velocity $V_x$
+\begin{equation}
+\bm{\dot{x}}(t) = \begin{bmatrix} -\frac{2(C_f+C_r)}{mV_x} & 0 & -V_x-\frac{2(C_fl_f-C_rl_r)}{mV_x} \\ 0 & 0 & 1 \\ -\frac{2(C_fl_f-C_rl_r)}{I_zV_x} & 0 & -\frac{2(C_fl_f^2-C_rl_r^2)}{I_zV_x}\end{bmatrix}x(t)  + \begin{bmatrix} \frac{2C_f}{m} \\ 0  \\  \frac{2C_fl_f}{I_z} \end{bmatrix}u(t)
+\end{equation}
+
+
+
+\end{section}
