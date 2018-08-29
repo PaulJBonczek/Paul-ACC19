@@ -6,46 +6,50 @@ In this work we are interested in finding a strategy to detect sensor attacks in
 % Noise profiles
 
 % work on intro and prob formulation
-% esen icra paper, acc paper, cps 2014 look how the intro is written, try to put down ito and problem formulation
+% esen icra paper, acc paper, cps 2014 look how the intro is written, try to put down itno and problem formulation
 
 % PRESENT TENSE!!
 % Dont give a solution, just say what the problem is that you're trying to solve
 % Find the policy to detect the compromised 
-% differentiate system will have dyamical change, differentiate between cyber attack and dynamical change
-% detetct cyber attack, adapti systems to work in a comprimised environment
-% descrbe how system is nonlinear system  but at the point in time its "linear"
+% differentiate system will have dynamical change, differentiate between cyber attack and dynamical change
+% detect cyber attack, adaptive systems to work in a compromised environment
+% describe how system is nonlinear system  but at the point in time its "linear"
 % Greek letter for noise
 % Prob 1 is adaptive control and detecting the compromised snesors
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
 % Prob2 comes after prob1 where we find a policy to adapt
 % policy to guarantee the system will be safe x_hat-undesired state in obstacle > 0 or epsilon (NORMS)
-% be able to distuish between dynamical chanes and attacks and also adapt the motion planning to safety travel in the environment
+% be able to distinguish between dynamical changes and attacks and also adapt the motion planning to safety travel in the environment
 
-% Brief expplanation of what the problem is 
+% Brief explanation of what the problem is 
 
 
 \begin{problem} 
 \label{problem1} {\textbf{Detection and Sensor Reconfiguration:}} 
-The objective is to be able to detect sensor attacks within a dynamically unknown system and then removing the compromised sensor to maintain proper control of the vehicle.
-	A ground robot has a given trajectory to follow within an environment of obstacles, with the position of the obstacles and the desired trajectory are known and calculated off-line. If an adversary has compromised a sensor or a sensor experiences a failure, the system will need to reconfigure its sensor information to still drive the vehicle along the desired path. Control performance of the robotic system is degraded with these less desirable sensor noise conditions. Given the system dynamics as a function of its state $ \bm{x} $, its input $ \bm{u}$, actuator uncertainties $ \bm{d}_a $, and other external disturbances $ \bm{d} $, with unknown system matrices $ A(k) $ and $ B(k) $,
+The objective is to be able to detect sensor attacks within a dynamically unknown system and then removing the compromised sensor to maintain proper control of the vehicle. Given the system dynamics as a function of its state $ \bm{x} $, its input $ \bm{u}$, and disturbances $ \bm{d} $,
 	\begin{equation}
-		\bm{x}(k+1) = A(k)\bm{x}(k) + B(k)\bm{u}(k) + \bm{d}_a(k) + \bm{d}(k)
+		\bm{x}(k+1) = f(\bm{x}(k), \bm{u}(k), \bm{d}(k))
 	\end{equation}
-we want to ensure the system can still be safely controlled in the given environment. The measured output of the system is represented by the output measurement matrix $ C $, while sensor noise is represented as $ \bm{e}_n $, and any attack on a sensor is given as $ \bm{e}_a$,
-	\begin{equation}
-		\bm{y}(k) = C(k)\bm{x}(k) + \bm{e}_n(k) + \bm{e}_a(k)
-	\end{equation}
-	
-When an attack or failure has been detected, this compromised sensor will no longer be used by the system. A less desirable sensor, with a higher noise variance, will be used for control and motion. With this new, less desirable sensor comes a larger uncertainty of the true state of the system.
-	
+we want to find a policy $\mathcal{P}$ at time instant $k$ that:
+\begin{enumerate}
+	\item can differentiate between a malicious sensor attack and changing dynamics or failures. 
+	\item remove the compromised sensor to restore system integrity for future time instances $k+h$. 
+\end{enumerate}
+Solving this problem will allow us to navigate a vehicle where dynamics are changing while preventing an attacker from having an undesirable effect on the system.
 \end{problem}
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion:}} 
-A ground vehicle's mission is to safely follow a desired trajectory within an obstacle filled environment. The system will possess a higher estimation uncertainty when less desirable sensors are being used for navigation. All obstacle positions are known beforehand, which makes off-line trajectory planning suitable. We want to find a policy that will guarantee the safety of the vehicle under changing noise levels, such that a vehicle will not collide with any obstacles.
+A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{x}_{g_i} \in \bm{X}_g =  \begin{bmatrix} \bm{x}_{g_1},\bm{x}_{g_2},\dots,\bm{x}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety within an environment. To guarantee vehicle safety, it must be able able to avoid any obstacles or undesired areas (e.g., cliffs) at all times.
+	\begin{equation}
+		\|{\bm{x}(k)-\bm{x}_{r_i}}\|>0,  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
+	\end{equation}
+where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, and $N_r$ is the total number of regions.
 
-INSERT EQUATION HERE TO SHOW THAT I WANT TO ENSURE THE POSITION OF VEHICLE WILL NOT COME IN CONTACT WITH AN OBSTACLE
+%A ground vehicle's mission is to safely follow a desired trajectory within an obstacle filled environment. The system will possess a higher estimation uncertainty when less desirable sensors are being used for navigation. All obstacle positions are known beforehand, which makes off-line trajectory planning suitable. We want to find a policy that will guarantee the safety of the vehicle under changing noise levels, such that a vehicle will not collide with any obstacles.
 
-To guarantee safety from uncertainties and disturbances, a confidence interval approach will be used to estimate the system's position to ensure safe passage through an environment. The system will be able to move freely without constraints at a position far from obstacles, but will have altered capabilities as soon as obstacles come within reach.
+%To guarantee safety from uncertainties and disturbances, a confidence interval approach will be used to estimate the system's position to ensure safe passage through an environment. The system will be able to move freely without constraints at a position far from obstacles, but will have altered capabilities as soon as obstacles come within reach.
+
+
 %	As the noise levels of the uncompromised sensors change, an alteration of the system's motion needs to occur due to changing uncertainties. To maintain safety throughout the environment, velocity and the amount of past sensor data is changed to compensate for these extra uncertainties. To guarantee the safety of the system, confidence intervals will be used, which will adapt over time with the changing parameters. Given the knowledge of the confidence percentage $ \bm{CI} $, sensor noise standard deviation $ \bm{\sigma_p} $, the number of sensor data samples $ \bm{N} $, and the mean of the data samples $ \bm{\bar{x}}_{x,y} $, a confidence interval of a certain percentage can be calculated:
 %	\begin{equation}
 %		\bm{CI}_{x,y|N} = \bm{\bar{x}}_{x,y} + \frac{CI*\bm{\sigma}_p}{\sqrt{\bm{N}}}
