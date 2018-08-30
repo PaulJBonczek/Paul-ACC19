@@ -5,20 +5,53 @@
 % INSERT FIGURE FOR THE ARCHITECTURE OF THE SYSTEM HERE
 %\begin{figure}[ht!]
 %	\centering
-%	\includegraphics[width=0.48\textwidth]{figures/system_arch.png}
-%	\caption{Architecture of our adaptive system with safety guarantees.}
-%	\label{fig:arch}
+%	\includegraphics[width=0.48\textwidth]{det_arch.png}
+%	\caption{Architecture of our adaptive system to include detection capabilities}
+%	\label{fig:det_arch}
 %\end{figure}
 
+(******Place a block diagram showing the system architecture of the detection scheme from the adaptive controller****).
 
 \subsection{Detection}
-% Create an block diagram showing the system architecture of the detection scheme from the adaptive controller.
+For detection, model reference adaptive control is an effective solution to the problem of dynamically changing or unknown systems. From (CITE reference) states that under the assumptions (reference to all 4 assumptions) ensures:
+	\begin{enumerate}[label=(\roman*)]
+	\item $y(k)$ and $u(k)$ are bounded 
+	\item $\lim_{n\to\infty}(y(k)-y^*(k))=0$
+	\item $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
+	\end{enumerate}
+This states the system's output $y(k)$ will asymptotically converge to the tracking reference signal $r(k)$ in a finite amount of time. Properties of the modified projection algorithm include,
+    \begin{enumerate}[label=(\roman*)]
+	\item every iteration improves estimation:
+	    \begin{align}
+	        \|\theta(k)-\theta_0\|\leq\|\theta(k-1)-\theta_0\|\leq\|\theta(0)-\theta_0\|, k\geq1 \nonumber
+	    \end{align}
+	\item parameter variation has finite energy:
+	    \begin{align}
+	        \sum_{k=1}^\infty{\|\theta(k)-\theta(k-1)\|}^2\leq \infty \nonumber
+	    \end{align}
+	\item parameter variation converges to zero:
+	    \begin{align}
+	        \lim_{k\to\infty}(\theta(k)-\theta(k-1))=0 \nonumber
+	    \end{align}
+	    \begin{align}
+	        \lim_{k\to\infty}(\theta(k)-\theta(k-N))=0, \text{any finite} N>0 \nonumber
+	    \end{align}
+	\end{enumerate}
+when the persistent excitation condition has been met consisting of:
+    \begin{enumerate}[label=(\alph*)]
+	\item $A(z^{-1})$ is stable.
+	\item $A(z^{-1})$ and $B(z^{-1})$ are coprime.
+	\item $u(k)$ has as many frequencies as the number of parameters in $\theta_0$.
+	\end{enumerate}
+Understanding these conditions and properties improves performance of the adaptive controller and detection capabilities.
 
-% Talk about how adaptive control is used for detection
+Each system state $\bm{x}_i$ where $i=1,2,\dots,n_x$ and $n_x$ is the total number of states has sensors $\bm{s}_i_j$ for $j=1,2,\dots,n_{s_i}$ where $n_{s_i}$ is the number of sensors that can extract sensor measurement data for a given state. These sensor measurements adhere to the above adaptive control assurances, with the addition of noise uncertainties.
+
+Each of the sensors $\bm{s}_i_j$ providing measurement data of each states experience the same convergence behavior to the tracking signal where sensors are uncompromised. This remains true with a changing reference signal, system dynamics, or bounded disturbances. When an attacker maliciously falsifies a sensor signal, the $j^{th}$ sensor of the $i^{th}$ state from the sensor set $\bm{s}_i_j$ no longer follows the converge rate compared to the uncompromised sensor measurements. 
 
 \subsection{Sensor Removal}
 
-% Finish the last few lines and last equation on laptop then copy & paste (of this and previous subsection) to here in the morning 8/30
+As the $j^{th}$ sensor of the $i^{th}$ state no longer follows convergence characteristics, it is removed from operation to ensure proper control and navigation safety. The new set of sensors providing measurement data for the $i^{th}$ state is $\bm{s}_i_j^*$ where $j^*=1,2,\dots,n_{s_i}-h_s$ when $h_s$ is defined as the total number of compromised sensors.
 
 \subsection{Estimation}
 The statistical technique of confidence intervals from (Reference to proper section) is the foundation of how this work solves estimation. Confidence intervals are used to guarantee with a confidence percentage that the true mean $\bar{x}$ lies within a $2D$ radial interval $\epsilon$, which is determined by a standard deviation $\sigma$ and the number of samples $N$. 
@@ -44,7 +77,7 @@ Doing this will protect the integrity of the confidence interval percentage, ens
 
 
 \subsection{Adaptive Motion Planning}
-
+With uncertainty of sensor measurements, with or without the loss of a compromised sensor, there needs to be guarantees to safely navigate a vehicle without accidents.
 
 
 % INSERT ALGORITHM FOR REPLANNING VELOCITY
