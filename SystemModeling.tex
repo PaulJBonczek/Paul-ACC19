@@ -6,14 +6,22 @@ In this section, the system dynamical, noise, and disturbance models used for co
 % Bold letters only for vectors
 % Approach
 
-****Include "overall" system architecture at the very end of this section*****
-
 \subsection{Vehicle Model}
-Include the:\\
-General Discrete time system \\
-Vehicle Model\\
-Velocity\\
-Steering\\
+To attain a dynamical model of the ground vehicle, a generalized differential-drive model may be used (CITE). The vehicle's position is described by its $x$ and $y$ coordinates, $\theta$ represents the vehicle's heading angle measured from the $x$ axis, and $v$ is the speed in the direction in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip, the continuous time dynamical model of the vehicle is
+    \begin{align}
+        \dot{v}=\begin{cases}
+            \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
+            \frac{1}{m}(F_l+F_r-B_rv), & \text{if not turning},
+        \end{cases}\\
+        \dot{\omega}=\begin{cases}
+            \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega), &\text{if turning},\\
+            0, & \text{if not turning},
+        \end{cases}
+	\end{align}
+	\begin{align}
+        \dot{\theta}=\omega, \dot{x}=v\sin(\theta), \dot{y}=v\cos(\theta).
+	\end{align}
+This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. The above continuous-time dynamical equations will be discretized into a form that's suitable for the discrete time adaptive controller.
 
  \subsection{Noise and Disturbance Model}
 When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and a changing ground surface. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \eta_a \in N(0,\sigma_a) $. The uncertainty due to measurement noise of the sensors is described by $ \eta_s \in N(0,\sigma_s) $. All noises are assumed to have a zero mean Gaussian distribution.
@@ -113,27 +121,20 @@ This is under the assumption that the mean is not changing over the previous $\b
 
 %NEED TO INCLUDE EQUATION TO SHOW HOW WE ESTIMATED A STATIC CASE BY TRANSLATING THE PAST DATA POINTS RIGHT HERE!
 
-NEED TO INCLUDE EQUATION TO SHOW HOW WE ESTIMATED A STATIC CASE BY TRANSLATING THE PAST DATA POINTS RIGHT HERE!
+%\begin{figure*}
+%\centering
+%\includegraphics[width = 0.9\textwidth]{sys_arch.png}
+%\caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
+%\label{fig:system_arch}
+%\end{figure*}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\begin{figure}
+\vspace{1pt}
+\centering
+\includegraphics[width=0.48\textwidth]{sys_arch.png}
+\caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
+\label{fig:system_arch}
+\end{figure}
 
 
 
