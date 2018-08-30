@@ -115,7 +115,7 @@ To avoid division by 0, $\theta_{n+1}(k)\neq0$ is necessary.
 
 Confidence intervals are used to estimate the mean of a population of data in stochastic environments. Using this method, a guarantee can be made that the mean of the data has a specific percentage of confidence that it's within an interval. Assuming the knowledge of the confidence percentage $ \bm{z^{*}} $, sensor noise population standard deviation $ \bm{\sigma_p} $, the number of sensor data samples $ \bm{N} $, and the mean of the data samples $ \bm{\bar{x}}_{x,y} $ in the $\bm{x}$ and $\bm{y}$ direction, a confidence interval of a certain percentage can be calculated: 
  	\begin{equation}
-		CI_{x,y|N} = \bar{x}_{x,y} + z^{*}\frac{\sigma_p}{\sqrt{N}}
+		CI_{x,y|N} = \bar{s}_{x,y} + z^{*}\frac{\sigma}{\sqrt{N}}
 	\end{equation}
 This is under the assumption that the mean is not changing over the previous $\bm{N}$ number of sampled data points used in the current confidence interval calculation. A detailed approach to we compensate for a translating system will be shown in (REF THE SECTION HERE).
 

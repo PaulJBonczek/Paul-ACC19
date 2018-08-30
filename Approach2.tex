@@ -10,33 +10,42 @@
 %	\label{fig:arch}
 %\end{figure}
 
-\subsection{Adaptive}
 
 \subsection{Detection}
+% Create an block diagram showing the system architecture of the detection scheme from the adaptive controller.
 
-
-
-\subsection{Estimation}
-
- %As measurement uncertainty increases due to sensors with higher noise, an more effective method to estimate the true position of the vehicle is needed to guarantee safety. 
- %As the noise levels of the uncompromised sensors change, an alteration of the system's motion needs to occur due to changing uncertainties. To maintain safety throughout the environment, velocity and the amount of past sensor data is changed to compensate for these extra uncertainties. To guarantee the safety of the system, confidence intervals will be used, which will adapt over time with the changing parameters. Given the knowledge of the confidence percentage $ \bm{CI} $, sensor noise standard deviation $ \bm{\sigma_p} $, the number of sensor data samples $ \bm{N} $, and the mean of the data samples $ \bm{\bar{x}}_{x,y} $, a confidence interval of a certain percentage can be calculated:
-%this will give an estimation with a specific confidence percentage that the system is within this central positional point and a estimated radius.
-
-%NEED TO INCLUDE EQUATION TO SHOW HOW WE ESTIMATED A STATIC CASE BY TRANSLATING THE PAST DATA POINTS RIGHT HERE!
-
-
-%For a more accurate confidence interval, additional uncertainties and information need to be accounted for. Actuator uncertainty and stopping distance for the given dynamical system need to be included. With a known actuator uncertainty $ \bm{\sigma}_a $, velocity measurements $ \bm{v}_{(0:N-1)} $, and sampling rate $ \bm{T}_s $,
-%	\begin{equation}
-%		\bm{E}_{a|N} = \bm{\sigma}_a*\bm{v}_{(0:N-1)}*\bm{T}_s
-%	\end{equation}
-%an additional layer of uncertainty will be added onto $\bm{CI}_{x,y|N}$.
-%Additionally, a distance for the system to stop in time to prevent collision is formulated in (WRITE SECTION).
-
+% Talk about how adaptive control is used for detection
 
 \subsection{Sensor Removal}
 
+% Finish the last few lines and last equation on laptop then copy & paste (of this and previous subsection) to here in the morning 8/30
+
+\subsection{Estimation}
+The statistical technique of confidence intervals from (Reference to proper section) is the foundation of how this work solves estimation. Confidence intervals are used to guarantee with a confidence percentage that the true mean $\bar{x}$ lies within a $2D$ radial interval $\epsilon$, which is determined by a standard deviation $\sigma$ and the number of samples $N$. 
+
+Assuming the data being used for estimation, regardless if it's raw or filtered data, is that it comes in the form $\mathcal{N}(0,\sigma_d)$ where the data population standard deviation $\sigma_d$ is known for any sensor combination. From [reference to confidence interval equation] we can find an interval of a determined confidence percentage that the vehicle is within that region to ensure safety. 
+
+The assumption of a confidence interval is the true mean remains static on the given axis. This cannot be assumed in the case of position estimation of a navigating vehicle. A pseudo-static form of a confidence interval is made to compensate for translation of position $\bm{x}(k-l)$, where $l=1,2,\dots,N-1$. The $N-1$ number of previous position data points are represented as if they all were taken from the current position $\bm{x}(k)$ in time. (SHOW THIS IN A FIGURE FOR BETTER VISUAL UNDERSTANDING, either Matlab or Powerpoint). These samples $\bm{x}_p$, where $p=1,2,\dots,N$ form the set $\mathcal{\bm{S}}=\begin{bmatrix}\bm{x}_1,\bm{x}_2,\dots,\bm{x}_N \end{bmatrix}$. Further, we can break down the set into two vectors $\bm{s}_x=\begin{bmatrix} x_x_1,x_x_2,\dots,x_x_N \end{bmatrix}$ and $\bm{s}_y=\begin{bmatrix} x_y_1,x_y_2,\dots,x_y_N \end{bmatrix}$ which represent the $x$ and $y$ coordinate data, respectively. 
+
+Translating the data coordinates into a pseudo-static form will create the set $\mathcal{\bm{S}}_t$, creating the two pseudo-static vectors $\bm{s}_{t_x}=\begin{bmatrix} x_{t_x_1},x_{t_x_2},\dots,x_{t_x_N} \end{bmatrix}$ and $\bm{s}_{t_y}=\begin{bmatrix} x_{t_y_1},x_{t_y_2},\dots,\bm{x}_{t_y_N} \end{bmatrix}$. Each element of these updated vectors are calculated as:
+    \begin{equation}
+	x_{t_x_w} = x_x(k-w+1)+\sum_{j=1}^w v(k-j)\cos{\theta(k-j)T_s}
+	\end{equation}
+	\begin{equation}
+	x_{t_y_w} = x_y(k-w+1)+\sum_{j=1}^w v(k-j)\sin{\theta(k-j)T_s}
+	\end{equation}
+The mean of each vector is written as $\bar{s}_x$ and $\bar{s}_y$ is used for the calculation of the confidence interval.
+
+Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the actuator $\sigma_a$, current velocity sensor $\sigma_v$, and current heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds $\epsilon$, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\mathcal{\bm{S}}$ is calculated as:
+    \begin{equation}
+	DISCUSS THIS
+	\end{equation}
+Doing this will protect the integrity of the confidence interval percentage, ensuring the vehicle is within the estimation bounds.
+
 
 \subsection{Adaptive Motion Planning}
+
+
 
 % INSERT ALGORITHM FOR REPLANNING VELOCITY
 %\begin{algorithm}
