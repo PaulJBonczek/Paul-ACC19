@@ -77,23 +77,36 @@ Doing this will protect the integrity of the confidence interval percentage, ens
 
 
 \subsection{Adaptive Motion Planning}
-With uncertainty of sensor measurements, with or without the loss of a compromised sensor, there needs to be guarantees to safely navigate a vehicle without accidents.
+With uncertainty of sensor measurements, with or without the loss of a compromised sensors, there needs to be guarantees to safely navigate a vehicle without accidents.
+
+% Finish the explanation
 
 
 % INSERT ALGORITHM FOR REPLANNING VELOCITY
-%\begin{algorithm}
-%   \caption{Adaptive Motion for Safety Guarantee} 
-%   \label{alg:adapt_motion} 
-%    \begin{algorithmic}[1]
-	
-%	\State Known Information N, \sigma, z^{*}
-%	\State Collect all previous N positions, velocities, and angles
-%	\State Calculate Confidence interval for psuedo-static case
-%	\State Calculate the initial reachable tube $ R(\boldsymbol{x}_0, \bm{u}(t), t \in [t_s, t_s+T] ) $
-%	\State Calculate $ t_{s+1} $    
-
-%	\end{algorithmic}
-%\end{algorithm}
+\begin{algorithm}
+   \caption{Adaptive Motion for Safety Guarantee} 
+   \label{alg:adapt_motion} 
+    \begin{algorithmic}[1]
+	\State Initial conditions of system: $k=0$,$\bm{x}(0)=\bm{x}_0$
+    \While{$0<k\leq\infty$}
+        \State Measure distance from known obstacle $dist =\|\hat{\bm{x}}_\epsilon(k)-\bm{x}_{r_i}\|$
+        \If{ $dist \in \bm{x}_\epsilon(k)$}
+            \State Solve for needed N
+            \State Update Velocity by using N for reference signal
+            \State Recalculate $\epsilon$ boundary
+        \Else
+            \If{$N == 1$}
+                \State N = 1 & Maintain velocity
+                \State Recalculate $\epsilon$ boundary
+            \Else
+                \State Update a suitable N
+                \State Update the velocity for reference signal
+                \State Recalculate $\epsilon$ boundary
+            \EndIf
+        \EndIf
+    \EndWhile
+	\end{algorithmic}
+\end{algorithm}
 
 
 
