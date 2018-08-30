@@ -7,10 +7,6 @@ The case study for this paper is with a ground vehicle experiencing the effects 
 \bm{\dot{x}}(t) = \begin{bmatrix} 0 & 1 \\
   0 & -\frac{b}{m} \end{bmatrix}x(t) + \begin{bmatrix} 0  \\  \frac{1}{m} \end{bmatrix}u(t)
 \end{equation}
-The continuous time model for steering with parameters yaw moment of inertia$I_z$, distance from COG to front tires $l_f$, distance from COG to rear tires $l_r$, cornering stiffness of front tires $C_f$, cornering stiffness of rear tires $C_r$, and forward velocity $V_x$
-\begin{equation}
-\bm{\dot{x}}(t) = \begin{bmatrix} -\frac{2(C_f+C_r)}{mV_x} & 0 & -V_x-\frac{2(C_fl_f-C_rl_r)}{mV_x} \\ 0 & 0 & 1 \\ -\frac{2(C_fl_f-C_rl_r)}{I_zV_x} & 0 & -\frac{2(C_fl_f^2-C_rl_r^2)}{I_zV_x}\end{bmatrix}x(t)  + \begin{bmatrix} \frac{2C_f}{m} \\ 0  \\  \frac{2C_fl_f}{I_z} \end{bmatrix}u(t)
-\end{equation}
 
 
 
