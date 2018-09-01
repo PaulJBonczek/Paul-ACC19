@@ -10,17 +10,90 @@
 %	\label{fig:det_arch}
 %\end{figure}
 
+\begin{figure}
+\vspace{1pt}
+\centering
+\includegraphics[width=0.48\textwidth]{sys_arch.png}
+\caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
+\label{fig:system_arch}
+\end{figure}
+
 (******Place a block diagram showing the system architecture of the detection scheme from the adaptive controller****).
+
+\subsection{Model Reference Adaptive Control}
+The purpose of having a model reference adaptive controller is to maintain a desired control performance when unknown dynamical changes or disturbances have occurred. Estimation of the system's polynomial coefficients will help give us this desired performance.
+Assumptions for adaptive control: 
+	\begin{enumerate}[leftmargin=4\parindent]
+	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^m$ are within $|z|<1$. 
+	\item[$A2)$] $n$ and $m$ (or their upper bounds) are known. 
+	\item[$A3)$] the system delay $d$ is known.
+	\end{enumerate}
+The objective of model reference adaptive control is to calculate an input signal $u(k)$ such that the system tracks $y^{*}(k)$ given the reference signal $r(k)$. 
+A following assumption for the reference model is it satisfies:
+    \begin{enumerate}[leftmargin=4\parindent]
+	\item[$A4)$] all zeros of $E(z^{-1})z^p$ are within $|z|<1$. 
+	\end{enumerate}
+
+The model reference control is designed (Reference to equation!) by solving the polynomial equation:
+    \begin{equation}
+	E(q^{-1})=F(q^{-1})A(q^{-1})+q^{-d}G(q^{-1})
+	\end{equation}
+By expressing (Ref to equation $A(q^{-1})y(k)=B(q^{-1})u(k)$) as:
+	\begin{equation}
+	E(q^{-1})y(k+d)={\alpha}q^{-1}y(k) + {\beta}q^{-1}u(k)=\theta_0^T\phi(k)
+	\end{equation}
+where,
+	\begin{equation}
+	\alpha(q^{-1})=G(q^{-1})=\alpha_0+\alpha_1q^{-1}+ \dots +\alpha_{n-1}q^{-n+1}
+	\end{equation}
+	\begin{align}
+	\beta( & q^{-1})=F(q^{-1})B^{'}(q^{-1})=\beta_0+\beta_1q^{-1} \nonumber \\
+	& + \dots +\beta_{m+d-1}q^{-m-d+1}, \beta_0\neq0
+	\end{align}
+we are designing the system to have the same characteristics as the reference model. Parametrization to express this system is:
+	\begin{equation}
+	\theta_0=(\alpha_0, \dots ,\alpha_{n-1},\beta_0, \dots ,\beta_{m+d-1})^T \in R^{n+m+d}
+	\end{equation}
+	\begin{align}
+	\phi(j)&=(y(k), \dots ,y(k-n+1),u(k), \dots , \nonumber \\
+	& u(k-m-d+1))^T \in R^{n+m+d}
+	\end{align}
+where $\theta_0$ is unknown and $\phi(k)$ is known.
+	The adaptive control input u(k) is then calculated from the equation:
+	\begin{equation}
+	\theta^T(k)\phi(k)=E(q^{-1})y^{*}(k+d)
+	\end{equation}
+with the equation for the input u(k) as:
+	\begin{align}
+	u(k)=\frac{1}{\theta_{n+1}(k)}&(-\theta_1(k)y(k)-\theta_2(k)y(k-1)  \nonumber \\
+    -\dots-\theta_n(k)y(k&-n-1)-\theta_{n+2}(k)u(k-1)  \\
+	-\theta_{n+3}(k)u(k-2)-& \dots - \theta_{n+m+d}(k)u(k-m-d+1) \nonumber \\
+	+g&H(q^{-1})r(k))^T \nonumber
+	\end{align}
+	\begin{equation}
+	\theta(k)=(\theta_1(k), \dots ,\theta_n(k),\theta_{n+1}(k), \dots ,\theta_{n+m+d}(k))^T
+	\end{equation}
+where $\theta(k)$ is the estimate of the true parameter vector $\theta_0$, updated by the modified projection algorithm:
+	\begin{equation}
+	\theta(k)=\theta(k-1)+\frac{a(k)\phi(k-d)e(k)}{c+\phi^T(k-d)\phi(k-d)}
+	\end{equation}
+	\begin{equation}
+	e(k)=E(q^{-1})y(k)-\theta^T(k-1)\phi(k-d)
+	\end{equation}
+	\begin{align*}
+	\varepsilon<a(k)<2-\varepsilon, 0,\varepsilon<1, c>0
+	\end{align*}
+To avoid division by 0, $\theta_{n+1}(k)\neq0$ is necessary.
 
 \subsection{Detection}
 For detection, model reference adaptive control is an effective solution to the problem of dynamically changing or unknown systems. From (CITE reference) states that under the assumptions (reference to all 4 assumptions) ensures:
-	\begin{enumerate}[label=(\roman*)]
+	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
 	\item $y(k)$ and $u(k)$ are bounded 
 	\item $\lim_{n\to\infty}(y(k)-y^*(k))=0$
 	\item $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
 	\end{enumerate}
 This states the system's output $y(k)$ will asymptotically converge to the tracking reference signal $r(k)$ in a finite amount of time. Properties of the modified projection algorithm include,
-    \begin{enumerate}[label=(\roman*)]
+    \begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\item every iteration improves estimation:
 	    \begin{align}
 	        \|\theta(k)-\theta_0\|\leq\|\theta(k-1)-\theta_0\|\leq\|\theta(0)-\theta_0\|, k\geq1 \nonumber
@@ -37,35 +110,33 @@ This states the system's output $y(k)$ will asymptotically converge to the track
 	        \lim_{k\to\infty}(\theta(k)-\theta(k-N))=0, \text{any finite} N>0 \nonumber
 	    \end{align}
 	\end{enumerate}
-when the persistent excitation condition has been met consisting of:
-    \begin{enumerate}[label=(\alph*)]
-	\item $A(z^{-1})$ is stable.
-	\item $A(z^{-1})$ and $B(z^{-1})$ are coprime.
-	\item $u(k)$ has as many frequencies as the number of parameters in $\theta_0$.
-	\end{enumerate}
-Understanding these conditions and properties improves performance of the adaptive controller and detection capabilities.
 
-Each system state $\bm{x}_i$ where $i=1,2,\dots,n_x$ and $n_x$ is the total number of states has sensors $\bm{s}_i_j$ for $j=1,2,\dots,n_{s_i}$ where $n_{s_i}$ is the number of sensors that can extract sensor measurement data for a given state. These sensor measurements adhere to the above adaptive control assurances, with the addition of noise uncertainties.
+Each system state $\bm{x}_i$ where $i=1,2,\dots,n_x$ and $n_x$ is the total number of states has sensors $\bm{s}_{ij}$ for $j=1,2,\dots,n_{s_i}$ where $n_{s_i}$ is the number of sensors that can extract sensor measurement data for a given state. These sensor measurements adhere to the above adaptive control assurances, with the addition of noise uncertainties.
 
-Each of the sensors $\bm{s}_i_j$ providing measurement data of each states experience the same convergence behavior to the tracking signal where sensors are uncompromised. This remains true with a changing reference signal, system dynamics, or bounded disturbances. When an attacker maliciously falsifies a sensor signal, the $j^{th}$ sensor of the $i^{th}$ state from the sensor set $\bm{s}_i_j$ no longer follows the converge rate compared to the uncompromised sensor measurements. 
+Each of the sensors $\bm{s}_{ij}$ providing measurement data of each states experience the same convergence behavior to the tracking signal where sensors are uncompromised. This remains true with a changing reference signal, system dynamics, or bounded disturbances. When an attacker maliciously falsifies a sensor signal, the $j^{th}$ sensor of the $i^{th}$ state from the sensor set $\bm{s}_{ij}$ no longer follows the converge rate compared to the uncompromised sensor measurements. 
 
 \subsection{Sensor Removal}
 
-As the $j^{th}$ sensor of the $i^{th}$ state no longer follows convergence characteristics, it is removed from operation to ensure proper control and navigation safety. The new set of sensors providing measurement data for the $i^{th}$ state is $\bm{s}_i_j^*$ where $j^*=1,2,\dots,n_{s_i}-h_s$ when $h_s$ is defined as the total number of compromised sensors.
+As the $j^{th}$ sensor of the $i^{th}$ state no longer follows convergence characteristics, it is removed from operation to ensure proper control and navigation safety. The new set of sensors providing measurement data for the $i^{th}$ state is $\bm{s}_{ij}^*$ where $j^*=1,2,\dots,n_{s_i}-h_s$ when $h_s$ is defined as the total number of compromised sensors.
 
 \subsection{Estimation}
-The statistical technique of confidence intervals from (Reference to proper section) is the foundation of how this work solves estimation. Confidence intervals are used to guarantee with a confidence percentage that the true mean $\bar{x}$ lies within a $2D$ radial interval $\epsilon$, which is determined by a standard deviation $\sigma$ and the number of samples $N$. 
 
-Assuming the data being used for estimation, regardless if it's raw or filtered data, is that it comes in the form $\mathcal{N}(0,\sigma_d)$ where the data population standard deviation $\sigma_d$ is known for any sensor combination. From [reference to confidence interval equation] we can find an interval of a determined confidence percentage that the vehicle is within that region to ensure safety. 
+The statistical technique of confidence intervals is the foundation of how this work solves estimation. Confidence intervals are used to estimate the mean of a population of data in stochastic environments. This method guarantees the true mean has a specific percentage of confidence that it's within an interval. Assuming the knowledge of the confidence percentage $z^{*}$, sensor noise standard deviation $ \sigma_p $, the number of sensor data samples $N$, and the mean of the sensor data samples $ \bm{\bar{x}}_{x,y} $ in the $x$ and $y$ direction, a confidence interval of a chosen percentage can be calculated: 
+ 	\begin{equation}
+		\varepsilon_{x,y|N} = \bar{s}_{x,y} + z^{*}\frac{\sigma}{\sqrt{N}}
+	\end{equation}
+This is under the assumption that the true mean is not changing over the previous $N$ number of sampled data points used in the current confidence interval calculation.
 
-The assumption of a confidence interval is the true mean remains static on the given axis. This cannot be assumed in the case of position estimation of a navigating vehicle. A pseudo-static form of a confidence interval is made to compensate for translation of position $\bm{x}(k-l)$, where $l=1,2,\dots,N-1$. The $N-1$ number of previous position data points are represented as if they all were taken from the current position $\bm{x}(k)$ in time. (SHOW THIS IN A FIGURE FOR BETTER VISUAL UNDERSTANDING, either Matlab or Powerpoint). These samples $\bm{x}_p$, where $p=1,2,\dots,N$ form the set $\mathcal{\bm{S}}=\begin{bmatrix}\bm{x}_1,\bm{x}_2,\dots,\bm{x}_N \end{bmatrix}$. Further, we can break down the set into two vectors $\bm{s}_x=\begin{bmatrix} x_x_1,x_x_2,\dots,x_x_N \end{bmatrix}$ and $\bm{s}_y=\begin{bmatrix} x_y_1,x_y_2,\dots,x_y_N \end{bmatrix}$ which represent the $x$ and $y$ coordinate data, respectively. 
+Assuming the data being used for estimation, regardless if it's raw or filtered data, is that it comes in the form $\mathcal{N}(0,\sigma_d)$ where the data population standard deviation $\sigma_d$ is known for any sensor combination. From [reference to above equation] we can find an interval of a determined confidence percentage that the vehicle is within that region to ensure safety. 
 
-Translating the data coordinates into a pseudo-static form will create the set $\mathcal{\bm{S}}_t$, creating the two pseudo-static vectors $\bm{s}_{t_x}=\begin{bmatrix} x_{t_x_1},x_{t_x_2},\dots,x_{t_x_N} \end{bmatrix}$ and $\bm{s}_{t_y}=\begin{bmatrix} x_{t_y_1},x_{t_y_2},\dots,\bm{x}_{t_y_N} \end{bmatrix}$. Each element of these updated vectors are calculated as:
+The assumption of a confidence interval is the true mean remains static on the given axis. This cannot be assumed in the case of position estimation of a navigating vehicle. A pseudo-static form of a confidence interval is made to compensate for translation of position $\bm{x}(k-l)$, where $l=1,2,\dots,N-1$. The $N-1$ number of previous position data points are represented as if they all were taken from the current position $\bm{x}(k)$ in time. (SHOW THIS IN A FIGURE FOR BETTER VISUAL UNDERSTANDING, either Matlab or Powerpoint). These samples $\bm{x}_p$, where $p=1,2,\dots,N$ form the set $\mathcal{\bm{S}}=\begin{bmatrix}\bm{x}_1,\bm{x}_2,\dots,\bm{x}_N \end{bmatrix}$. Further, we can break down the set into two vectors $\bm{s}_x=\begin{bmatrix} x_{x1},x_{x2},\dots,x_{xN} \end{bmatrix}$ and $\bm{s}_y=\begin{bmatrix} x_{y1},x_{y2},\dots,x_{yN} \end{bmatrix}$ which represent the $x$ and $y$ coordinate data, respectively. 
+
+Translating the data coordinates into a pseudo-static form will create the set $\mathcal{\bm{S}}_t$, creating the two pseudo-static vectors $\bm{s}_{t_x}=\begin{bmatrix} x_{t_{x1}},x_{t_{x2}},\dots,x_{t_{xN}} \end{bmatrix}$ and $\bm{s}_{t_y}=\begin{bmatrix} x_{t_{y1}},x_{t_{y2}},\dots,\bm{x}_{t_{yN}} \end{bmatrix}$. Each element of these updated vectors are calculated as:
     \begin{equation}
-	x_{t_x_w} = x_x(k-w+1)+\sum_{j=1}^w v(k-j)\cos{\theta(k-j)T_s}
+	x_{t_{xw}} = x_x(k-w+1)+\sum_{j=1}^w v(k-j)\cos{\theta(k-j)T_s}
 	\end{equation}
 	\begin{equation}
-	x_{t_y_w} = x_y(k-w+1)+\sum_{j=1}^w v(k-j)\sin{\theta(k-j)T_s}
+	x_{t_{yw}} = x_y(k-w+1)+\sum_{j=1}^w v(k-j)\sin{\theta(k-j)T_s}
 	\end{equation}
 The mean of each vector is written as $\bar{s}_x$ and $\bar{s}_y$ is used for the calculation of the confidence interval.
 
@@ -96,7 +167,7 @@ With uncertainty of sensor measurements, with or without the loss of a compromis
             \State Recalculate $\epsilon$ boundary
         \Else
             \If{$N == 1$}
-                \State N = 1 & Maintain velocity
+                \State N = 1 and Maintain velocity
                 \State Recalculate $\epsilon$ boundary
             \Else
                 \State Update a suitable N

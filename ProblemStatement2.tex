@@ -3,25 +3,36 @@
 \label{sec:problem}
 In this work we are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system. We want to guarantee that the vehicle is still able to navigate safely in an obstacle filled environment.% while using less desirable sensor with larger noise profiles. 
 
-% Noise profiles
-
-% work on intro and prob formulation
-% esen icra paper, acc paper, cps 2014 look how the intro is written, try to put down itno and problem formulation
 
 % PRESENT TENSE!!
-% Dont give a solution, just say what the problem is that you're trying to solve
-% Find the policy to detect the compromised 
+
 % differentiate system will have dynamical change, differentiate between cyber attack and dynamical change
 % detect cyber attack, adaptive systems to work in a compromised environment
 % describe how system is nonlinear system  but at the point in time its "linear"
 % Greek letter for noise
-% Prob 1 is adaptive control and detecting the compromised snesors
+
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
-% Prob2 comes after prob1 where we find a policy to adapt
-% policy to guarantee the system will be safe x_hat-undesired state in obstacle > 0 or epsilon (NORMS)
 % be able to distinguish between dynamical changes and attacks and also adapt the motion planning to safety travel in the environment
 
-% Brief explanation of what the problem is 
+
+
+
+% ALOT OF APPROACH CHANGES
+
+% DOME - Some how connect problem 2 to problem 1, 
+% DONE - add the A(k)x+B(k)u
+% DONE - Overall structure needs to go in beginning of approach
+% More defined architecture diagram of detection and adaptive control
+% DONE - Chnage adaptive control, the solution needs to go in the approach
+% DONE - r(k) needs to go into high level motion planning
+% DONE - Make text inside block diagram larger
+% 1st section of adaptive control (approach) talk more about detection
+% What kind of attacks can I detect?
+% DONE - Change underscore problem, place a comma in between subscripts
+% DONE - For adaptive control, we can assume... for assumptions
+% DONE - Define what A and B' are
+
+% Lemmas to show something
 
 
 \begin{problem} 
@@ -35,13 +46,13 @@ we want to find a policy $\mathcal{P}$ at time instant $k$ that:
 	\item can differentiate between a malicious sensor attack and changing dynamics or failures. 
 	\item remove the compromised sensor to restore system integrity for future time instances $k+h$. 
 \end{enumerate}
-Solving this problem will allow us to navigate a vehicle where dynamics are changing while preventing an attacker from having an undesirable effect on the system.
+Solving this problem will allow us to navigate a vehicle where dynamics are changing while preventing an attacker from having an undesirable effect on the system. 
 \end{problem}
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion:}} 
-A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{x}_{g_i} \in \bm{X}_g =  \begin{bmatrix} \bm{x}_{g_1},\bm{x}_{g_2},\dots,\bm{x}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety within an environment. To guarantee vehicle safety, it must be able able to avoid any obstacles or undesired areas (e.g., cliffs) at all times.
+A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{x}_{g_i} \in \bm{X}_g =  \begin{bmatrix} \bm{x}_{g_1},\bm{x}_{g_2},\dots,\bm{x}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety among uncertainties within an environment. When a compromised sensor has been removed from the system, these uncertainties may change to a more undesirable situation. To guarantee vehicle safety, it must be able to avoid any undesired areas (e.g., obstacles, cliffs) while these uncertainties are changing.
 	\begin{equation}
-		\|{\bm{x}(k)-\bm{x}_{r_i}}\|>0,  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
+		\lVert {\bm{x}(k)-\bm{x}_{r_i}} \rVert >0,  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
 where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, and $N_r$ is the total number of regions.
 
