@@ -52,9 +52,12 @@ Solving this problem will allow us to navigate a vehicle where dynamics are chan
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion:}} 
 A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{x}_{g_i} \in \bm{X}_g =  \begin{bmatrix} \bm{x}_{g_1},\bm{x}_{g_2},\dots,\bm{x}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety among uncertainties within an environment. When a compromised sensor has been removed from the system, these uncertainties may change to a more undesirable situation. To guarantee vehicle safety, it must be able to avoid any undesired areas (e.g., obstacles, cliffs) while these uncertainties are changing.
 	\begin{equation}
-		\lVert {\bm{x}(k)-\bm{x}_{r_i}} \rVert >0,  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
+		\lVert {\bm{x}(k)-\bm{x}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
-where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, and $N_r$ is the total number of regions.
+	\begin{equation}
+		\Delta=[v(k)]^{\delta_v}\delta
+	\end{equation}
+where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\delta$ is a user defined desired distance between the outer most point of the confidence region and an unwanted region, and $N_r$ is the total number of regions. $[\delta, \delta_v] \in R^{\geq0}$ are chosen values that determine the desired distance between the closest unwanted region to the estimation region as a function of velocity.
 
 %A ground vehicle's mission is to safely follow a desired trajectory within an obstacle filled environment. The system will possess a higher estimation uncertainty when less desirable sensors are being used for navigation. All obstacle positions are known beforehand, which makes off-line trajectory planning suitable. We want to find a policy that will guarantee the safety of the vehicle under changing noise levels, such that a vehicle will not collide with any obstacles.
 

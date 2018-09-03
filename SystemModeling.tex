@@ -21,7 +21,7 @@ To attain a dynamical model of the ground vehicle, a generalized differential-dr
         \end{cases}
 	\end{align}
 	\begin{align}
-        \dot{\theta}=\omega, \dot{x}=v\sin(\theta), \dot{y}=v\cos(\theta).
+        \dot{\theta_h}=\omega, \dot{x}=v\sin(\theta_h), \dot{y}=v\cos(\theta_h).
 	\end{align}
 This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. This changing dynamic model can be described in the discretized state space form:
     \begin{equation}
@@ -29,9 +29,9 @@ This presents a high-level model of the vehicle, describing only the motion equa
 	\end{equation}
 
  \subsection{Noise and Disturbance Model}
-When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and a changing ground surface. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \eta_a \in N(0,\sigma_a) $, while any disturbances are described as $d(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \eta_s \in N(0,\sigma_s) $ and $\bm{\xi}_a(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model can be in the form:
+When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and a changing ground surface. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}_a(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model can be in the form:
     \begin{equation}
-	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}
+	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k)
 	\end{equation}
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}_a(k)
