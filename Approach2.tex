@@ -2,6 +2,8 @@
 \begin{section}{Approach}
 \label{sec:approach}
 
+\NB{add text here to introduce what the reader will see in the next few sections. Add a block diagram}
+
 % INSERT FIGURE FOR THE ARCHITECTURE OF THE SYSTEM HERE
 %\begin{figure}[ht!]
 %	\centering
@@ -19,6 +21,8 @@
 \end{figure}
 
 \subsection{Model Reference Adaptive Control}
+
+\NB{merge section A and B and titled it Resilient Adaptive Control. Summarize more what in section A and shift teh attention to the detection and estimation}
 The purpose of having a model reference adaptive controller is to maintain a desired control performance when unknown dynamical changes or disturbances have occurred. Estimation of the system's polynomial coefficients will help give us this desired performance.
 Assumptions for adaptive control: 
 	\begin{enumerate}[leftmargin=4\parindent]
@@ -85,7 +89,14 @@ To avoid division by $0$, $\theta_{n+1}(k)\neq0$ is necessary.
 
 \subsection{Detection}
 
-\begin{figure}
+For detection, model reference adaptive control is an effective solution to the problem of dynamically changing or unknown systems. From (CITE reference) states that under the assumptions (reference to all 4 assumptions) ensures:
+	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
+	\item $y(k)$ and $u(k)$ are bounded 
+	\item $\lim_{n\to\infty}(y(k)-y^*(k))=0$
+	\item $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
+	\end{enumerate}
+	
+	\begin{figure}[ht!]
 \vspace{1pt}
 \centering
 \includegraphics[width=0.48\textwidth]{con_and_det.png}
@@ -93,12 +104,6 @@ To avoid division by $0$, $\theta_{n+1}(k)\neq0$ is necessary.
 \label{fig:det_arch}
 \end{figure}
 
-For detection, model reference adaptive control is an effective solution to the problem of dynamically changing or unknown systems. From (CITE reference) states that under the assumptions (reference to all 4 assumptions) ensures:
-	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
-	\item $y(k)$ and $u(k)$ are bounded 
-	\item $\lim_{n\to\infty}(y(k)-y^*(k))=0$
-	\item $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
-	\end{enumerate}
 This states the system's output $y(k)$ will asymptotically converge to the tracking reference signal $r(k)$ in a finite amount of time. Properties of the modified projection algorithm include,
     \begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\item every iteration improves estimation:
@@ -121,6 +126,8 @@ This states the system's output $y(k)$ will asymptotically converge to the track
 Each system state $\bm{x}_i$ where $i=1,2,\dots,n_x$ and $n_x$ is the total number of states has sensors $\bm{s}_{ij}$ for $j=1,2,\dots,n_{s_i}$ where $n_{s_i}$ is the number of sensors that can extract sensor measurement data for a given state. These sensor measurements adhere to the above adaptive control assurances, with the addition of noise uncertainties.
 
 Each of the sensors $\bm{s}_{ij}$ providing measurement data of each states experience the same convergence behavior to the tracking signal where sensors are uncompromised. This remains true with a changing reference signal, system dynamics, or bounded disturbances. When an attacker maliciously falsifies a sensor signal, the $j^{th}$ sensor of the $i^{th}$ state from the sensor set $\bm{s}_{ij}$ no longer follows the converge rate compared to the uncompromised sensor measurements. 
+\NB{add missing equations}
+\NB{add Lemma}
 
 \subsection{Sensor Removal}
 

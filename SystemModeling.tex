@@ -27,7 +27,7 @@ This presents a high-level model of the vehicle, describing only the motion equa
     \begin{equation}
 	\bm{x}(k+1) = \bm{A}(k)\bm{x}(k) + \bm{B}(k)\bm{u}(k)
 	\end{equation}
-
+\NB{add more details about how to go from the continuous model to the state space representation}
  \subsection{Noise and Disturbance Model}
 When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and a changing ground surface. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}_a(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model can be in the form:
     \begin{equation}
@@ -38,7 +38,7 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 	\end{equation}
 
 \subsection{Adaptive Control Model}
-The control algorithm used is characteristic polynomial adaptive control based on the following discrete-time state space model with known dimensions of $\bm{A}$ and $\bm{B}$. The dynamically changing model is linearized by choosing initially known state space parameters for a specific operating point:
+\NB{In this work we leverage the ....adaptive control approach presented in ... in which the objective is to compute an input to follow a reference model given changing dynamics... Here we summarize the model which will be used later in the Approach Section.... to adapt the system under uncertainties and to detect attacks and estimate the state of the system}The control algorithm used is characteristic polynomial adaptive control \NB{add citation and italize the technique} based on the following discrete-time state space model with known dimensions of $\bm{A}$ and $\bm{B}$. The dynamically changing model is linearized by choosing initially known state space parameters for a specific operating point:
 	\begin{equation}
 	\bm{x}(k+1) = \bm{A}\bm{x}(k) + \bm{B}\bm{u}(k)
 	\end{equation}
@@ -50,7 +50,7 @@ with its discrete time transfer function:
 	= \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n}
 	\end{equation}
 where $b_0\ne{0}$, $d>0$, and $n-d-m\geq{0}$\\
-Using an ARMA model and defining the operators $q^{-1}$ (delay) and q (advance),
+Using an ARMA \NB{spell it out} model and defining the operators $q^{-1}$ (delay) and q (advance),
 	\begin{equation}
 	q^{-1}x(k) = x(k-1), qx(k) = x(k+1)
 	\end{equation}

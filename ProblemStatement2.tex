@@ -1,7 +1,9 @@
 \begin{section}{Problem Statement}
 	
 \label{sec:problem}
-In this work we are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system. We want to guarantee that the vehicle is still able to navigate safely in an obstacle filled environment.% while using less desirable sensor with larger noise profiles. 
+
+In this work we consider autonomous vehicle operations in cluttered environments under different uncertainties including noise, failures, and cyber-attacks on its sensors. 
+We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment.% while using less desirable sensor with larger noise profiles. 
 
 
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
@@ -30,7 +32,7 @@ In this work we are interested in finding a strategy to detect sensor attacks in
 
 \begin{problem} 
 \label{problem1} {\textbf{Detection and Sensor Reconfiguration:}} 
-The objective is to be able to detect sensor attacks within a dynamically unknown system and then removing the compromised sensor to maintain proper control of the vehicle. Given the system dynamics as a function of its state $ \bm{x} $, its input $ \bm{u}$, and disturbances $ \bm{d} $,
+The objective is to be able to detect sensor attacks within a dynamically unknown system and then removing any compromised sensor to maintain proper control of the vehicle. Given the system dynamics as a function of its state $ \bm{x} $, its input $ \bm{u}$, and disturbances $ \bm{d} $,
 	\begin{equation}
 		\bm{x}(k+1) = f(\bm{x}(k), \bm{u}(k), \bm{d}(k))
 	\end{equation}
@@ -39,18 +41,18 @@ we want to find a policy $\mathcal{P}$ at time instant $k$ that:
 	\item can differentiate between a malicious sensor attack and changing dynamics or failures. 
 	\item remove the compromised sensor to restore system integrity for future time instances $k+h$. 
 \end{enumerate}
-Solving this problem will allow us to navigate a vehicle where dynamics are changing while preventing an attacker from having an undesirable effect on the system. 
+Solving this problem will allow us to navigate a vehicle considering system and environmental dynamical changes while preventing an attacker from having an undesirable effect on the system. \NB{rephrase}
 \end{problem}
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion:}} 
-A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{x}_{g_i} \in \bm{X}_g =  \begin{bmatrix} \bm{x}_{g_1},\bm{x}_{g_2},\dots,\bm{x}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety among uncertainties within an environment. When a compromised sensor has been removed from the system, these uncertainties may change to a more undesirable situation. To guarantee vehicle safety, it must be able to avoid any undesired areas (e.g., obstacles, cliffs) while these uncertainties are changing.
+A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{x}_{g_i} \in \bm{X}_g =  \begin{bmatrix} \bm{x}_{g_1},\bm{x}_{g_2},\dots,\bm{x}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-atatcks \NB{move above}. When a compromised sensor has been removed from the system (Problem 1), these uncertainties may change to a more undesirable situation. To guarantee vehicle safety, it must be able to avoid any undesired areas (e.g., obstacles, cliffs) while these uncertainties are changing.
 	\begin{equation}
 		\lVert {\bm{x}(k)-\bm{x}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
 	\begin{equation}
 		\Delta(k)=[v(k)]^{\delta_v}\delta
 	\end{equation}
-where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\delta$ is a user defined desired distance between the outer most point of the confidence region and an unwanted region, and $N_r$ is the total number of regions. $[\delta, \delta_v] \in R^{\geq0}$ are chosen values that determine the desired distance between the closest unwanted region to the estimation region as a function of velocity.
+where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\delta$ is a user defined desired distance between the outer most point of the confidence region and an unwanted region, and $N_r$ is the total number of regions. $[\delta, \delta_v] \in R^{\geq0}$ are chosen values that determine the desired distance between the closest unwanted region to the estimation region as a function of velocity \NB{revise as discussed in the meeting}.
 
 %A ground vehicle's mission is to safely follow a desired trajectory within an obstacle filled environment. The system will possess a higher estimation uncertainty when less desirable sensors are being used for navigation. All obstacle positions are known beforehand, which makes off-line trajectory planning suitable. We want to find a policy that will guarantee the safety of the vehicle under changing noise levels, such that a vehicle will not collide with any obstacles.
 
