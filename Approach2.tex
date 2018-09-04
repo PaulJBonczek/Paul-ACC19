@@ -104,6 +104,8 @@ For detection, model reference adaptive control is an effective solution to the 
 \label{fig:det_arch}
 \end{figure}
 
+\NB{equations and symbols in the figures should look like the text}
+
 This states the system's output $y(k)$ will asymptotically converge to the tracking reference signal $r(k)$ in a finite amount of time. Properties of the modified projection algorithm include,
     \begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\item every iteration improves estimation:
@@ -131,11 +133,13 @@ Each of the sensors $\bm{s}_{ij}$ providing measurement data of each states expe
 
 \subsection{Sensor Removal}
 
-As the $j^{th}$ sensor of the $i^{th}$ state no longer follows convergence characteristics, it is removed from operation to ensure proper control and navigation safety. The new set of sensors providing measurement data for the $i^{th}$ state is $\bm{s}_{ij}^*$ where $j^*=1,2,\dots,n_{s_i}-h_s$ when $h_s$ is defined as the total number of compromised sensors.
+\NB{be careful with the indexes. $n$ states and $i,j,k$ are indeces}
+
+As the $j^{th}$ sensor of the $i^{th}$ state no longer follows convergence characteristics, it is removed from operation to ensure proper control and navigation safety. The new set of sensors providing measurement data for the $i^{th}$ state is $\bm{s}_{ij}^*$ where $j^*=1,2,\dots,n_{s_i}-h_s$ \NB{$y$ for measurements} when $h_s$ is defined as the total number of compromised sensors.
 
 \subsection{Estimation}
 
-The statistical technique of confidence intervals is the foundation of how this work solves estimation. Confidence intervals are used to estimate the mean of a population of data in stochastic environments. This method guarantees the true mean has a specific percentage of confidence that it's within an interval. Assuming the knowledge of the confidence percentage $z^{*}$, sensor noise standard deviation $ \sigma_p $, the number of sensor data samples $N$, and the mean of the sensor data samples $ \bm{\bar{x}}_{x,y} $ in the $x$ and $y$ direction, a confidence interval of a chosen percentage can be calculated: 
+\NB{Say what's happening here and why} The statistical technique of confidence intervals is the foundation of how this work solves estimation. Confidence intervals are used to estimate the mean of a population of data in stochastic environments. \NB{show equation here} This method guarantees the true mean has a specific percentage of confidence that it's within an interval. Assuming the knowledge of the confidence percentage $z^{*}$, sensor noise standard deviation $ \sigma_p $, the number of sensor data samples $N$, and the mean of the sensor data samples $ \bm{\bar{x}}_{x,y} $ in the $x$ and $y$ direction, a confidence interval of a chosen percentage can be calculated \NB{define $\epsilon$}: 
  	\begin{equation}
 		\varepsilon_{x,y|N} = \bar{s}_{x,y} + z^{*}\frac{\sigma}{\sqrt{N}}
 	\end{equation}
