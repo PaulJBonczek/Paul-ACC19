@@ -4,13 +4,6 @@
 In this work we are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system. We want to guarantee that the vehicle is still able to navigate safely in an obstacle filled environment.% while using less desirable sensor with larger noise profiles. 
 
 
-% PRESENT TENSE!!
-
-% differentiate system will have dynamical change, differentiate between cyber attack and dynamical change
-% detect cyber attack, adaptive systems to work in a compromised environment
-% describe how system is nonlinear system  but at the point in time its "linear"
-% Greek letter for noise
-
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
 % be able to distinguish between dynamical changes and attacks and also adapt the motion planning to safety travel in the environment
 
@@ -55,7 +48,7 @@ A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i
 		\lVert {\bm{x}(k)-\bm{x}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
 	\begin{equation}
-		\Delta=[v(k)]^{\delta_v}\delta
+		\Delta(k)=[v(k)]^{\delta_v}\delta
 	\end{equation}
 where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\delta$ is a user defined desired distance between the outer most point of the confidence region and an unwanted region, and $N_r$ is the total number of regions. $[\delta, \delta_v] \in R^{\geq0}$ are chosen values that determine the desired distance between the closest unwanted region to the estimation region as a function of velocity.
 

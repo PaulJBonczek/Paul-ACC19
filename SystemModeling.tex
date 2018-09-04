@@ -7,7 +7,7 @@ In this section, the system dynamical, noise, and disturbance models used for co
 % Approach
 
 \subsection{Vehicle Model}
-To attain a dynamical model of the ground vehicle, a generalized differential-drive model may be used (CITE). The vehicle's position is described by its $x$ and $y$ coordinates, $\theta$ represents the vehicle's heading angle measured from the $x$ axis, and $v$ is the speed in the direction in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip, the continuous time dynamical model of the vehicle is
+To attain a dynamical model of the ground vehicle, a generalized differential-drive model may be used \cite{nutaro2011building}. The vehicle's position is described by its $x$ and $y$ coordinates, $\theta$ represents the vehicle's heading angle measured from the $x$ axis, and $v$ is the speed in the direction in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip, the continuous time dynamical model of the vehicle is
     \begin{align}
         \dot{v}=\begin{cases}
             \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
