@@ -3,31 +3,6 @@
 \label{sec:approach}
 In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion to guarantee vehicle safety to solve Problems \ref{problem1} and \ref{problem2}. We follow the architecture in the block diagrams of Fig. \ref{fig:system_arch} and \ref{fig:det_arch}. 
 
-%In this section we describe the framework adopted for
-%online prediction and planning for UAV missions to solve
-%Problems 3.1 and 3.2. Specifically we follow the architecture
-
-%depicted in the block diagram in Fig. 2. The overall archi-
-%tecture is composed of: i) states and disturbance estimation,
-
-%ii) energy prediction, and iii) path planning. Both estimation
-%and prediction are model-based: the state estimate uses a
-%model of the system to estimate the disturbance while the
-%predictor makes predictions of states and inputs based on
-%the current states and inputs and uses the worst and best
-%disturbance cases to evaluate the total energy the system will
-%consume over a finite planning horizon and a finite number
-%of trajectories. Finally the planner will choose the trajectory
-%with the minimum energy consumption.
-%Disturbance estimation can be performed using different
-%techniques, both parametric and non parametric [7]. The
-
-%literature offers several methods like Kalman filtering, least-
-%square methods, expectation-maximization algorithms, and
-
-%kernel regressions. In this work, for ease of discussion,
-%we assume that a disturbance estimate is available to the
-%quadrotor at every time.
 
 
 \begin{figure}[ht!]
@@ -153,7 +128,7 @@ where $j$ and $j^*$ refer to subsystems generating an input to control the same 
 \label{fig:det_arch}
 \end{figure}
 
-When an attacker maliciously falsifies a sensor signal, the $j^{th}$ output sensor measurement of the $i^{th}$ output state no longer follows the converge rate compared to the uncompromised sensor measurements. As the $j^{th}$ sensor of the $i^{th}$ output no longer follows convergence characteristics, it is removed from the set of uncompromised output sensor measurements $\bm{Y}$ to ensure proper control and estimation for navigation safety. The new set of output measurements is defined as $\bm{Y}=\bm{Y}_0-\bm{Y}_a$ where $\bm{Y}_0$ is the initial uncompromised output measurement set and $\bm{Y}_a$ is the set of attacked output sensors that have been removed.
+When an attacker maliciously falsifies a sensor signal, the $j^{th}$ output sensor measurement of the $i^{th}$ output state no longer follows the converge rate compared to the uncompromised sensor measurements. As the $j^{th}$ sensor of the $i^{th}$ output no longer follows convergence characteristics, it is removed from the set of uncompromised output sensor measurements $\bm{Y}$ to ensure proper control and estimation for navigation safety. The new set of output measurements is defined as $\bm{Y}=\bm{Y}_0-\bm{Y}_a$ where $\bm{Y}_0$ is the initial uncompromised output measurement set and $\bm{Y}_a$ is the set of attacked output sensors that have been removed. Effective detection is constrained to when $\leq \frac{N_i}{2}$ of sensors are attacked, where $N_i$ is the total number of available sensors for the $i^{th}$ output.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -178,11 +153,11 @@ Assuming the knowledge of the confidence percentage $z^{*}$, population standard
 For this paper, this method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation, regardless if it's raw or filtered data, has the form $\mathcal{N}(0,\sigma_p)$ where the data population standard deviation $\sigma_p$ is known for any sensor combination. Using (\ref{Confidence_interval}) we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety:
     \begin{equation}
     \label{Confidence_region}
-		\hat{\varepsilon}_{x,y|N} = \hat{\bar{y}}_{x,y} + z^{*}\frac{\sigma_p}{\sqrt{N}}
+		\hat{\bm{\varepsilon}}_{x,y|N} = \hat{\bar{y}}_{x,y} + z^{*}\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
-Where the radius is,
+Where its radius is,
     \begin{equation}
-		\hat{\varepsilon} = z^{*}\frac{\sigma_p}{\sqrt{N}}
+		\hat{\varepsilon}_r = z^{*}\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
 Similar to the calculation of confidence intervals, it is under the assumption that the true mean, or in our case the vehicle, is not changing positions over the $N$ number of sampled data points used in the confidence interval region calculation.
 
@@ -211,7 +186,7 @@ Each element of these updated sets are calculated as:
 	\end{equation}
 The mean of each set is written as $\hat{\bar{y}}_x^*$ and $\hat{\bar{y}}_y^*$ is used for the calculation of the estimated confidence interval region.
 
-Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the actuator $\sigma_a$, velocity sensor $\sigma_v$, and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds $\hat{\varepsilon}_{x,y|N}$, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\mathcal{\bm{X}}$ and $\mathcal{\bm{Y}}$ is calculated as:
+Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the actuator $\sigma_a$, velocity sensor $\sigma_v$, and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\mathcal{\bm{X}}$ and $\mathcal{\bm{Y}}$ is calculated as:
     \begin{equation}
 	\hat{\varepsilon}_{v,\theta_h|N}^{\star}=\sqrt{(v^{\star}\cos{\theta_h^{\star}})^2+(v^{\star}\sin{\theta_h^{\star}})^2}
 	\end{equation}
@@ -222,7 +197,7 @@ where,
 	\begin{equation}
 	\theta_h^{\star}=\bar{\theta}_h(k-i_{\varepsilon^{\star}})+z^{*}\sigma_h \nonumber
 	\end{equation}
-with $i_{\varepsilon^{\star}}=[1,2,,\dots,N]$ while measured velocity and heading angles are denoted $v$ and $\theta_h$, respectively. Doing this will protect the integrity of the confidence interval region, ensuring the vehicle is within its estimation bounds.
+with $i_{\varepsilon^{\star}}=[1,2,,\dots,N]$ while average measured velocity and average measured heading angles over the past $N$ samples are denoted $\bar{v}$ and $\bar{\theta}_h$, respectively. Doing this will protect the integrity of the confidence interval region, ensuring the vehicle is within its estimation bounds.
 
 \subsection{Adaptive Motion Planning}
 With uncertainty of sensor measurements, with or without the loss of a compromised sensors, there needs to be guarantees to safely navigate a vehicle without accidents. As obstacles or unwanted regions approach the vehicle with position uncertainty, changes to the vehicle's motion need to be made. To keep the vehicles estimated confidence region from intersecting with an unwanted region, a change to the number of current and past data samples in the calculation as well as an adaptation of the velocity. With no uncertainty of velocity and heading angle measurements, the equation to solve for the number of required $N$ samples to keep the confidence region within a specific radius is:
@@ -244,6 +219,9 @@ An update of the reference velocity needs to occur when these undesired regions 
 	    \hat{\varepsilon}_1=&\hat{\varepsilon}_{x,y|N} +\hat{\varepsilon}_{v,\theta_h|N}^{\star},\\ &\hat{\varepsilon}_2=\hat{\varepsilon}_1+\Delta \nonumber	    
 	\end{split}
 	\end{equation}
+	
+where $\hat{\varepsilon}_1$ and $\hat{\varepsilon}_2$ are both radii from the estimated center point $\hat{\bar{\bm{y}}}_{x,y}$.
+	
 %	\begin{equation}
 %		\Delta(k)=[v(k)]^{\delta_v}\delta
 %	\end{equation}

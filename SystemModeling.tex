@@ -67,22 +67,17 @@ where,
 	\begin{equation}
 	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0  \\ 0 & 0 \\  0 & \frac{B}{2I_z} \end{bmatrix}, \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \\ \ddot{\theta_h} \end{bmatrix}, \bm{u}(t)=\begin{bmatrix} F_l+F_r \\ F_l-F_r \end{bmatrix} \nonumber
 	\end{equation}
+The state vector consists of $x$ and $y$ position coordinates, forward velocity $v$, heading angle position $\theta_h$, and the heading angle's velocity and acceleration $\dot{\theta_h}$ and $\ddot{\theta_h}$.
 	
- \subsection{Noise and Disturbance Model}
-When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and a changing ground surface. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}_a(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model can be in the form:
-    \begin{equation}
-	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k)
-	\end{equation}
-	\begin{equation}
-	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}_a(k)
-	\end{equation}
+
+
 
 \subsection{Adaptive Control Model}
-In this work we leverage the \textit{characteristic model based all-coefficient adaptive control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics. Here we summarize the model which will be used later in Section  \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The dynamically changing model is linearized to a defined set point by the initially known parameters within the $A$ and $B$ matrices:
+In this work we leverage the \textit{characteristic model based all-coefficient adaptive control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics. Here we summarize the model which will be used later in Section  \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The dynamically changing model is linearized to a defined set point from initially known parameters within the $\bm{A}$ and $\bm{B}$ matrices:
 	\begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}\bm{x}(t) + \bm{B}\bm{u}(t)
 	\end{equation}
-Since the adaptive control algorithm used is based on a discrete-time state space model, the model needs to be discritized. To convert from continuous to discrete time, the following equations are calculated for $A$ and $B$ with a predetermined sampling time $T_s$:
+Since the adaptive control algorithm used is based on a discrete-time state space model, the model needs to be discritized. To convert from continuous to discrete time, the following equations are calculated for $\bm{A}$ and $\bm{B}$ with a predetermined sampling time $T_s$:
     \begin{equation}
 	\bm{A}_d = e^{\bm{A}T_s}
 	\end{equation}
@@ -131,5 +126,16 @@ to form a model reference transfer function in the form:
 	\begin{equation}
 	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
 	\end{equation}
+
+
+ \subsection{Noise and Disturbance Model}
+When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and a changing ground surface. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}_a(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model can be in the form:
+    \begin{equation}
+	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k)
+	\end{equation}
+	\begin{equation}
+	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}_a(k)
+	\end{equation}
+
 
 \end{section}
