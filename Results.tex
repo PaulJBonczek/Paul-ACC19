@@ -4,23 +4,40 @@
 
 % Need to label states of the state vector in the modeling section [x y v \theta]
 
-The case study investigated in this paper is with a ground vehicle experiencing the effects of sensor and process noise, dynamical changes, while also succumbing to wind disturbances and sensor attacks. The vehicle will be traveling along a pre-planned trajectory with assumed to be known obstacles throughout the environment. (Show a figure, or more, of the vehicle within the environment showing the path and obstacles). We consider a ground vehicle starting at an initial position facing the positive $x$ direction with zero velocity $x(0)=(0,0,0,0)^T$. The objective for the vehicle is to encircle a large object while following a desired trajectory with obstacles of varying distances from the path. During navigation, parameters within the fundamental matrix $\bm{A}(k)$ and input matrix $\bm{B}(k)$ may change by up to 50\%. It is assumed the maximum velocity of the vehicle is 3.0m/s and the desired reference velocity it wants to maintain is 2.5m/s. 
+The case study investigated in this paper is with a ground vehicle experiencing the effects of sensor and process noise, dynamical changes, while also succumbing to wind disturbances and sensor attacks. The vehicle will be traveling along a pre-planned trajectory with assumed to be known obstacles throughout the environment. We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 22,10 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. The objective for the vehicle is to reach a goal point while following a desired trajectory with obstacles of varying distances from the path. It is assumed the maximum velocity of the vehicle is 3.0m/s and the desired reference velocity it wants to maintain is 2.5m/s. 
 
 
-Below is results I will show 
-In Figure Xa) the vehicle moving along the trajectory with no compromised sensors and far from obstacles. Velocity is unaltered due to the obstacles being well outside the uncertainty boundaries.
 
-Figure Xb) demonstrates the effects of the loss of a position sensor of low noise profile. The confidence estimation interval has grown in size.
+\begin{figure*}[b!th]
+%\begin{figure*}[th!]
+\begin{tabular}{cccc}
 
-Figure Xc) demonstrates the adaptive motion planner in action when obstacles come within the confidence and uncertainty boundary. Velocity is reduced to shrink both the confidence interval and uncertainty bounds.
+\subfigure[\label{fig:low_noise} ]{\includegraphics[width = 0.23\textwidth]{Motion1.png}} &	
 
-Figure Xd) Obstacles are again far away from the given trajectory, outside of the CI and uncertainty bounds. Velocity is restored to desired levels.
+\subfigure[\label{fig:high_noise} ]{\includegraphics[width = 0.23\textwidth]{Motion2.png}}  &
+	
+\subfigure[\label{fig:near_obstacle} ]{\includegraphics[width = 0.23\textwidth]{Motion3.png}} &
 
+\subfigure[\label{fig:far_obstacle} ]{\includegraphics[width = 0.23\textwidth]{Motion4.png}}
+
+\end{tabular}
+\caption{A comparison in time of a vehicle navigating through an obstacle filled environment. In (a), the position sensor at this time has low uncertainty, in (b) the original position sensor has been removed and replaced by a sensor with higher uncertainty, in (c), the confidence region shrinks as more data samples are used and the velocity decreases to guarantee safety of nearby objects and in (d), the obstacles are again far away, so less data samples are needed and the velocity returns to it's desired state. }
+
+\end{figure*}
+
+In Figure \ref{fig:low_noise}, the vehicle moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is, in general, small because the best available sensor with low amount of noise is available . Velocity is unaltered due to the obstacles being well outside the uncertainty boundaries.
+
+Figure \ref{fig:high_noise} demonstrates the effects of the loss of a position sensor of low noise profile due to detection of a sensor attack. A different sensor of higher uncertainty is being used for positional coordinate data. The confidence estimation region has grown in size due to these differing uncertainties.
+
+Figure \ref{fig:near_obstacle} demonstrates the adaptive motion planner in action when obstacles come within the confidence region. More data past samples are used and velocity is decreased to minimize uncertainties for more effective estimation.
+
+In Figure \ref{fig:far_obstacle}, obstacles are again far away from the true position of the vehicle, outside of the confidence region's bounds. Velocity is restored toward desired levels and less data sampled are necessary to remain confident that the vehicle is safe.
+
+
+FUTURE FIGURES OF ENTIRE SYSTEM AS A WHOLE TO SHOW DETECTION OF ATTACKS (WITH ACTION), DETECTION OF DYNAMICAL CHANGES (WITH NO CORRECTIVE ACTIONS).
 Figure Y) displays all sensor measurements for velocity, capturing when the attack occurs and the consequent recovery. 
-
 Figure Z) Showing the detection scheme can decipher the difference between dynamical changes and an attack
 
-% Figure XX) Show convergence of signal to reference
 
 \begin{figure}
 \vspace{1pt}

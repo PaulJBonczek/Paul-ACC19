@@ -1,18 +1,36 @@
 
 \begin{section}{Approach}
 \label{sec:approach}
+In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion to guarantee vehicle safety to solve Problems \ref{problem1} and \ref{problem2}. We follow the architecture in the block diagrams of Fig. \ref{fig:system_arch} and \ref{fig:det_arch}. 
 
-\NB{add text here to introduce what the reader will see in the next few sections. Add a block diagram}
+%In this section we describe the framework adopted for
+%online prediction and planning for UAV missions to solve
+%Problems 3.1 and 3.2. Specifically we follow the architecture
 
-% INSERT FIGURE FOR THE ARCHITECTURE OF THE SYSTEM HERE
-%\begin{figure}[ht!]
-%	\centering
-%	\includegraphics[width=0.48\textwidth]{det_arch.png}
-%	\caption{Architecture of our adaptive system to include detection capabilities}
-%	\label{fig:det_arch}
-%\end{figure}
+%depicted in the block diagram in Fig. 2. The overall archi-
+%tecture is composed of: i) states and disturbance estimation,
 
-\begin{figure}
+%ii) energy prediction, and iii) path planning. Both estimation
+%and prediction are model-based: the state estimate uses a
+%model of the system to estimate the disturbance while the
+%predictor makes predictions of states and inputs based on
+%the current states and inputs and uses the worst and best
+%disturbance cases to evaluate the total energy the system will
+%consume over a finite planning horizon and a finite number
+%of trajectories. Finally the planner will choose the trajectory
+%with the minimum energy consumption.
+%Disturbance estimation can be performed using different
+%techniques, both parametric and non parametric [7]. The
+
+%literature offers several methods like Kalman filtering, least-
+%square methods, expectation-maximization algorithms, and
+
+%kernel regressions. In this work, for ease of discussion,
+%we assume that a disturbance estimate is available to the
+%quadrotor at every time.
+
+
+\begin{figure}[ht!]
 \vspace{1pt}
 \centering
 \includegraphics[width=0.48\textwidth]{sys_arch.png}
@@ -20,10 +38,10 @@
 \label{fig:system_arch}
 \end{figure}
 
-\subsection{Model Reference Adaptive Control}
+\subsection{Resilient Adaptive Control}
+\label{sec:Res_adapt_control}
 
-\NB{merge section A and B and titled it Resilient Adaptive Control. Summarize more what in section A and shift teh attention to the detection and estimation}
-The purpose of having a model reference adaptive controller is to maintain a desired control performance when unknown dynamical changes or disturbances have occurred. Estimation of the system's polynomial coefficients will help give us this desired performance.
+The purpose of having model reference adaptive control (MRAC) is to maintain a desired control performance when unknown dynamical changes or disturbances have occurred. Estimation of the system characteristic model's coefficients will help give us this desired performance.
 Assumptions for adaptive control: 
 	\begin{enumerate}[leftmargin=4\parindent]
 	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^m$ are within $|z|<1$. 
@@ -87,26 +105,14 @@ where $\bm{\theta}(k)$ is the estimate of the true parameter vector $\bm{\theta}
 	\end{align*}
 To avoid division by $0$, $\theta_{n+1}(k)\neq0$ is necessary.
 
-\subsection{Detection}
-
-For detection, model reference adaptive control is an effective solution to the problem of dynamically changing or unknown systems. From (CITE reference) states that under the assumptions (reference to all 4 assumptions) ensures:
+For detection, model reference adaptive control is an effective solution to the problem of dynamically changing or unknown systems. \cite{tao2003adaptive} states that under the assumptions (A1-A4), it ensures:
 	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
+	\label{assumtions_ensure}
 	\item $y(k)$ and $u(k)$ are bounded 
-	\item $\lim_{n\to\infty}(y(k)-y^*(k))=0$
+	\item $\lim_{k\to\infty}(y(k)-y^*(k))=0$
 	\item $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
 	\end{enumerate}
-	
-	\begin{figure}[ht!]
-\vspace{1pt}
-\centering
-\includegraphics[width=0.48\textwidth]{con_and_det.png}
-\caption{System architecture of the detection scheme within the adaptive controller. Representing the $i^{th}$ state and the $j$ number of available sensors.}
-\label{fig:det_arch}
-\end{figure}
-
-\NB{equations and symbols in the figures should look like the text}
-
-This states the system's output $y(k)$ will asymptotically converge to the tracking reference signal $r(k)$ in a finite amount of time. Properties of the modified projection algorithm include,
+This states the system's output $y(k)$ will asymptotically converge to the tracking reference signal $y^*(k)$ in a finite amount of time. Properties of the modified projection algorithm include,
     \begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\item every iteration improves estimation:
 	    \begin{align}
@@ -125,42 +131,89 @@ This states the system's output $y(k)$ will asymptotically converge to the track
 	    \end{align}
 	\end{enumerate}
 
-Each system state $\bm{x}_i$ where $i=1,2,\dots,n_x$ and $n_x$ is the total number of states has sensors $\bm{s}_{ij}$ for $j=1,2,\dots,n_{s_i}$ where $n_{s_i}$ is the number of sensors that can extract sensor measurement data for a given state. These sensor measurements adhere to the above adaptive control assurances, with the addition of noise uncertainties.
+Each system output measurement $\bm{y}_i$ where $i=1,2,\dots,N_y$ and $N_y$ is the total number of outputs to be measured. Every $\bm{y}_i$ output measurement has $j$ number of sensors capable of provided data, represented in the form $\bm{y}_{i,j}$. Each of the sensor measurements $\bm{y}_{i,j}$ providing data of each output experience the same convergence behavior to the tracking signal when the sensors are uncompromised. This remains true with a changing reference signal, changing system dynamics, or bounded disturbances. 
+With the assurances of (\ref{assumtions_ensure}), it is true that all uncompromised outputs track its given reference signal via the reference model.
+\begin{equation}
+\label{multiple_output_tracking}
+    \lim_{k\to\infty}(y_{i,j}(k)-y^*_i(k))=0, \text{ }\forall j
+\end{equation}
+For each $i^{th}$ measured output, a total of $j$ number of MRAC subsystems are built to monitor for dynamical changes and sensor attacks. Each subsystem receives it's own individual $j^{th}$ sensor signal, but they all share the same reference model, reference signal $r(k)$, and input $u_i(k)$ that is directly used to control the vehicle to a desired output. Each MRAC subsystem calculates an updated input $u_{i,j}$ that are fed into the detector, which analyses each $j^{th}$ input-output combination to check for comprised sensors. With (\ref{multiple_output_tracking}) ensured, we can also say:
+\begin{equation}
+    \lim_{k\to\infty}(u_{i,j}(k)-u_{i,j^*}(k))=0, \text{ }j\neq j^*
+\end{equation}
+where $j$ and $j^*$ refer to subsystems generating an input to control the same output.
 
-Each of the sensors $\bm{s}_{ij}$ providing measurement data of each states experience the same convergence behavior to the tracking signal where sensors are uncompromised. This remains true with a changing reference signal, system dynamics, or bounded disturbances. When an attacker maliciously falsifies a sensor signal, the $j^{th}$ sensor of the $i^{th}$ state from the sensor set $\bm{s}_{ij}$ no longer follows the converge rate compared to the uncompromised sensor measurements. 
-\NB{add missing equations}
 \NB{add Lemma}
 
-\subsection{Sensor Removal}
+\begin{figure}[ht!]
+\vspace{1pt}
+\centering
+\includegraphics[width=0.48\textwidth]{con_and_det.png}
+\caption{System architecture of the detection scheme within the adaptive controller. Representing the $i^{th}$ output state and the $j^{th}$ number of available measurement sensors for that output.}
+\label{fig:det_arch}
+\end{figure}
 
-\NB{be careful with the indexes. $n$ states and $i,j,k$ are indeces}
+When an attacker maliciously falsifies a sensor signal, the $j^{th}$ output sensor measurement of the $i^{th}$ output state no longer follows the converge rate compared to the uncompromised sensor measurements. As the $j^{th}$ sensor of the $i^{th}$ output no longer follows convergence characteristics, it is removed from the set of uncompromised output sensor measurements $\bm{Y}$ to ensure proper control and estimation for navigation safety. The new set of output measurements is defined as $\bm{Y}=\bm{Y}_0-\bm{Y}_a$ where $\bm{Y}_0$ is the initial uncompromised output measurement set and $\bm{Y}_a$ is the set of attacked output sensors that have been removed.
 
-As the $j^{th}$ sensor of the $i^{th}$ state no longer follows convergence characteristics, it is removed from operation to ensure proper control and navigation safety. The new set of sensors providing measurement data for the $i^{th}$ state is $\bm{s}_{ij}^*$ where $j^*=1,2,\dots,n_{s_i}-h_s$ \NB{$y$ for measurements} when $h_s$ is defined as the total number of compromised sensors.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Estimation}
-
-\NB{Say what's happening here and why} The statistical technique of confidence intervals is the foundation of how this work solves estimation. Confidence intervals are used to estimate the mean of a population of data in stochastic environments. \NB{show equation here} This method guarantees the true mean has a specific percentage of confidence that it's within an interval. Assuming the knowledge of the confidence percentage $z^{*}$, sensor noise standard deviation $ \sigma_p $, the number of sensor data samples $N$, and the mean of the sensor data samples $ \bm{\bar{x}}_{x,y} $ in the $x$ and $y$ direction, a confidence interval of a chosen percentage can be calculated \NB{define $\epsilon$}: 
- 	\begin{equation}
-		\varepsilon_{x,y|N} = \bar{s}_{x,y} + z^{*}\frac{\sigma}{\sqrt{N}}
-	\end{equation}
-This is under the assumption that the true mean is not changing over the previous $N$ number of sampled data points used in the current confidence interval calculation.
-
-Assuming the data being used for estimation, regardless if it's raw or filtered data, is that it comes in the form $\mathcal{N}(0,\sigma_d)$ where the data population standard deviation $\sigma_d$ is known for any sensor combination. From [reference to above equation] we can find an interval of a determined confidence percentage that the vehicle is within that region to ensure safety. 
-
-The assumption of a confidence interval is the true mean remains static on the given axis. This cannot be assumed in the case of position estimation of a navigating vehicle. A pseudo-static form of a confidence interval is made to compensate for translation of position $\bm{x}(k-M)$, where $M=1,2,\dots,N-1$. The $M$ number of previous position data points are represented as if they all were taken from the current position $\bm{x}(k)$ in time. (SHOW THIS IN A FIGURE FOR BETTER VISUAL UNDERSTANDING, either Matlab or Powerpoint). These samples $\bm{x}_p$, where $p=1,2,\dots,N$ form the set $\mathcal{\bm{S}}=\begin{bmatrix}\bm{x}_1,\bm{x}_2,\dots,\bm{x}_N \end{bmatrix}$. Further, we can break down the set into two vectors $\bm{s}_x=\begin{bmatrix} x_{x1},x_{x2},\dots,x_{xN} \end{bmatrix}$ and $\bm{s}_y=\begin{bmatrix} x_{y1},x_{y2},\dots,x_{yN} \end{bmatrix}$ which represent the $x$ and $y$ coordinate data, respectively. 
-
-Translating the data coordinates into a pseudo-static form will create the set $\mathcal{\bm{S}}_t$, creating the two pseudo-static vectors $\bm{s}_{t_x}=\begin{bmatrix} x_{t_{x1}},x_{t_{x2}},\dots,x_{t_{xN}} \end{bmatrix}$ and $\bm{s}_{t_y}=\begin{bmatrix} x_{t_{y1}},x_{t_{y2}},\dots,\bm{x}_{t_{yN}} \end{bmatrix}$. Each element of these updated vectors are calculated as:
+For positional estimation with sensor uncertainties, we need a guarantee the vehicle is within a region to prevent navigation into an undesired state. Using an $N$ number of data samples of known variance $\sigma_p^2$, we are able to estimate a region of a specific confidence that the vehicle is within the region's boundaries.
+\begin{figure}[ht!]
+\vspace{1pt}
+\centering
+\includegraphics[width=0.48\textwidth]{GaussianPDF.png}
+\caption{Distribution of data samples in an $X-Y$ plane with equal noise variance on the $X$ and $Y$ axis.}
+\label{fig:gauss_pdf}
+\end{figure}
+In this work, the statistical technique of confidence intervals is the foundation of how we solve for estimation. Confidence intervals are used to estimate where the true mean lies in a given stochastic sample of data. 
     \begin{equation}
-	x_{t_{xw}} = x_x(k-w+1)+\sum_{j=1}^w v(k-j)\cos{\theta_h(k-j)T_s}
+     \label{Confidence_interval}
+		C_I = \bar{x} + z^{*}\frac{\sigma}{\sqrt{N}}
+	\end{equation}
+Assuming the knowledge of the confidence percentage $z^{*}$, population standard deviation $ \sigma $, the number of sensor data samples $N$, and the mean of the sensor data samples $ \bar{x} $, a confidence interval of a chosen percentage can be calculated. As the $N$ number of samples grow, the radius of the confidence interval shrinks giving a better estimation of the true mean with the same confidence level.
+% The region $\varepsilon_{x,y|N}$ is described as having the center point at $\bar{y}_{x,y}$ and radius of,
+
+For this paper, this method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation, regardless if it's raw or filtered data, has the form $\mathcal{N}(0,\sigma_p)$ where the data population standard deviation $\sigma_p$ is known for any sensor combination. Using (\ref{Confidence_interval}) we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety:
+    \begin{equation}
+    \label{Confidence_region}
+		\hat{\varepsilon}_{x,y|N} = \hat{\bar{y}}_{x,y} + z^{*}\frac{\sigma_p}{\sqrt{N}}
+	\end{equation}
+Where the radius is,
+    \begin{equation}
+		\hat{\varepsilon} = z^{*}\frac{\sigma_p}{\sqrt{N}}
+	\end{equation}
+Similar to the calculation of confidence intervals, it is under the assumption that the true mean, or in our case the vehicle, is not changing positions over the $N$ number of sampled data points used in the confidence interval region calculation.
+
+ This cannot be assumed in the case of position estimation of a navigating vehicle. A pseudo-static form of a confidence region is made to compensate for translation of previous position measurements $\bm{y}_{x,y}(k-i)$, where $i=1,2,\dots,N$. These $N-1$ number of previous position data points need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data to calculate the confidence region. (SHOW THIS IN A FIGURE FOR BETTER VISUAL UNDERSTANDING, either Matlab or Powerpoint).
+
+The unaltered $N$ data samples are described in two sets,
+\begin{equation}
+    \mathcal{\bm{X}}=\begin{bmatrix} y_x(k-1) ,y_x(k-2),\dots,y_x(k-N) \end{bmatrix} \nonumber
+\end{equation}
+\begin{equation}
+    \mathcal{\bm{Y}}=\begin{bmatrix} y_y(k-1) ,y_y(k-2),\dots,y_y(k-N) \end{bmatrix} \nonumber
+\end{equation}
+for the positional coordinate data in the $x$ and $y$ direction. Translating the data coordinates into a pseudo-static form will create the updated sets,
+\begin{equation}
+    \mathcal{\bm{X}}^*=\begin{bmatrix} y_x^*(k-1) ,y_x^*(k-2),\dots,y_x^*(k-N) \end{bmatrix} \nonumber
+\end{equation}
+\begin{equation}
+    \mathcal{\bm{Y}}^*=\begin{bmatrix} y_y^*(k-1) ,y_y(^*k-2),\dots,y_y^*(k-N) \end{bmatrix} \nonumber
+\end{equation}
+Each element of these updated sets are calculated as:
+    \begin{equation}
+	y_x^*(k-i) = y_x(k-i)+\sum_{j=1}^i v(k-j)\cos{\theta_h(k-j)T_s}
 	\end{equation}
 	\begin{equation}
-	x_{t_{yw}} = x_y(k-w+1)+\sum_{j=1}^w v(k-j)\sin{\theta_h(k-j)T_s}
+	y_y^*(k-i) = y_y(k-i)+\sum_{j=1}^i v(k-j)\sin{\theta_h(k-j)T_s}
 	\end{equation}
-The mean of each vector is written as $\bar{s}_x$ and $\bar{s}_y$ is used for the calculation of the confidence interval.
+The mean of each set is written as $\hat{\bar{y}}_x^*$ and $\hat{\bar{y}}_y^*$ is used for the calculation of the estimated confidence interval region.
 
-Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the actuator $\sigma_a$, current velocity sensor $\sigma_v$, and current heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds $\epsilon$, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\mathcal{\bm{S}}$ is calculated as:
+Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the actuator $\sigma_a$, velocity sensor $\sigma_v$, and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds $\hat{\varepsilon}_{x,y|N}$, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\mathcal{\bm{X}}$ and $\mathcal{\bm{Y}}$ is calculated as:
     \begin{equation}
-	\varepsilon_{v,\theta_h|(M)}^{\star}=\sqrt{(v^{\star}\cos{\theta_h^{\star}})^2+(v^{\star}\sin{\theta_h^{\star}})^2}
+	\hat{\varepsilon}_{v,\theta_h|N}^{\star}=\sqrt{(v^{\star}\cos{\theta_h^{\star}})^2+(v^{\star}\sin{\theta_h^{\star}})^2}
 	\end{equation}
 where,
     \begin{equation}
@@ -169,27 +222,32 @@ where,
 	\begin{equation}
 	\theta_h^{\star}=\bar{\theta}_h(k-i_{\varepsilon^{\star}})+z^{*}\sigma_h \nonumber
 	\end{equation}
-with $i_{\varepsilon^{\star}}=[1,M]$ while measured velocity and heading angles are denoted $v$ and $\theta_h$, respectively. Doing this will protect the integrity of the confidence interval percentage, ensuring the vehicle is within the estimation bounds.
+with $i_{\varepsilon^{\star}}=[1,2,,\dots,N]$ while measured velocity and heading angles are denoted $v$ and $\theta_h$, respectively. Doing this will protect the integrity of the confidence interval region, ensuring the vehicle is within its estimation bounds.
 
 \subsection{Adaptive Motion Planning}
-With uncertainty of sensor measurements, with or without the loss of a compromised sensors, there needs to be guarantees to safely navigate a vehicle without accidents. As obstacles or unwanted regions approach the vehicle with position uncertainty, changes to the vehicle's motion need to be made. To keep the vehicles estimated confidence region from intersecting with an unwanted region, a change to the number of current and past data samples in the calculation as well as an adaptation of the velocity. With no uncertainty of velocity and heading angle measurements, the equation to solve for the number of required $N$ samples to keep the confidence interval within a specific radius is:
+With uncertainty of sensor measurements, with or without the loss of a compromised sensors, there needs to be guarantees to safely navigate a vehicle without accidents. As obstacles or unwanted regions approach the vehicle with position uncertainty, changes to the vehicle's motion need to be made. To keep the vehicles estimated confidence region from intersecting with an unwanted region, a change to the number of current and past data samples in the calculation as well as an adaptation of the velocity. With no uncertainty of velocity and heading angle measurements, the equation to solve for the number of required $N$ samples to keep the confidence region within a specific radius is:
     \begin{equation}
-	    N_{k+1} \geq \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\bar{s}}} - \bar{s}_{x,y} \rVert} -\Delta(k) } \right)^2
+    \label{conf_region1}
+	    N \geq \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\hat{\bar{y}}}} - \hat{\bar{\bm{y}}}_{x,y}^* \rVert} -\Delta } \right)^2
 	\end{equation}
-where $\lVert {\bm{x}_{r_{\bar{s}}}-\bar{s}_{x,y}} \rVert$ is the distance from the closest undesired region to the estimated position mean $\bar{s}_{x,y}$.
-With the assumption of Normally distributed sensor noise on the velocity and heading angle sensors, the above equation is not suitable. The uncertainty region $\varepsilon_{v,\theta_h|(M)}^{\star}$ from these sensors must be accounted for. The revision to equation (Equation above) for a sufficient value of $N$ is:
+where $\lVert {\bm{x}_{r_{\hat{\bar{y}}}}-\hat{\bar{\bm{y}}}_{x,y}^*} \rVert$ is the distance from the closest undesired region to the estimated vehicle center point position $\hat{\bar{\bm{y}}}_{x,y}^*$.
+With the assumption of Normally distributed sensor noise on the velocity and heading angle sensors, the above equation is not suitable. The uncertainty region $\hat{\varepsilon}_{v,\theta_h|(N)}^{\star}$ from these sensors must be accounted for. The revision to equation (\ref{conf_region1}) for a sufficient value of $N$ is:
     \begin{equation}
-	    N_{k+1} \geq \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\bar{s}}} - \bar{s}_{x,y} \rVert} -[\varepsilon_{v,\theta_h|(M_k)}^{\star}+\Delta(k)] } \right)^2
+	    N \geq \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\hat{\bar{y}}}} - \hat{\bar{\bm{y}}}_{x,y}^* \rVert} -[\hat{\varepsilon}_{v,\theta_h|N}^{\star}+\Delta] } \right)^2
 	\end{equation}
-An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \varepsilon_{x,y|N} +\varepsilon_{v,\theta_h|(N-1)}^{\star}+\Delta(k)$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v$ update is calculated by,
+An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \hat{\varepsilon}_{x,y|N} +\hat{\varepsilon}_{v,\theta_h|N}^{\star}+\Delta$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by:
     \begin{equation}
-	    r_v(k)=r_v(k-1) \left[ \frac{\lVert \bm{x}_{r_{\bar{s}}} - \bar{s}_{x,y} \rVert - \varepsilon_1}{\varepsilon_2 - \varepsilon_1} \right]
+	    r_v(k)=r_v(k-1) \left[ \frac{\lVert \bm{x}_{r_{\hat{\bar{y}}}} - \hat{\bar{\bm{y}}}_{x,y} \rVert - \hat{\varepsilon}_1}{\hat{\varepsilon}_2 - \hat{\varepsilon}_1} \right]
 	\end{equation}
 	\begin{equation}
 	\begin{split}
-	    \varepsilon_1=&\varepsilon_{x,y|N_k} +\varepsilon_{v,\theta_h|(M_k)}^{\star},\\ &\varepsilon_2=\varepsilon_1+\Delta(k) \nonumber	    
+	    \hat{\varepsilon}_1=&\hat{\varepsilon}_{x,y|N} +\hat{\varepsilon}_{v,\theta_h|N}^{\star},\\ &\hat{\varepsilon}_2=\hat{\varepsilon}_1+\Delta \nonumber	    
 	\end{split}
 	\end{equation}
+%	\begin{equation}
+%		\Delta(k)=[v(k)]^{\delta_v}\delta
+%	\end{equation}
+%where $[\delta, \delta_v] \in R^{\geq0}$ are chosen values that determine the desired distance between the closest unwanted region to the estimation region as a function of velocity.
 
 
 % INSERT ALGORITHM FOR REPLANNING VELOCITY
@@ -200,26 +258,25 @@ An update of the reference velocity needs to occur when these undesired regions 
 	\State Initial conditions of system: $k=0$,$\bm{x}(0)=\bm{x}_0$
 	\State Set $r_v(0)$ to desired velocity $r_{v_{des}}(k)$
     \While{$1<k\leq\infty$}
-        \State \Longunderstack[l]{ Measure closest distance to undesired \\ region $\|\bm{x}_{r_{\bar{s}}} - \bar{s}_{x,y}\|$}
-        \State Calculate intervals $\varepsilon_1$, $\varepsilon_2$, and $\Delta(k)$ for $N$
-        \If{ $\|\bm{x}_{r_{\bar{s}}} - \bar{s}_{x,y}\| < \varepsilon_2(k)$}
-            \State Solve for suitable $N_{k+1}$
+        \State \Longunderstack[l]{ Calculate $\hat{\bar{\bm{y}}}_{x,y}$ then measure closest distance\\ to undesired region $\|\bm{x}_{r_{\hat{\bar{y}}}} - \hat{\bar{\bm{y}}}_{x,y}\|$.}
+        \State Calculate radii of intervals $\hat{\varepsilon}_1$ and $\hat{\varepsilon}_2$ for $N$.
+        \If{ $\|\bm{x}_{r_{\hat{\bar{y}}}} - \hat{\bar{\bm{y}}}_{x,y}\| < \hat{\varepsilon}_2(k)$}
+            \State Solve for suitable $N$ of next iteration
             \State Update reference for velocity $r_v(k)$
         \Else
-            \If{$\|\bm{x}_{r_{\bar{s}}} - \bar{s}_{x,y}\| < \varepsilon_2(k)$ when $N=1$}
-                \State Solve for a suitable $N_{k+1}$
+            \If{$\|\bm{x}_{r_{\hat{\bar{y}}}} - \hat{\bar{\bm{y}}}_{x,y}\| < \varepsilon_2(k)$ when $N=1$}
+                \State Solve for a suitable $N$
                 \State Update reference for velocity $r_v(k)$
             \Else
                 \If{$r_v(k) \neq r_{v_{des}}$}
                     \State Reference velocity $r_v(k)=r_{v_{des}}$
-                    \State $N_{k+1} = 1$
+                    \State $N = 1$
                 \Else
                     \State Reference velocity $r_v(k) = r_v(k-1)$
-                    \State $N_{k+1} = 1$
+                    \State $N = 1$
                 \EndIf
             \EndIf
         \EndIf
-        \State $N = N_{k+1}$
     \EndWhile
 	\end{algorithmic}
 \end{algorithm}

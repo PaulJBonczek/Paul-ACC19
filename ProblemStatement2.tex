@@ -3,29 +3,15 @@
 \label{sec:problem}
 
 In this work we consider autonomous vehicle operations in cluttered environments under different uncertainties including noise, failures, and cyber-attacks on its sensors. 
-We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment.% while using less desirable sensor with larger noise profiles. 
+We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment. A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{p}_{g_i} \in \bm{P}_g =  \begin{bmatrix} \bm{p}_{g_1},\bm{p}_{g_2},\dots,\bm{p}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-attacks
 
 
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
 % be able to distinguish between dynamical changes and attacks and also adapt the motion planning to safety travel in the environment
 
 
-
-
-% ALOT OF APPROACH CHANGES
-
-% DOME - Some how connect problem 2 to problem 1, 
-% DONE - add the A(k)x+B(k)u
-% DONE - Overall structure needs to go in beginning of approach
-% More defined architecture diagram of detection and adaptive control
-% DONE - Chnage adaptive control, the solution needs to go in the approach
-% DONE - r(k) needs to go into high level motion planning
-% DONE - Make text inside block diagram larger
 % 1st section of adaptive control (approach) talk more about detection
 % What kind of attacks can I detect?
-% DONE - Change underscore problem, place a comma in between subscripts
-% DONE - For adaptive control, we can assume... for assumptions
-% DONE - Define what A and B' are
 
 % Lemmas to show something
 
@@ -39,43 +25,21 @@ The objective is to be able to detect sensor attacks within a dynamically unknow
 we want to find a policy $\mathcal{P}$ at time instant $k$ that:
 \begin{enumerate}
 	\item can differentiate between a malicious sensor attack and changing dynamics or failures. 
-	\item remove the compromised sensor to restore system integrity for future time instances $k+h$. 
+	\item remove the compromised sensor to restore system integrity for all future time instances $k+h$. 
 \end{enumerate}
-Solving this problem will allow us to navigate a vehicle considering system and environmental dynamical changes while preventing an attacker from having an undesirable effect on the system. \NB{rephrase}
+Solving this problem will allow the autonomous vehicle to safely navigate during system and environmental dynamical changes while preventing an attacker from having an undesirable effect on the system. \NB{rephrase}
 \end{problem}
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion:}} 
-A ground vehicle has an objective to navigate to one or more goal $g_i$ where $i=1,2,\dots,N_g$ at the positions $\bm{x}_{g_i} \in \bm{X}_g =  \begin{bmatrix} \bm{x}_{g_1},\bm{x}_{g_2},\dots,\bm{x}_{g_{N_g}} \end{bmatrix}$, while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-atatcks \NB{move above}. When a compromised sensor has been removed from the system (Problem 1), these uncertainties may change to a more undesirable situation. To guarantee vehicle safety, it must be able to avoid any undesired areas (e.g., obstacles, cliffs) while these uncertainties are changing.
+Sensor and dynamical uncertainties lead to errors in estimation, this results in an increased risk of navigating into an undesired region. To guarantee vehicle safety, it must be able to avoid any undesired areas (e.g., obstacles, cliffs) when these uncertainties exist.
 	\begin{equation}
-		\lVert {\bm{x}(k)-\bm{x}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
+		\lVert {\bm{p}(k)-\bm{p}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
-	\begin{equation}
-		\Delta(k)=[v(k)]^{\delta_v}\delta
-	\end{equation}
-where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{x}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\delta$ is a user defined desired distance between the outer most point of the confidence region and an unwanted region, and $N_r$ is the total number of regions. $[\delta, \delta_v] \in R^{\geq0}$ are chosen values that determine the desired distance between the closest unwanted region to the estimation region as a function of velocity \NB{revise as discussed in the meeting}.
+where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\Delta$ is a defined distance between the outer most point of the estimation confidence interval and an undesired region, and $N_r$ is the total number of undesired regions. As a compromised sensor is removed, sensor reconfiguration changes the uncertainty due to sensor noise. Adapting to these changing uncertainties enables the vehicle to be resilient to its alterations.
 
 %A ground vehicle's mission is to safely follow a desired trajectory within an obstacle filled environment. The system will possess a higher estimation uncertainty when less desirable sensors are being used for navigation. All obstacle positions are known beforehand, which makes off-line trajectory planning suitable. We want to find a policy that will guarantee the safety of the vehicle under changing noise levels, such that a vehicle will not collide with any obstacles.
 
 %To guarantee safety from uncertainties and disturbances, a confidence interval approach will be used to estimate the system's position to ensure safe passage through an environment. The system will be able to move freely without constraints at a position far from obstacles, but will have altered capabilities as soon as obstacles come within reach.
-
-
-%	As the noise levels of the uncompromised sensors change, an alteration of the system's motion needs to occur due to changing uncertainties. To maintain safety throughout the environment, velocity and the amount of past sensor data is changed to compensate for these extra uncertainties. To guarantee the safety of the system, confidence intervals will be used, which will adapt over time with the changing parameters. Given the knowledge of the confidence percentage $ \bm{CI} $, sensor noise standard deviation $ \bm{\sigma_p} $, the number of sensor data samples $ \bm{N} $, and the mean of the data samples $ \bm{\bar{x}}_{x,y} $, a confidence interval of a certain percentage can be calculated:
-%	\begin{equation}
-%		\bm{CI}_{x,y|N} = \bm{\bar{x}}_{x,y} + \frac{CI*\bm{\sigma}_p}{\sqrt{\bm{N}}}
-%	\end{equation}
-%this will give an estimation with a specific confidence percentage that the system is within this central positional point and a estimated radius.
-
-
-%NEED TO INCLUDE EQUATION TO SHOW HOW WE ESTIMATED A STATIC CASE BY TRANSLATING THE PAST DATA POINTS RIGHT HERE!
-
-
-%For a more accurate confidence interval, additional uncertainties and information need to be accounted for. Actuator uncertainty and stopping distance for the given dynamical system need to be included. With a known actuator uncertainty $ \bm{\sigma}_a $, velocity measurements $ \bm{v}_{(0:N-1)} $, and sampling rate $ \bm{T}_s $,
-%	\begin{equation}
-%		\bm{E}_{a|N} = \bm{\sigma}_a*\bm{v}_{(0:N-1)}*\bm{T}_s
-%	\end{equation}
-%an additional layer of uncertainty will be added onto $\bm{CI}_{x,y|N}$.
-%Additionally, a distance for the system to stop in time to prevent collision is formulated in (WRITE SECTION). 
-
 	
 \end{problem}
 

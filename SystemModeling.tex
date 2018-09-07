@@ -8,26 +8,66 @@ In this section, the system dynamical, noise, and disturbance models used for co
 
 \subsection{Vehicle Model}
 To attain a dynamical model of the ground vehicle, a generalized differential-drive model may be used \cite{nutaro2011building}. The vehicle's position is described by its $x$ and $y$ coordinates, $\theta$ represents the vehicle's heading angle measured from the $x$ axis, and $v$ is the speed in the direction in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip, the continuous time dynamical model of the vehicle is
+%    \begin{align}
+%        \dot{v}=\begin{cases}
+%            \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
+%            \frac{1}{m}(F_l+F_r-B_rv), & \text{if not turning},
+%        \end{cases} \\
+%        \dot{\omega}=\begin{cases}
+%            \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega), &\text{if turning},\\
+%            0, & \text{if not turning}, 
+%        \end{cases}
+%	\end{align}
+%	\begin{align}
+%        \dot{\theta_h}=\omega, \dot{x}=v\sin(\theta_h), \dot{y}=v\cos(\theta_h).
+%	\end{align}
+
+%    \begin{align}
+%        \dot{v}=\begin{cases}
+%            \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
+%            \frac{1}{m}(F_l+F_r-B_rv), & \text{if not turning},
+%        \end{cases} \\
+%        \dot{\omega}=\begin{cases}
+%            \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega), &\text{if turning},\\
+%            0, & \text{if not turning}, 
+%        \end{cases}
+%	\end{align}
+%	\begin{align}
+%        \dot{\theta_h}=\omega, \dot{x}=v\sin(\theta_h), \dot{y}=v\cos(\theta_h).
+%	\end{align}
+
+	\begin{equation}
+    \begin{split}
+    \label{eqn:plant}
+    \dot{v}&=\left\{
+    \begin{array}{ll}
+    \frac{1}{m}(F_l+F_r-(B_s+B_r)v, & \hbox{if } turning\\
+    \frac{1}{m}(F_l+F_r-B_rv, & \hbox{if } not~turning
+    \end{array}
+    \right.\\
+    \dot{\omega}&=\left\{
+    \begin{array}{ll}
+    \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega, & \hbox{if } turning\\
+    0, & \hbox{if } not~turning
+    \end{array}
+    \right.\\
+    \end{split}
+    \end{equation}
     \begin{align}
-        \dot{v}=\begin{cases}
-            \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
-            \frac{1}{m}(F_l+F_r-B_rv), & \text{if not turning},
-        \end{cases}
-    \end{align}
-    \begin{align}
-        \dot{\omega}=\begin{cases}
-            \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega), &\text{if turning},\\
-            0, & \text{if not turning},
-        \end{cases}
+     \dot{\theta_h}=\omega,\text{ } \dot{x}=v\sin(\theta_h),\text{ } \dot{y}=v\cos(\theta_h).
 	\end{align}
-	\begin{align}
-        \dot{\theta_h}=\omega, \dot{x}=v\sin(\theta_h), \dot{y}=v\cos(\theta_h).
-	\end{align}
-This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. This changing dynamic model can be described in the discretized state space form:
+This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be expressed in a continuous state space form:
     \begin{equation}
-	\bm{x}(k+1) = \bm{A}(k)\bm{x}(k) + \bm{B}(k)\bm{u}(k)
+	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
-\NB{add more details about how to go from the continuous model to the state space representation}
+where,
+    \begin{equation}
+	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0 & 0 \\ 0 & 1 & sin(\theta_h) & 0 & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 \\  0 & 0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
+	\end{equation}
+	\begin{equation}
+	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0  \\ 0 & 0 \\  0 & \frac{B}{2I_z} \end{bmatrix}, \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \\ \ddot{\theta_h} \end{bmatrix}, \bm{u}(t)=\begin{bmatrix} F_l+F_r \\ F_l-F_r \end{bmatrix} \nonumber
+	\end{equation}
+	
  \subsection{Noise and Disturbance Model}
 When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and a changing ground surface. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}_a(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model can be in the form:
     \begin{equation}
@@ -38,19 +78,32 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 	\end{equation}
 
 \subsection{Adaptive Control Model}
-\NB{In this work we leverage the ....adaptive control approach presented in ... in which the objective is to compute an input to follow a reference model given changing dynamics... Here we summarize the model which will be used later in the Approach Section.... to adapt the system under uncertainties and to detect attacks and estimate the state of the system}The control algorithm used is characteristic polynomial adaptive control \NB{add citation and italize the technique} based on the following discrete-time state space model with known dimensions of $\bm{A}$ and $\bm{B}$. The dynamically changing model is linearized by choosing initially known state space parameters for a specific operating point:
+In this work we leverage the \textit{characteristic model based all-coefficient adaptive control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics. Here we summarize the model which will be used later in Section  \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The dynamically changing model is linearized to a defined set point by the initially known parameters within the $A$ and $B$ matrices:
 	\begin{equation}
-	\bm{x}(k+1) = \bm{A}\bm{x}(k) + \bm{B}\bm{u}(k)
+	\dot{\bm{x}}(t) = \bm{A}\bm{x}(t) + \bm{B}\bm{u}(t)
 	\end{equation}
-with its discrete time transfer function:
-	\begin{equation}
-        G(z) = \frac{y(z)}{u(z)} = \bm{C}(z\bm{I}-\bm{A})^{-1}\bm{B} \nonumber \\
-    \end{equation}
+Since the adaptive control algorithm used is based on a discrete-time state space model, the model needs to be discritized. To convert from continuous to discrete time, the following equations are calculated for $A$ and $B$ with a predetermined sampling time $T_s$:
     \begin{equation}
-	= \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n}
+	\bm{A}_d = e^{\bm{A}T_s}
 	\end{equation}
-where $b_0\ne{0}$, $d>0$, and $n-d-m\geq{0}$\\
-Using an ARMA \NB{spell it out} model and defining the operators $q^{-1}$ (delay) and q (advance),
+    \begin{equation}
+	\bm{B}_d = \int_0^{T_s} e^{\bm{A}\lambda}d\lambda \bm{B}
+	\end{equation}
+
+The linearized discrete time state space model is defined as,
+    \begin{equation}
+	\bm{x}(k+1) = \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k)
+	\end{equation}
+
+with a discrete-time transfer function:
+	\begin{align}
+        G(z) & = \frac{y(z)}{u(z)} = \bm{C}(z\bm{I}-\bm{A}_d)^{-1}\bm{B}_d  \\
+	& = \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n} \nonumber
+	\end{align}
+	\begin{equation}
+	\text{where } b_0\ne{0}, d>0, \text{ and } n-d-m\geq{0} \nonumber
+	\end{equation}
+Using an Autoregressive Moving Average (ARMA) model and defining the operators $q^{-1}$ (delay) and $q$ (advance),
 	\begin{equation}
 	q^{-1}x(k) = x(k-1), qx(k) = x(k+1)
 	\end{equation}
@@ -64,7 +117,7 @@ where:
 	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n}) \nonumber
 	\end{equation}
 	\begin{equation}
-	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m})u(k) \nonumber
+	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m}) \nonumber
 	\end{equation}
 to form the revised system expression as:
 	\begin{equation}
