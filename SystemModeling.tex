@@ -1,13 +1,13 @@
 \begin{section}{System Models and Architecture}
 	
 \label{sec:modeling}
-In this section, the system dynamical, noise, and disturbance models used for control and motion are described, as well as the adaptive control scheme and confidence interval model.
+In this section, the system dynamical, noise, and disturbance models used for control and motion are described. We also introduce the adaptive control model that will be used later on in our approach \ref{sec: }.
 
 % Bold letters only for vectors
 % Approach
 
 \subsection{Vehicle Model}
-To attain a dynamical model of the ground vehicle, a generalized differential-drive model may be used \cite{nutaro2011building}. The vehicle's position is described by its $x$ and $y$ coordinates, $\theta$ represents the vehicle's heading angle measured from the $x$ axis, and $v$ is the speed in the direction in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip, the continuous time dynamical model of the vehicle is
+\NB{In this work we consider a differential...whose dynamics can be represented as: ...with}To attain a dynamical model of the ground vehicle, a generalized differential-drive model may be used \cite{nutaro2011building}. The vehicle's position is described by its $x$ and $y$ coordinates, $\theta$ represents the vehicle's heading angle measured from the $x$ axis, and $v$ is the speed in the direction in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip, the continuous time dynamical model of the vehicle is
 %    \begin{align}
 %        \dot{v}=\begin{cases}
 %            \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
@@ -56,7 +56,7 @@ To attain a dynamical model of the ground vehicle, a generalized differential-dr
     \begin{align}
      \dot{\theta_h}=\omega,\text{ } \dot{x}=v\sin(\theta_h),\text{ } \dot{y}=v\cos(\theta_h).
 	\end{align}
-This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be expressed in a continuous state space form:
+This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. \NB{mention linearization around an operating point before showing the state space representation}The above system model may be expressed in a continuous state space form:
     \begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
@@ -67,7 +67,7 @@ where,
 	\begin{equation}
 	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0  \\ 0 & 0 \\  0 & \frac{B}{2I_z} \end{bmatrix}, \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \\ \ddot{\theta_h} \end{bmatrix}, \bm{u}(t)=\begin{bmatrix} F_l+F_r \\ F_l-F_r \end{bmatrix} \nonumber
 	\end{equation}
-The state vector consists of $x$ and $y$ position coordinates, forward velocity $v$, heading angle position $\theta_h$, and the heading angle's velocity and acceleration $\dot{\theta_h}$ and $\ddot{\theta_h}$.
+The state vector consists of $x$ and $y$ position coordinates, forward velocity $v$, heading angle position $\theta_h$, and the heading angle's velocity and acceleration $\dot{\theta}_h$ and $\ddot{\theta_h}$.
 	
 
 
