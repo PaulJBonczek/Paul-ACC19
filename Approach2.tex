@@ -151,7 +151,11 @@ In this work, the statistical technique of confidence intervals is the foundatio
      \label{Confidence_interval}
 		C_I = \bar{x} + z^{*}\frac{\sigma}{\sqrt{N}}
 	\end{equation}
+<<<<<<< HEAD
 Assuming the knowledge of the confidence percentage $z^{*}$, population standard deviation $ \sigma $, the number of sensor data samples $N$, and the mean of the sensor data samples $ \bar{x} $, a confidence interval of a chosen percentage can be calculated \NB{re-read this section. This sentence should be moved above or changed.}. As the number of samples grow, the radius of the confidence interval shrinks giving a better estimation of the true mean with the same confidence level.
+=======
+Assuming the knowledge of the confidence percentage $z^{*}$, population standard deviation $ \sigma $, the number of sensor data samples $N \in \N$, and the mean of the sensor data samples $ \bar{x} $, a confidence interval of a chosen percentage can be calculated. As the $N$ number of samples grow, the radius of the confidence interval shrinks giving a better estimation of the true mean with the same confidence level.
+>>>>>>> origin/master
 % The region $\varepsilon_{x,y|N}$ is described as having the center point at $\bar{y}_{x,y}$ and radius of,
 
 For this paper \NB{what you mean for this paper?}, this method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation, regardless if it's raw or filtered data, has the form $\mathcal{N}(0,\sigma_p)$ where the data population standard deviation $\sigma_p$ is known for any sensor combination. Using (\ref{Confidence_interval}) \NB{we need to talk about eqref and ref in latex} we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety:
