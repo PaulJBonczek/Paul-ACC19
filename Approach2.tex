@@ -4,7 +4,7 @@
 In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion to guarantee vehicle safety to solve Problems \ref{problem1} and \ref{problem2}. We follow the architecture in the block diagrams of Fig. \ref{fig:system_arch} and \ref{fig:det_arch}. 
 
 
-
+(FIX THIS DIAGRAM, MAKE IT MORE UNDERSTANDABLE).
 \begin{figure}[ht!]
 \vspace{1pt}
 \centering
@@ -106,7 +106,7 @@ This states the system's output $y(k)$ will asymptotically converge to the track
 	    \end{align}
 	\end{enumerate}
 
-Each system output measurement $\bm{y}_i$ where $i=1,2,\dots,N_y$ and $N_y$ is the total number of outputs to be measured. Every $\bm{y}_i$ output measurement has $j$ number of sensors capable of provided data, represented in the form $\bm{y}_{i,j}$. Each of the sensor measurements $\bm{y}_{i,j}$ providing data of each output experience the same convergence behavior to the tracking signal when the sensors are uncompromised. This remains true with a changing reference signal, changing system dynamics, or bounded disturbances. 
+Each system output measurement $\bm{y}_i$ where $i=1,2,\dots,N_y$ and $N_y \in \N$ is the total number of outputs to be measured. Every $\bm{y}_i$ output measurement has $j$ number of sensors capable of provided data, represented in the form $\bm{y}_{i,j}$. Each of the sensor measurements $\bm{y}_{i,j}$ providing data of each output experience the same convergence behavior to the tracking signal when the sensors are uncompromised. This remains true with a changing reference signal, changing system dynamics, or bounded disturbances. 
 With the assurances of (\ref{assumtions_ensure}), it is true that all uncompromised outputs track its given reference signal via the reference model.
 \begin{equation}
 \label{multiple_output_tracking}
@@ -128,7 +128,7 @@ where $j$ and $j^*$ refer to subsystems generating an input to control the same 
 \label{fig:det_arch}
 \end{figure}
 
-When an attacker maliciously falsifies a sensor signal, the $j^{th}$ output sensor measurement of the $i^{th}$ output state no longer follows the converge rate compared to the uncompromised sensor measurements. As the $j^{th}$ sensor of the $i^{th}$ output no longer follows convergence characteristics, it is removed from the set of uncompromised output sensor measurements $\bm{Y}$ to ensure proper control and estimation for navigation safety. The new set of output measurements is defined as $\bm{Y}=\bm{Y}_0-\bm{Y}_a$ where $\bm{Y}_0$ is the initial uncompromised output measurement set and $\bm{Y}_a$ is the set of attacked output sensors that have been removed. Effective detection is constrained to when $\leq \frac{N_i}{2}$ of sensors are attacked, where $N_i$ is the total number of available sensors for the $i^{th}$ output.
+When an attacker maliciously falsifies a sensor signal, the $j^{th}$ output sensor measurement of the $i^{th}$ output state no longer follows the converge rate compared to the uncompromised sensor measurements. As the $j^{th}$ sensor of the $i^{th}$ output no longer follows convergence characteristics, it is removed from the set of uncompromised output sensor measurements $\bm{Y}$ to ensure proper control and estimation for navigation safety. The new set of output measurements is defined as $\bm{Y}=\bm{Y}_0-\bm{Y}_a$ where $\bm{Y}_0$ is the initial uncompromised output measurement set and $\bm{Y}_a$ is the set of attacked output sensors that have been removed. Effective detection is constrained to when less than $\frac{N_i}{2}$ of sensors are attacked, where $N_i \in \N$ is the total number of available sensors for the $i^{th}$ output.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

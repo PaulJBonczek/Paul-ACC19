@@ -22,20 +22,6 @@ In this work we consider a differential-drive ground vehicle model \cite{nutaro2
 %        \dot{\theta_h}=\omega, \dot{x}=v\sin(\theta_h), \dot{y}=v\cos(\theta_h).
 %	\end{align}
 
-%    \begin{align}
-%        \dot{v}=\begin{cases}
-%            \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
-%            \frac{1}{m}(F_l+F_r-B_rv), & \text{if not turning},
-%        \end{cases} \\
-%        \dot{\omega}=\begin{cases}
-%            \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega), &\text{if turning},\\
-%            0, & \text{if not turning}, 
-%        \end{cases}
-%	\end{align}
-%	\begin{align}
-%        \dot{\theta_h}=\omega, \dot{x}=v\sin(\theta_h), \dot{y}=v\cos(\theta_h).
-%	\end{align}
-
 	\begin{equation}
     \begin{split}
     \label{eqn:plant}
@@ -58,40 +44,17 @@ In this work we consider a differential-drive ground vehicle model \cite{nutaro2
 	\end{align}
 	
 with position described by $x$ and $y$ coordinates, $\theta_h$ represents the vehicle's heading angle measured from the positive $x$ axis, and $v$ is the speed in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip.
-This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. \NB{mention linearization around an operating point before showing the state space representation}The above system model may be expressed in a continuous state space form:
+This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be expressed in a continuous state space form:
     \begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
-	
-(THE S.S. EQUATIONS BELOW WILL BE MOVED TO THE SIMULATION RESULTS SECTION)
-where,
-    \begin{equation}
-	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0 \\ 0 & 1 & sin(\theta_h) & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 \\  0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
-	\end{equation}
-	\begin{equation}
-	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0 \\  0 & \frac{B}{2I_z} \end{bmatrix}, \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)=\begin{bmatrix} F_l+F_r \\ F_l-F_r \end{bmatrix} \nonumber
-	\end{equation}
-The state vector consists of $x$ and $y$ position coordinates, forward velocity $v$, heading angle position and velocity are $\theta_h$ and $\dot{\theta}_h$.
-	
-
-
 
 \subsection{Adaptive Control Model}
-In this work we leverage the \textit{characteristic model based all-coefficient adaptive control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics. Here we summarize the model which will be used later in Section  \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The dynamically changing model is linearized to a defined set point from initially known parameters within the $\bm{A}$ and $\bm{B}$ matrices:
+In this work we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics. Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The dynamically changing model is linearized to a defined set point from initially known parameters within the $\bm{A}$ and $\bm{B}$ matrices:
 	\begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}\bm{x}(t) + \bm{B}\bm{u}(t)
 	\end{equation}
-Since the adaptive control algorithm used is based on a discrete-time state space model, the model needs to be discritized. To convert from continuous to discrete time, the following equations are calculated for $\bm{A}$ and $\bm{B}$ with a predetermined sampling time $T_s$:
-
-( THESE WILL BE REMOVED)
-    \begin{equation}
-	\bm{A}_d = e^{\bm{A}T_s}
-	\end{equation}
-    \begin{equation}
-	\bm{B}_d = \int_0^{T_s} e^{\bm{A}\lambda}d\lambda \bm{B}
-	\end{equation}
-
-The linearized discrete time state space model is defined as,
+Since the adaptive control algorithm used is based on a discrete-time state space model, the continuous-time model needs to be discritized. With a suitable sampling time $t_s$, the linearized discrete-time model is written as,
     \begin{equation}
 	\bm{x}(k+1) = \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k)
 	\end{equation}
