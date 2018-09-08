@@ -4,13 +4,7 @@
 
 % Need to label states of the state vector in the modeling section [x y v \theta]
 
-The case study investigated in this paper is with a ground vehicle experiencing the effects of sensor and process noise, dynamical changes, while also succumbing to wind disturbances and sensor attacks. The vehicle will be traveling along a pre-planned trajectory with assumed to be known obstacles throughout the environment. We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 22,10 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. The objective for the vehicle is to reach a goal point while following a desired trajectory with obstacles of varying distances from the path. It is assumed the maximum velocity of the vehicle is 3.0m/s and the desired reference velocity it wants to maintain is 2.5m/s. For simulations, we used the continuous-time differential-drive state space model in the form:
-    \begin{equation}
-	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0 \\ 0 & 1 & sin(\theta_h) & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 \\  0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
-	\end{equation}
-	\begin{equation}
-	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0 \\  0 & \frac{B}{2I_z} \end{bmatrix}, \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)=\begin{bmatrix} F_l+F_r \\ F_l-F_r \end{bmatrix} \nonumber
-	\end{equation}
+The case study investigated in this paper is with a ground vehicle experiencing the effects of sensor and process noise, dynamical changes, while also succumbing to wind disturbances and sensor attacks. The vehicle will be traveling along a pre-planned trajectory with assumed to be known obstacles throughout the environment. We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 22,10 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. The objective for the vehicle is to reach a goal point while following a desired trajectory with obstacles of varying distances from the path. It is assumed the maximum velocity of the vehicle is 3.0m/s and the desired reference velocity it wants to maintain is 2.5m/s. For simulations...
 
 
 
