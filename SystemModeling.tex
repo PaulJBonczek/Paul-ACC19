@@ -1,13 +1,13 @@
 \begin{section}{System Models and Architecture}
 	
 \label{sec:modeling}
-In this section, the system dynamical, noise, and disturbance models used for control and motion are described. We also introduce the adaptive control model that will be used later on in our approach \ref{sec: }.
+In this section, the system dynamical, noise, and disturbance models used for control and motion are described. We also introduce the adaptive control model that will be used later on in our approach \ref{sec:Res_adapt_control}.
 
 % Bold letters only for vectors
 % Approach
 
 \subsection{Vehicle Model}
-\NB{In this work we consider a differential...whose dynamics can be represented as: ...with}To attain a dynamical model of the ground vehicle, a generalized differential-drive model may be used \cite{nutaro2011building}. The vehicle's position is described by its $x$ and $y$ coordinates, $\theta$ represents the vehicle's heading angle measured from the $x$ axis, and $v$ is the speed in the direction in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip, the continuous time dynamical model of the vehicle is
+In this work we consider a differential-drive ground vehicle model \cite{nutaro2011building} whose continuous-time dynamics can be described as:
 %    \begin{align}
 %        \dot{v}=\begin{cases}
 %            \frac{1}{m}(F_l+F_r-(B_s+B_r)v), & \text{if turning},\\
@@ -56,18 +56,22 @@ In this section, the system dynamical, noise, and disturbance models used for co
     \begin{align}
      \dot{\theta_h}=\omega,\text{ } \dot{x}=v\sin(\theta_h),\text{ } \dot{y}=v\cos(\theta_h).
 	\end{align}
+	
+with position described by $x$ and $y$ coordinates, $\theta_h$ represents the vehicle's heading angle measured from the positive $x$ axis, and $v$ is the speed in this direction. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. If the assumption is that the wheels do not slip.
 This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the vehicle's electromotors and are affected by the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. \NB{mention linearization around an operating point before showing the state space representation}The above system model may be expressed in a continuous state space form:
     \begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
+	
+(THE S.S. EQUATIONS BELOW WILL BE MOVED TO THE SIMULATION RESULTS SECTION)
 where,
     \begin{equation}
-	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0 & 0 \\ 0 & 1 & sin(\theta_h) & 0 & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 0 & 0 & 1 \\  0 & 0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
+	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0 \\ 0 & 1 & sin(\theta_h) & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 \\  0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
 	\end{equation}
 	\begin{equation}
-	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0  \\ 0 & 0 \\  0 & \frac{B}{2I_z} \end{bmatrix}, \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \\ \ddot{\theta_h} \end{bmatrix}, \bm{u}(t)=\begin{bmatrix} F_l+F_r \\ F_l-F_r \end{bmatrix} \nonumber
+	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0 \\  0 & \frac{B}{2I_z} \end{bmatrix}, \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)=\begin{bmatrix} F_l+F_r \\ F_l-F_r \end{bmatrix} \nonumber
 	\end{equation}
-The state vector consists of $x$ and $y$ position coordinates, forward velocity $v$, heading angle position $\theta_h$, and the heading angle's velocity and acceleration $\dot{\theta}_h$ and $\ddot{\theta_h}$.
+The state vector consists of $x$ and $y$ position coordinates, forward velocity $v$, heading angle position and velocity are $\theta_h$ and $\dot{\theta}_h$.
 	
 
 
@@ -78,6 +82,8 @@ In this work we leverage the \textit{characteristic model based all-coefficient 
 	\dot{\bm{x}}(t) = \bm{A}\bm{x}(t) + \bm{B}\bm{u}(t)
 	\end{equation}
 Since the adaptive control algorithm used is based on a discrete-time state space model, the model needs to be discritized. To convert from continuous to discrete time, the following equations are calculated for $\bm{A}$ and $\bm{B}$ with a predetermined sampling time $T_s$:
+
+( THESE WILL BE REMOVED)
     \begin{equation}
 	\bm{A}_d = e^{\bm{A}T_s}
 	\end{equation}

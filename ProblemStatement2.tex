@@ -3,7 +3,7 @@
 \label{sec:problem}
 
 In this work we consider autonomous vehicle operations in cluttered environments under different uncertainties including noise, failures, and cyber-attacks on its sensors. 
-We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment. Specifically, a ground vehicle has an objective to navigate to one or more goals $g_i$ with $ i = 1, 2, \dots, N_g$ positioned at $\bm{p}_{g_i} \in \bm{P}_g =  \begin{bmatrix} \bm{p}_{g_1},\bm{p}_{g_2},\dots,\bm{p}_{g_{N_g}} \end{bmatrix}$, \NB{rephrase and add $p=\left[x,y\right]$} while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-attacks
+We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment. Specifically, a ground vehicle has an objective to navigate to one or more goals $g_i$ with $ i = \{1, 2, \dots, N_g\}$, $N_g \in \N$ positioned at $\bm{p}_{g_i}={\begin{bmatrix} x,y \end{bmatrix}}^T$, while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-attacks.
 
 
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
@@ -25,21 +25,17 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 we want to find a policy $\mathcal{P}$ to:
 \begin{enumerate}
 	\item differentiate between a malicious sensor attacks and changing dynamics or failures. 
-	\item remove the compromised sensors and restore system integrity.\NB{need to think about this} %for all future time instances $k+h$. 
+	\item remove the compromised sensors to restore system integrity. %for all future time instances $k+h$. 
 \end{enumerate}
-	all while adaptive system's control performance.
-Solving this problem will allow the autonomous vehicle to safely navigate during system and environmental dynamical changes while preventing an attacker from having an undesirable effect on the system. \NB{rephrase ..system system}
+all while adaptive system's control performance. Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. We remove compromised sensors to solve this problem, however the system was designed to use all sensors. Thus we need to replan to consider that we have fewer sensors.
 \end{problem}
-
-\NB{Solving for Problem 1 we remove compromised sensors, however the system was designed to use all sensors. Thus we need to replan to consider that we have fewer sensors.}
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion:}} 
-Given....find a policy....to guarantee safety ....
-Sensor and dynamical uncertainties lead to errors in estimation, this results in an increased risk of navigating into an undesired region. To guarantee vehicle safety, it must be able to avoid any undesired areas (e.g., obstacles, cliffs) when these uncertainties exist.
+Given a smaller set of sensors than originally designed find a policy to guarantee safety such that,
 	\begin{equation}
 		\lVert {\bm{p}(k)-\bm{p}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
-where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\Delta$ is a defined distance between the outer most point of the estimation confidence interval and an undesired region, and $N_r \in \N$ is the total number of undesired regions. As a compromised sensor is removed, sensor reconfiguration changes the uncertainty due to sensor noise. Adapting to these changing uncertainties enables the vehicle to be resilient to its alterations.
+where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\Delta(k)$ is a defined distance between the outer most point of the estimation confidence interval and an undesired region, and $N_r \in \N$ is the total number of undesired regions. The sensor's uncertainties lead to errors in estimation, which results in an increased risk of navigating into an undesired region. As a compromised sensor is removed, sensor reconfiguration changes the uncertainty due to sensor noise. To guarantee vehicle safety, it must be able to avoid any undesired areas when these uncertainties exist. Adapting to these changing uncertainties enables the vehicle to be resilient to its alterations.
 
 %A ground vehicle's mission is to safely follow a desired trajectory within an obstacle filled environment. The system will possess a higher estimation uncertainty when less desirable sensors are being used for navigation. All obstacle positions are known beforehand, which makes off-line trajectory planning suitable. We want to find a policy that will guarantee the safety of the vehicle under changing noise levels, such that a vehicle will not collide with any obstacles.
 
