@@ -14,7 +14,7 @@ We are interested in finding a strategy to detect sensor attacks in an unknown, 
 % What kind of attacks can I detect?
 
 % Lemmas to show something
-Our first objective is to detect sensor attacks within a dynamically unknown system and then removing any compromised sensor to maintain proper control of the vehicle. Formally:
+Our first objective is to detect sensor attacks within a dynamically unknown system and then remove any compromised sensor to maintain stable and safe control of the vehicle through the remaining of its mission. Formally:
 
 \begin{problem} 
 \label{problem1} {\textbf{Attack Detection and Sensor Reconfiguration:}} 
@@ -24,13 +24,16 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 	\end{equation}
 we want to find a policy $\mathcal{P}$ to:
 \begin{enumerate}
-	\item differentiate between a malicious sensor attacks and changing dynamics or failures. 
+	\item differentiate between malicious sensor attacks and changing dynamics or failures; 
 	\item remove the compromised sensors to restore system integrity. %for all future time instances $k+h$. 
 \end{enumerate}
-all while adaptive system's control performance. Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. We remove compromised sensors to solve this problem, however the system was designed to use all sensors. Thus we need to replan to consider that we have fewer sensors.
+all while adaptive system's control performance. Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. Solving Problem 1 will remove the compromised sensors, however leaving the system with fewer sensors as designed. 
+% will We remove compromised sensors to solve this problem, however the system was designed to use all sensors. 
+Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
+% needs to be taken into account during replanning. Thus we need to replan to consider that we have fewer sensors.
 \end{problem}
 	
-\begin{problem} \label{problem2} {\textbf{Adaptive Motion:}} 
+\begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}} \NB{NO - REWRITE THE FOLLOWING PROBLEM}
 Given a smaller set of sensors than originally designed find a policy to guarantee safety such that,
 	\begin{equation}
 		\lVert {\bm{p}(k)-\bm{p}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
