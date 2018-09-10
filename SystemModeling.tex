@@ -47,27 +47,41 @@ in which $x$ and $y$ coordinates represent position, $\theta_h$ represents the v
 % angle measured from the positive $x$ axis, 
  and $v$ is the speed in this direction of motion. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. 
 % If the assumption is that the wheels do not slip.
-This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in two separate continuous-time state space systems, the first is for the velocity model:
+This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in a continuous-time state space form:
+%    \begin{equation}
+%	\bm{A}_v(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) \\ 0 & 1 & sin(\theta_h) \\ 0 & 0 & -(B_s+B_r) \end{bmatrix},
+%	\bm{B}_v(t)=\begin{bmatrix} 0 \\ 0 \\ \frac{1}{m} \end{bmatrix}, \nonumber
+%	\end{equation}
+%	\begin{equation}
+%     \bm{x}_v(t)=\begin{bmatrix} x \\ y \\ v \end{bmatrix}, \bm{u}_v(t)= F_l+F_r 
+%	\end{equation}
+%The angle model for steering is written as:
+%	\begin{equation}
+%	\bm{A}_{\theta}(t)=\begin{bmatrix} 0 & 1 \\ 0 & -B_l \end{bmatrix} \nonumber
+%	\bm{B}_{\theta}(t)=\begin{bmatrix} 0 \\ \frac{B}{2I_z} \end{bmatrix},
+%	\end{equation}
+%    \begin{equation}
+%     \bm{x}_{\theta}(t)=\begin{bmatrix} \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}_{\theta}(t)=F_l-F_r 
+%	\end{equation}
+%For either system, a general state space model is written in the form,
+%    \begin{equation}
+%	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
+%	\end{equation}
+
+
     \begin{equation}
-	\bm{A}_v(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) \\ 0 & 1 & sin(\theta_h) \\ 0 & 0 & -(B_s+B_r) \end{bmatrix},
-	\bm{B}_v(t)=\begin{bmatrix} 0 \\ 0 \\ \frac{1}{m} \end{bmatrix}, \nonumber
+	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0\\ 0 & 1 & sin(\theta_h) & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
 	\end{equation}
 	\begin{equation}
-     \bm{x}_v(t)=\begin{bmatrix} x \\ y \\ v \end{bmatrix}, \bm{u}_v(t)= F_l+F_r 
+	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0 \\ 0 & \frac{B}{2I_z} \end{bmatrix}, 
+     \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)= \begin{bmatrix} F_l+F_r \\ F_l-F_r  \end{bmatrix} 
 	\end{equation}
-The angle model for steering is written as:
-	\begin{equation}
-	\bm{A}_{\theta}(t)=\begin{bmatrix} 0 & 1 \\ 0 & -B_l \end{bmatrix} \nonumber
-	\bm{B}_{\theta}(t)=\begin{bmatrix} 0 \\ \frac{B}{2I_z} \end{bmatrix},
-	\end{equation}
-    \begin{equation}
-     \bm{x}_{\theta}(t)=\begin{bmatrix} \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}_{\theta}(t)=F_l-F_r 
-	\end{equation}
-For either system, a general state space model is written in the form,
+
+For the state space system, a general model is written in the form,
     \begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
-with $\bm{A}(t) \in R^{p\times p}$, $\bm{B}(t) \in R^{p}$, $\bm{x}(t) \in R^{p}$.
+with the state matrix $\bm{A}(t) \in R^{p\times p}$, the input matrix $\bm{B}(t) \in R^{p\times m}$, state vector $\bm{x}(t) \in R^{p}$, and system input $\bm{u}(t) \in R^{m}$.
 
 
 \subsection{Adaptive Control Model}
@@ -97,24 +111,26 @@ Using an Autoregressive Moving Average (ARMA) model and defining the operators $
 	\end{equation}
 the system (\ref{eq:transfer_function}) is now expressed as:
     \begin{align}
+    \label{ARMA_equation}
 	(1+&a_1q^{-1}+...+a_nq^{-n})y(k) \nonumber \\
 	&=q^{-d}(b_0+b_1q^{-1}+...+b_mq^{-m})u(k)
 	\end{align}
 Now, by defining 
 %where:
 	\begin{equation}
-	\label{ARMA_equation}
 	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n}) \nonumber
 	\end{equation}
 	\begin{equation}
 	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m}) \nonumber
 	\end{equation}
-we can revise (\ref{ARMA_equation}) to the system expressed as:
+we can revise \eqref{ARMA_equation} to the system expressed as:
 	\begin{equation}
+	\label{eq:ARMA_equation_revise}
 	A(q^{-1})y(k)=q^{-d}B^{'}(q^{-1})u(k)
 	\end{equation}
-We want to design an input signal $u(k)$ that ensures our system's output $y(k)$ tracks $y^*(k)$ from the reference model, with a given input reference signal $(k)$. This reference model is expressed as,
+We want to design an input signal $u(k)$ that ensures our system's output $y(k)$ tracks $y^*(k)$ from the reference model, with a given input reference signal $r(k)$. This reference model is expressed as,
 	\begin{equation}
+	\label{eq:reference model}
 	E(q^{-1})y^*(k+d)=q^{-d}gH(q^{-1})r(k)
 	\end{equation}
 	
@@ -132,8 +148,6 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}_a(k)
 	\end{equation}
-	
-	\NB{what is $\bm{y}$ and $\bm{C}$? What's their dimensions.}
-
+The vector $y(k) \in R^{S}$ is described as the sensor measurement vector of $S$ sensors and the output matrix is defined as $C \in R^{S\times n}$.  
 
 \end{section}
