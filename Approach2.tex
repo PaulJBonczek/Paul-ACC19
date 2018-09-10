@@ -13,13 +13,88 @@ In this section we describe the framework for detection of sensor attacks for sy
 
 \subsection{Resilient Adaptive Control}
 \label{sec:Res_adapt_control}
-The purpose of the model reference adaptive control (MRAC) is to maintain a desired control performance when unknown dynamical changes or disturbances occur. Estimation of the true system characteristic model's coefficients give us this desired performance. First, we want to build the MRAC to calculate an input $u(k)$ for the system to track a signal from a reference model, which will be used later used in the detection technique. For designing the adaptive controller, the following assumptions need to be true:
+
+A Resilient Adaptive Controller will allow the system to detect sensor attacks while maintaining control performance as dynamical and disturbance uncertainties occur. To maintain this control performance, a Model Reference Adaptive Controller is used. First, we want to ensure adequate information of the system is known in order to design the resilient adaptive controller, the following assumptions need to be true:
 	\begin{enumerate}[leftmargin=4\parindent]
 	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^m$ are within $|z|<1$. 
 	\item[$A2)$] $n$ and $m$ are known. 
 	\item[$A3)$] the system delay $d$ is known.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $n$, $m$, and $d$ are the dimensions of \eqref{eq:transfer_function}.
+The zeros $z$ of the system are within the discrete $z-plane$ while $n$, $m$, and $d$ are the dimensions of \eqref{eq:transfer_function}. For detection of sensor attacks in dynamically changing or unknown systems, the model reference adaptive control is an effective solution to the problem. We can utilize many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive}:
+	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
+	\label{assumtions_ensure}
+	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
+	\item[$T2)$] $\lim_{k\to\infty}(y(k)-y^*(k))=0$
+	\label{Truth2}
+	\item[$T3)$] $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
+	\end{enumerate}
+	
+	
+
+(WHERE I'M CURRENTLY AT WITH CORRECTIONS)
+
+
+To calculate the desired input $u(k)$ to properly control the vehicle, sensor measurements need to be uncompromised. 
+This means that the system's output $y(k)$ will asymptotically converge to the tracking signal $y^*(k)$ from the reference model in a finite amount of time. Properties of the modified projection algorithm \eqref{eq:Modified_Proj_Algorithm} include:
+    \begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
+	\item every iteration improves estimation:
+	    \begin{align}
+	        \|\bm{\theta}(k)-\bm{\theta}_0\|\leq\|\bm{\theta}(k-1)-\bm{\theta}_0\|, k\geq1 \nonumber
+	    \end{align}
+	\item parameter variation converges to zero:
+	    \begin{align}
+	        \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-1))=0 \nonumber
+	    \end{align}
+	\end{enumerate}
+	\begin{align}
+	   \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-N))=0, \text{any finite } N>0 \nonumber
+	\end{align}
+
+On our vehicle, sensor redundancy is utilized for the system to be resilient against sensor attacks. Each sensor output measurement $y_i$ where $i=1,2,\dots,M$ with $M \in \N$ as the total number of sensor measurements. Each of the output sensor measurements $y_i$, when uncompromised, have convergence (T2) towards their desired tracking signal $y_i^*(k)$ at the rate determined by the reference model. 
+    \begin{equation}
+    \label{multiple_output_tracking}
+    \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0, \text{ }\forall i
+    \end{equation}
+This remains true with a changing reference signal $r_i(k)$, changing dynamics, or bounded disturbances. 
+
+\begin{figure}[ht!]
+\vspace{1pt}
+\centering
+\includegraphics[width=0.48\textwidth]{con_and_det.png}
+\caption{Architecture of the detection scheme within the adaptive controlled system. Representing  the $s$ number of available measurement sensors for that output.}
+\label{fig:det_arch}
+\end{figure}
+
+As shown in Fig. \ref{fig:det_arch}, every $i^{th}$ sensor will have its own MRAC subsystem, each of which are monitoring their measurements for sensor attacks. While each subsystem receives it's own individual $i^{th}$ sensor measurement $y_i$, they all share the same reference signal $r_i$, and input $u_i$ that is directly used to control the specific state of the vehicle to a desired output $y_i^*(k)$. Each MRAC subsystem calculates an updated temporary input $u^*_i$ that are fed into the detector, which analyses each $i^{th}$ input $u^*_i$ - output $y_i$ combination to check for attacked sensors. 
+
+
+
+Since \eqref{multiple_output_tracking} should hold during any operation, it is also true the following:
+\begin{equation}
+    \lim_{k\to\infty}(u^*_i(k)-u^*_j(k))=0, \text{ }i\neq j
+\end{equation}
+where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respected subsystem to control the measurement signal $y_i^*(k)$ towards the desired reference output signal $y_i^*(k)$.
+
+\NB{add Lemma}
+
+( THRESHOLD EQUATION TO DETERMINE IF ATTACKED OR NOT RIGHT HERE)
+
+When an attacker maliciously falsifies a sensor signal, the compromised $i^{th}$ measurement no longer follows tracking signal $y_i^*$ at the converge rate compared to the uncompromised sensor measurements of the same state. As the $i^{th}$ measurement diverges from the remaining sensor measurements of the same state, it is removed from the set of uncompromised output sensor measurements $\bm{S}$ and placed into the attacked sensor set $\bm{S}_a$.
+
+
+
+
+Effective detection is constrained to when less than $\frac{N_i}{2}$ of sensors are attacked, where $N_i \in \N$ is the total number of available sensors for the $i^{th}$ output.
+%\NB{IMPORTANT: this section needs to be re-organized. You should start with the concept of subsystems and show how each subsystem estimate parameters and inputs and then show mathematically how to compare and remove attacks.}
+
+	
+	
+	
+	
+	
+	
+	
+%Estimation of the true system characteristic model's coefficients give us this desired performance	
 	
 The objective of model reference adaptive control is to calculate an input signal $u(k)$ such that the system tracks $y^{*}(k)$ from the reference model given the reference input signal $r(k)$. The model reference control is designed by solving the following polynomial equation,
     \begin{equation}
@@ -40,8 +115,10 @@ with the polynomials,
 	\alpha(q^{-1})=G(q^{-1})=\alpha_0+\alpha_1q^{-1}+ \dots +\alpha_{n-1}q^{-n+1}
 	\end{equation}
 	\begin{align}
-	\beta( q^{-1})= F(q^{-1})&B^{'}(q^{-1})=\beta_0+\beta_1q^{-1} \nonumber \\
+	\begin{split}
+	\beta( q^{-1})= F(q^{-1})&B^{'}(q^{-1})=\beta_0+\beta_1q^{-1} \\
 	& + \dots +\beta_{m+d-1}q^{-m-d+1}, \beta_0\neq0
+	\end{split}
 	\end{align}
 
 The right side of equation \eqref{eq:ARMA_equation_revise2} can be expressed by parametrization in the form,
@@ -50,11 +127,13 @@ The right side of equation \eqref{eq:ARMA_equation_revise2} can be expressed by 
 	\end{equation}
 with the unknown vector $\bm{\theta}_0$ and known signal vector $\bm{\theta}_0$,
     \begin{equation}
-	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{n-1},\beta_0, \dots ,\beta_{m+d-1})^T \in R^{n+m+d}
+	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{n-1},\beta_0, \dots ,\beta_{m+d-1})^T \in \R^{n+m+d}
 	\end{equation}
 	\begin{align}
-	\bm{\phi}(k)&=(y(k), \dots ,y(k-n+1),u(k), \dots , \nonumber \\
-	& u(k-m-d+1))^T \in R^{n+m+d}
+	\begin{split}
+	\bm{\phi}(k)&=(y(k), \dots ,y(k-n+1),u(k), \dots , \\
+	& u(k-m-d+1))^T \in \R^{n+m+d}
+	\end{split}
 	\end{align}
 	
 Since we want the system to have the same characteristics as the reference model \eqref{eq:reference model}, we need to estimate the true parameter vector $\bm{\theta}_0$ with the estimated parameter vector $\bm{\theta}^T(k)$. 
@@ -89,82 +168,21 @@ By rearranging \eqref{eq:tracking_model} we isolate $u(k)$ to calculate our next
 	\theta_{n+1}(k)\neq0 \nonumber
 	\end{equation}
 	
-To calculate the desired input $u(k)$ to properly control the vehicle, sensor measurements need to be uncompromised. For detection of sensor attacks in dynamically changing or unknown systems, the model reference adaptive control is an effective solution to the problem. We can utilize many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive}:
-	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
-	\label{assumtions_ensure}
-	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
-	\item[$T2)$] $\lim_{k\to\infty}(y(k)-y^*(k))=0$
-	\label{Truth2}
-	\item[$T3)$] $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
-	\end{enumerate}
-This means that the system's output $y(k)$ will asymptotically converge to the tracking signal $y^*(k)$ from the reference model in a finite amount of time. Properties of the modified projection algorithm \eqref{eq:Modified_Proj_Algorithm} include:
-    \begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
-	\item every iteration improves estimation:
-	    \begin{align}
-	        \|\bm{\theta}(k)-\bm{\theta}_0\|\leq\|\bm{\theta}(k-1)-\bm{\theta}_0\|, k\geq1 \nonumber
-	    \end{align}
-	\item parameter variation converges to zero:
-	    \begin{align}
-	        \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-1))=0 \nonumber
-	    \end{align}
-	\end{enumerate}
-	\begin{align}
-	   \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-N))=0, \text{any finite } N>0 \nonumber
-	\end{align}
-
-On our vehicle, sensor redundancy is utilized for the system to be resilient against sensor attacks. Each sensor output measurement $y_i$ where $i=1,2,\dots,M$ with $M \in \N$ as the total number of sensor measurements. Each of the output sensor measurements $y_i$, when uncompromised, have convergence (T2) towards their desired tracking signal $y_i^*(k)$ at the rate determined by the reference model. 
-    \begin{equation}
-    \label{multiple_output_tracking}
-    \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0, \text{ }\forall i
-    \end{equation}
-This remains true with a changing reference signal $r_i(k)$, changing dynamics, or bounded disturbances. 
-
-As shown in Fig. \ref{fig:det_arch}, every $i^{th}$ sensor will have its own MRAC subsystem, each of which are monitoring their measurements for sensor attacks. While each subsystem receives it's own individual $i^{th}$ sensor measurement $y_i$, they all share the same reference signal $r_i$, and input $u_i$ that is directly used to control the specific state of the vehicle to a desired output $y_i^*(k)$. Each MRAC subsystem calculates an updated temporary input $u^*_i$ that are fed into the detector, which analyses each $i^{th}$ input $u^*_i$ - output $y_i$ combination to check for attacked sensors. 
 
 
+\subsection{Estimation Confidence Region}
 
-Since \eqref{multiple_output_tracking} should hold during any operation, it is also true the following:
-\begin{equation}
-    \lim_{k\to\infty}(u^*_i(k)-u^*_j(k))=0, \text{ }i\neq j
-\end{equation}
-where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respected subsystem to control the measurement signal $y_i^*(k)$ towards the desired reference output signal $y_i^*(k)$.
-
-\NB{add Lemma}
-
-( THRESHOLD EQUATION TO DETERMINE IF ATTACKED OR NOT RIGHT HERE)
-
-\begin{figure}[ht!]
-\vspace{1pt}
-\centering
-\includegraphics[width=0.48\textwidth]{con_and_det.png}
-\caption{System architecture of the detection scheme within the adaptive controller. Representing the $i^{th}$ output state and the $j^{th}$ number of available measurement sensors for that output.}
-\label{fig:det_arch}
-\end{figure}
-
-
-When an attacker maliciously falsifies a sensor signal, the compromised $i^{th}$ measurement no longer follows tracking signal $y_i^*$ at the converge rate compared to the uncompromised sensor measurements of the same state. As the $i^{th}$ measurement diverges from the remaining sensor measurements of the same state, it is removed from the set of uncompromised output sensor measurements $\bm{S}$ and placed into the attacked sensor set $\bm{S}_a$.
-
-
-
-
-Effective detection is constrained to when less than $\frac{N_i}{2}$ of sensors are attacked, where $N_i \in \N$ is the total number of available sensors for the $i^{th}$ output.
-%\NB{IMPORTANT: this section needs to be re-organized. You should start with the concept of subsystems and show how each subsystem estimate parameters and inputs and then show mathematically how to compare and remove attacks.}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Estimation Confidence}
-For position estimation with sensor uncertainties, we need a guarantee the vehicle is within a region to prevent navigation into an undesired state. Using an $N$ number of data samples of known variance $\sigma_p^2$, we are able to estimate a region of a specific confidence that the vehicle is within the region's boundaries. %\NB{Rephrase this: You should mention that multiple measurements are fused using for example Kalman-based filtering techniques and the result is a state estimate with a certain variance that depends on the sensors variances also known from datasheet specs.}
-
-In this work we leverage the statistical technique of confidence intervals to obtain a specific confidence of the estimate. Confidence intervals are important because they calculate a confidence percentage that the true mean lies within the estimated bounds. As the number of data samples get larger, the confidence interval shrinks to give a better estimation of the true mean. Assuming the knowledge of the confidence percentage $z^{*}$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the sensor data samples $ \bar{x} $, a confidence interval of a chosen percentage can be calculated:
+In this work we leverage the statistical technique of confidence intervals to obtain a specific confidence of an estimate. Confidence intervals are important because they calculate a confidence percentage that the true mean lies within the estimated bounds. As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean. Assuming the knowledge of the confidence percentage $z^{*}$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $ \bar{x} $, a confidence interval of a chosen percentage can be calculated:
     \begin{equation}
      \label{Confidence_interval}
 		C_x = \bar{x} + z^{*}\frac{\sigma}{\sqrt{N}}
 	\end{equation}
+	
+	
+For position estimation with sensor uncertainties, we need a guarantee the vehicle is within a region to prevent navigation into an undesired state. To do this, uncompromised sensor measurements are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\hat{\bm{p}}=[\hat{x},\hat{y}]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from data sheet specifications. Using an $N$ number of data samples of variance $\sigma_p^2$, we are able to estimate an interval of specific confidence that the vehicle is within the these boundaries.
 
-% Explain the figure below
 
-For our case, we want to estimate a 2-dimensional interval. By calculating this multivariate confidence interval, we name it a confidence region, we estimate a region which the vehicle is within. This method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation, regardless if it's raw or filtered data, has the form $\mathcal{N}(0,\sigma_p)$ where the data population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety:
+For our case, we want to estimate a 2-dimensional interval. By calculating this multivariate confidence interval, we name it a confidence region, we estimate a region which the vehicle is within. This method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation has the form $\mathcal{N}(0,\sigma_p)$ where the data population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety:
     \begin{equation}
     \label{Confidence_region}
 		\hat{\bm{\varepsilon}}_{\hat{\bar{\bm{p}}}|N} = \hat{\bar{\bm{p}}} + z^{*}\frac{\sigma_p}{\sqrt{N}}
@@ -173,33 +191,39 @@ Where the radius of \eqref{Confidence_region} is,
     \begin{equation}
 		\hat{\varepsilon} = z^{*}\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
-Similar to the calculation of confidence intervals, it is under the assumption the true mean is static, the vehicle position in our case, is not changing over time. This cannot be assumed in the case of position estimation of a navigating vehicle. A pseudo-static form of a confidence region is made to compensate for translation of previous position measurements $\bm{p}(k-i)$, where $i=1,2,\dots,N$. These $N-1$ number of previous position data points need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data to calculate the confidence region. 
-
-(Mention Fig 3 in text, explain how it ties into confidence intervals)
+Similar to the calculation of confidence intervals, it is under the assumption the true mean is static, is not changing over time. This cannot be assumed in our case of position estimation of a navigating vehicle. 
 \begin{figure}[ht!]
 \vspace{1pt}
 \centering
-\includegraphics[width=0.48\textwidth]{GaussianPDF.png}
-\caption{Distribution of data samples in an $X-Y$ plane with equal noise variance on the $X$ and $Y$ axis.}
+\includegraphics[width=0.48\textwidth]{Gaussian2D.png}
+\caption{Distribution of vehicle's estimated position over 100 samples in an $X-Y$ plane with equal noise variance on the $X$ and $Y$ axis. Creating a psuedo-static case allows for the calculation of a confidence region for vehicle position.}
 \label{fig:gauss_pdf}
 \end{figure}
 
-The unaltered $N$ data samples are described in two sets,
+A pseudo-static form of a confidence region is made to compensate for translation of previous position measurements $\hat{\bm{p}}(k-i)$, where $i=1,2,\dots,N-1$. These $N-1$ number of previous position data points need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data to calculate the confidence region. As shown in Fig. \ref{fig:gauss_pdf}, we want to have the data samples for calculation of the confidence region look as if the vehicle is stationary. The $N$ position estimate samples are described in the set,
 \begin{equation}
-    \bm{P}=\begin{bmatrix} \bm{p}(k-1) ,\bm{p}(k-2),\dots,\bm{p}(k-N) \end{bmatrix} 
+    \bm{P}=\begin{bmatrix} \hat{\bm{p}}(k) ,\hat{\bm{p}}(k-1),\dots,\hat{\bm{p}}(k-N+1) \end{bmatrix} 
 \end{equation}
-for the position coordinate data in the $x$ and $y$ direction. Translating the data coordinates into a pseudo-static form will create the updated set,
+for the position coordinates in the $x$ and $y$ direction. Translating the data coordinates into a pseudo-static form will create the updated set,
 \begin{equation}
-    \bm{P}^*=\begin{bmatrix} \bm{p}^*(k-1) ,\bm{p}^*(k-2),\dots,\bm{p}^*(k-N) \end{bmatrix} \nonumber
+    \bm{P}^*=\begin{bmatrix} \hat{\bm{p}}^*(k) ,\hat{\bm{p}}^*(k-1),\dots,\hat{\bm{p}}^*(k-N+1) \end{bmatrix} \nonumber
 \end{equation}
 Each element of these updated sets are calculated as,
     \begin{equation}
-	p_x^*(k-i) = p_x(k-i)+\sum_{j=1}^i v(k-j)\cos{\theta_h(k-j)t_s}
+    \begin{split}
+	\hat{p}_x^*(k-i) = \hat{p}_x(k-i)+\sum_{j=1}^i v(k-j)\cos{\theta_h(k-j)t_s} \\
+	\hat{p}_y^*(k-i) = \hat{p}_y(k-i)+\sum_{j=1}^i v(k-j)\sin{\theta_h(k-j)t_s}
+	\end{split}
 	\end{equation}
-	\begin{equation}
-	p_y^*(k-i) = p_y(k-i)+\sum_{j=1}^i v(k-j)\sin{\theta_h(k-j)t_s}
-	\end{equation}
-where $i=1,2,\dots,N$, $p_x^*$ and $p_y^*$ are the $x$ and $y$ position coordinates within $\bm{p}^*$. The mean of the updated set is written as $\hat{\bar{\bm{p}}}^*$, which is used for the calculation of the estimated confidence interval region.
+where $i=1,2,\dots,N-1$, $\hat{p}_x^*$ and $\hat{p}_y^*$ are the $x$ and $y$ position coordinates within $\hat{\bm{p}}^*$ and the most recent position estimate at the time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$. The mean of the updated set is written as $\hat{\bar{\bm{p}}}^*$, which is used for the calculation of the estimated confidence interval region. To demonstrate how this works, Fig. \ref{fig:pseudo_static} gives a visualization of how the position estimates are transitioned into a pseudo-static case.
+
+\begin{figure}[ht!]
+\vspace{1pt}
+\centering
+\includegraphics[width=0.48\textwidth]{pseudo_static.png}
+\caption{Translation of the original position estimates $\hat{\bm{p}}(k)$ to a pseudo-static case $\hat{\bm{p}}^*(k)$ as if all the position estimates were sampled from the vehicle at the current time $k$.}
+\label{fig:pseudo_static}
+\end{figure}
 
 Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\bm{P}$ is calculated as:
     \begin{equation}
@@ -219,20 +243,22 @@ with $i_{\varepsilon^{\star}}=[1,2,,\dots,N]$ while average measured velocity an
 With uncertainty of sensor measurements, with or without the loss of a compromised sensors, there needs to be guarantees to safely navigate a vehicle without accidents. As the vehicle approaches obstacles or unwanted regions with position uncertainty, changes to the vehicle's motion need to be made. To keep the vehicles estimated confidence region from intersecting with an unwanted region, a change to the number of current and past data samples in the calculation as well as an adaptation of the velocity. Without uncertainty of velocity and heading angle measurements, the equation to solve for the number of required $N$ samples to keep the confidence region within a specific radius is:
     \begin{equation}
     \label{conf_region1}
-	    N \geq \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\hat{\bar{\bm{p}}}}} - \hat{\bar{\bm{p}}}^* \rVert} -\Delta(k) } \right)^2
+	    N^* = \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\hat{\bar{\bm{p}}}}} - \hat{\bar{\bm{p}}}^* \rVert} -\Delta(k) } \right)^2
 	\end{equation}
 where $\lVert {\bm{x}_{r_{\hat{\bar{\bm{p}}}}}-\hat{\bar{\bm{p}}}^*} \rVert$ is the distance from the closest undesired region to the estimated vehicle center point position $\hat{\bar{\bm{p}}}^*$.
 With the assumption of Normally distributed sensor noise on the velocity and heading angle sensors, the above equation is not suitable. The uncertainty region $\hat{\varepsilon}_{v,\theta_h|N}^{\star}$ from these sensors must be accounted for. The revision to equation (\ref{conf_region1}) for a sufficient value of $N$ is:
     \begin{equation}
-	    N \geq \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\hat{\bar{\bm{p}}}}} - \hat{\bar{\bm{p}}}^* \rVert} -[\hat{\varepsilon}_{v,\theta_h|N}^{\star}+\Delta(k)] } \right)^2
+	    N^* = \left(z^{*} \frac{ \sigma_p }{ {\lVert \bm{x}_{r_{\hat{\bar{\bm{p}}}}} - \hat{\bar{\bm{p}}}^* \rVert} -\hat{\varepsilon}_{v,\theta_h|N}^{\star}-\Delta(k) } \right)^2
 	\end{equation}
+Due to the fact that $N^*$ represents the number of samples needed to reduce the estimation region to a desired size, $N^*$ needs to be an integer. We simply round $N^*$ up to the nearest integer to give us $N \in \N$.
+
 An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \hat{\varepsilon}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{\star}+\Delta(k)$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by:
     \begin{equation}
 	    r_v(k)=r_v(k-1) \left[ \frac{\lVert \bm{x}_{r_{\hat{\bar{\bm{p}}}}} - \hat{\bar{\bm{p}}}^* \rVert - \hat{\varepsilon}_1}{\hat{\varepsilon}_2 - \hat{\varepsilon}_1} \right]
 	\end{equation}
 	\begin{equation}
 	\begin{split}
-	    \hat{\varepsilon}_1=&\hat{\varepsilon}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{\star},\\ &\hat{\varepsilon}_2=\hat{\varepsilon}_1+\Delta(k) \nonumber	    
+	    \hat{\varepsilon}_1&=\hat{\bm{\varepsilon}}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{\star},\\ &\hat{\varepsilon}_2=\hat{\varepsilon}_1+\Delta(k) \nonumber	    
 	\end{split}
 	\end{equation}
 	

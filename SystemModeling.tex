@@ -47,7 +47,12 @@ in which $x$ and $y$ coordinates represent position, $\theta_h$ represents the v
 % angle measured from the positive $x$ axis, 
  and $v$ is the speed in this direction of motion. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. 
 % If the assumption is that the wheels do not slip.
-This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in a continuous-time state space form:
+This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in a continuous-time state space form,
+    \begin{equation}
+	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
+	\end{equation}
+with the state matrix $\bm{A}(t) \in \R^{p\times p}$, the input matrix $\bm{B}(t) \in \R^{p\times m}$, state vector $\bm{x}(t) \in \R^{p}$, and system input $\bm{u}(t) \in \R^{m}$. $\bm{A}(t)$, $\bm{B}(t)$, $\bm{x}(t)$, and $\bm{u}(t)$ are given by:
+
 %    \begin{equation}
 %	\bm{A}_v(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) \\ 0 & 1 & sin(\theta_h) \\ 0 & 0 & -(B_s+B_r) \end{bmatrix},
 %	\bm{B}_v(t)=\begin{bmatrix} 0 \\ 0 \\ \frac{1}{m} \end{bmatrix}, \nonumber
@@ -68,20 +73,14 @@ This presents a high-level model of the vehicle, describing only the motion equa
 %	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 %	\end{equation}
 
-
     \begin{equation}
 	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0\\ 0 & 1 & sin(\theta_h) & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
 	\end{equation}
 	\begin{equation}
 	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0 \\ 0 & \frac{B}{2I_z} \end{bmatrix}, 
-     \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)= \begin{bmatrix} F_l+F_r \\ F_l-F_r  \end{bmatrix} 
+     \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)= \begin{bmatrix} F_l+F_r \\ F_l-F_r  \end{bmatrix}  \nonumber
 	\end{equation}
 
-For the state space system, a general model is written in the form,
-    \begin{equation}
-	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
-	\end{equation}
-with the state matrix $\bm{A}(t) \in R^{p\times p}$, the input matrix $\bm{B}(t) \in R^{p\times m}$, state vector $\bm{x}(t) \in R^{p}$, and system input $\bm{u}(t) \in R^{m}$.
 
 
 \subsection{Adaptive Control Model}
@@ -96,9 +95,11 @@ Since the adaptive control algorithm used is based on a discrete-time state spac
 
 with a discrete-time transfer function:
 	\begin{align}
+	\begin{split}
 	\label{eq:transfer_function}
         G(z) & = \frac{y(z)}{u(z)} = \bm{C}(z\bm{I}-\bm{A}_d)^{-1}\bm{B}_d  \\
-	& = \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n} \nonumber
+	& = \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n} 
+	\end{split}
 	\end{align}
 	\begin{equation}
 	\text{where } b_0\ne{0}, d>0, \text{ and } n-d-m\geq{0} \nonumber
@@ -111,17 +112,19 @@ Using an Autoregressive Moving Average (ARMA) model and defining the operators $
 	\end{equation}
 the system (\ref{eq:transfer_function}) is now expressed as:
     \begin{align}
+    \begin{split}
     \label{ARMA_equation}
-	(1+&a_1q^{-1}+...+a_nq^{-n})y(k) \nonumber \\
+	(1+&a_1q^{-1}+...+a_nq^{-n})y(k) \\
 	&=q^{-d}(b_0+b_1q^{-1}+...+b_mq^{-m})u(k)
+	\end{split}
 	\end{align}
 Now, by defining 
 %where:
 	\begin{equation}
-	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n}) \nonumber
+	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n})
 	\end{equation}
 	\begin{equation}
-	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m}) \nonumber
+	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m})
 	\end{equation}
 we can revise \eqref{ARMA_equation} to the system expressed as:
 	\begin{equation}
@@ -148,6 +151,6 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}_a(k)
 	\end{equation}
-The vector $y(k) \in R^{S}$ is described as the sensor measurement vector of $S$ sensors and the output matrix is defined as $C \in R^{S\times n}$.  
+The vector $y(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $C \in \R^{s\times n}$.  
 
 \end{section}

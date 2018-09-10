@@ -27,21 +27,18 @@ we want to find a policy $\mathcal{P}$ to:
 	\item differentiate between malicious sensor attacks and changing dynamics or failures; 
 	\item remove the compromised sensors to restore system integrity. %for all future time instances $k+h$. 
 \end{enumerate}
-all while maintaining the adaptive system's control performance. Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. Solving Problem 1 will remove the compromised sensors, however leaving the system with fewer sensors as designed. 
-% will We remove compromised sensors to solve this problem, however the system was designed to use all sensors. 
-Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
+all while maintaining the adaptive system's control performance. Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
 % needs to be taken into account during replanning. Thus we need to replan to consider that we have fewer sensors.
 \end{problem}
+Solving Problem 1 removes the compromised sensors, however leaving the system with fewer sensors as designed. Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
 	
-\begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}} \NB{NO - REWRITE THE FOLLOWING PROBLEM}
-Given a smaller set of sensors than originally designed, we want to find a policy to guarantee the vehicle never enters an undesired region,
+\begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}}
+With Problem 1 solved, we want to find a policy to operate safely given a few number of sensors than originally designed. We want to adapt motion in such a way that the vehicle never enters a known undesired region,
 	\begin{equation}
 		\lVert {\bm{p}(k)-\bm{p}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
-where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\Delta(k)$ is a defined distance between the vehicle's position and an undesired region, and $N_r \in \N$ is the total number of undesired regions. Solving this problem allows the autonomous vehicle to adapt its motion according to the new sensor set, guaranteeing the vehicle never enters an undesired region. This work assumes
+where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane, $\Delta(k)$ is a defined distance between the vehicle's position and an undesired region, and $N_r \in \N$ is the total number of undesired regions. Solving this problem allows the autonomous vehicle to adapt its motion according to the new sensor set, guaranteeing the vehicle never enters an undesired region.
 
-
-%The sensor's uncertainties lead to errors in estimation, which results in an increased risk of navigating into an undesired region. As a compromised sensor is removed, sensor reconfiguration changes the uncertainty due to sensor noise. To guarantee vehicle safety, it must be able to avoid any undesired areas when these uncertainties exist. Adapting to these changing uncertainties enables the vehicle to be resilient to its alterations.
 
 	
 \end{problem}
