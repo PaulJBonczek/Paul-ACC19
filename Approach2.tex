@@ -15,42 +15,23 @@ In this section we describe the framework for detection of sensor attacks for sy
 \label{sec:Res_adapt_control}
 
 A Resilient Adaptive Controller will allow the system to detect sensor attacks while maintaining control performance as dynamical and disturbance uncertainties occur. To maintain this control performance, a Model Reference Adaptive Controller is used. First, we want to ensure adequate information of the system is known in order to design the resilient adaptive controller, the following assumptions need to be true:
-	\begin{enumerate}[leftmargin=4\parindent]
-	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^m$ are within $|z|<1$. 
+	\begin{enumerate}[leftmargin=3\parindent]
+	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^m$ from \eqref{eq:B_prime} are within $|z|<1$. 
 	\item[$A2)$] $n$ and $m$ are known. 
 	\item[$A3)$] the system delay $d$ is known.
+	\item[$A4)$] all poles of $E(z^{-1})z^p$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $n$, $m$, and $d$ are the dimensions of \eqref{eq:transfer_function}. For detection of sensor attacks in dynamically changing or unknown systems, the model reference adaptive control is an effective solution to the problem. We can utilize many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive}:
-	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
+The zeros $z$ of the system are within the discrete $z-plane$ while $n$, $m$, and $d$ are the dimensions of \eqref{eq:transfer_function}. For detection of sensor attacks in dynamically changing or unknown systems, the model reference adaptive control is an effective solution to the problem. We utilize many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive},
+	\begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\label{assumtions_ensure}
 	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
 	\item[$T2)$] $\lim_{k\to\infty}(y(k)-y^*(k))=0$
 	\label{Truth2}
 	\item[$T3)$] $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
 	\end{enumerate}
-	
-	
+with $y(k)$ as the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time.
 
-(WHERE I'M CURRENTLY AT WITH CORRECTIONS)
-
-
-To calculate the desired input $u(k)$ to properly control the vehicle, sensor measurements need to be uncompromised. 
-This means that the system's output $y(k)$ will asymptotically converge to the tracking signal $y^*(k)$ from the reference model in a finite amount of time. Properties of the modified projection algorithm \eqref{eq:Modified_Proj_Algorithm} include:
-    \begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
-	\item every iteration improves estimation:
-	    \begin{align}
-	        \|\bm{\theta}(k)-\bm{\theta}_0\|\leq\|\bm{\theta}(k-1)-\bm{\theta}_0\|, k\geq1 \nonumber
-	    \end{align}
-	\item parameter variation converges to zero:
-	    \begin{align}
-	        \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-1))=0 \nonumber
-	    \end{align}
-	\end{enumerate}
-	\begin{align}
-	   \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-N))=0, \text{any finite } N>0 \nonumber
-	\end{align}
-
-On our vehicle, sensor redundancy is utilized for the system to be resilient against sensor attacks. Each sensor output measurement $y_i$ where $i=1,2,\dots,M$ with $M \in \N$ as the total number of sensor measurements. Each of the output sensor measurements $y_i$, when uncompromised, have convergence (T2) towards their desired tracking signal $y_i^*(k)$ at the rate determined by the reference model. 
+The resilient adaptive controller will employ an architecture of redundant subsystems, as shown in Fig. \ref{fig:det_arch}. Each sensor measurement $y_i$ where $i=1,2,\dots,s$ has its own adaptive controller to generate an input $u^*$ to follow a desired tracking signal $y^*_i$. Each of the output sensor measurements, when uncompromised, have convergence (T2) towards their desired tracking signal from the corresponding reference model. 
     \begin{equation}
     \label{multiple_output_tracking}
     \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0, \text{ }\forall i
@@ -65,38 +46,28 @@ This remains true with a changing reference signal $r_i(k)$, changing dynamics, 
 \label{fig:det_arch}
 \end{figure}
 
-As shown in Fig. \ref{fig:det_arch}, every $i^{th}$ sensor will have its own MRAC subsystem, each of which are monitoring their measurements for sensor attacks. While each subsystem receives it's own individual $i^{th}$ sensor measurement $y_i$, they all share the same reference signal $r_i$, and input $u_i$ that is directly used to control the specific state of the vehicle to a desired output $y_i^*(k)$. Each MRAC subsystem calculates an updated temporary input $u^*_i$ that are fed into the detector, which analyses each $i^{th}$ input $u^*_i$ - output $y_i$ combination to check for attacked sensors. 
+As shown in Fig. \ref{fig:det_arch}, every $i^{th}$ measurement will have its own MRAC subsystem, each of which are monitoring their measurements for sensor attacks. While each subsystem receives it's own individual $i^{th}$ sensor measurement $y_i$, they all share the same reference signal $r_i$, and input $u_i$ that is directly used to control the specific state of the vehicle to a desired output $y_i^*(k)$. Each MRAC subsystem calculates an updated temporary input $u^*_i(k)$ that are fed into the detector, which analyses each $i^{th}$ subsystem input $u^*_i$ to check for attacked sensors.
 
-
-
-Since \eqref{multiple_output_tracking} should hold during any operation, it is also true the following:
+Since \eqref{multiple_output_tracking} should hold during any operation, the following is also true:
 \begin{equation}
     \lim_{k\to\infty}(u^*_i(k)-u^*_j(k))=0, \text{ }i\neq j
 \end{equation}
-where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respected subsystem to control the measurement signal $y_i^*(k)$ towards the desired reference output signal $y_i^*(k)$.
+where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respected subsystems to control the measurement signal $y_i(k)$ towards the desired reference output signal $y_i^*(k)$. Each temporary input, under ideal conditions, should be the same value as all other temporary inputs controlling their output to track the same tracking signal. For each subsystem to properly calculate the next input $u^*_i(k)$, their sensor measurement $y_i$ need to be uncompromised. When one or more measurements have a non-zero value from the sensor attack vector $\xi_i(k) \neq 0$, those corresponding $i^{th}$ subsystem inputs $u^*_i$ diverge from the uncompromised subsystems.
 
-\NB{add Lemma}
-
-( THRESHOLD EQUATION TO DETERMINE IF ATTACKED OR NOT RIGHT HERE)
-
-When an attacker maliciously falsifies a sensor signal, the compromised $i^{th}$ measurement no longer follows tracking signal $y_i^*$ at the converge rate compared to the uncompromised sensor measurements of the same state. As the $i^{th}$ measurement diverges from the remaining sensor measurements of the same state, it is removed from the set of uncompromised output sensor measurements $\bm{S}$ and placed into the attacked sensor set $\bm{S}_a$.
-
-
+For detection, a threshold value $\delta_i$ is chosen to determine if a temporary input $u_i^*$ is compromised. If the $i^{th}$ temporary input's updated value has a difference greater than $\delta_i$ from more than half of the remaining temporary inputs controlled the same state,
+\begin{equation}
+    |u^*_i(k)-u^*_j(k)|>\delta_i, \forall i
+\end{equation}
+where $j$ represents more than half of the remaining temporary inputs, then the system is alarmed. If the $i^{th}$ temporary input doesn't return below the $\delta_i$ threshold within $N_{\delta}$ future time intervals, the sensor from this $i^{th}$ subsystem is removed from future use. The removed sensor will be placed in the set $\mathcal{\bm{S}}_a$ for attacked sensors. Effective detection is constrained to when less than of sensors of the same controlled state are attacked. Once all temporary inputs have been checked, the best available is chosen to be used for the true control signal $u_i(k)$ to the system.
 
 
-Effective detection is constrained to when less than $\frac{N_i}{2}$ of sensors are attacked, where $N_i \in \N$ is the total number of available sensors for the $i^{th}$ output.
-%\NB{IMPORTANT: this section needs to be re-organized. You should start with the concept of subsystems and show how each subsystem estimate parameters and inputs and then show mathematically how to compare and remove attacks.}
 
-	
-	
-	
-	
-	
-	
-	
-%Estimation of the true system characteristic model's coefficients give us this desired performance	
-	
-The objective of model reference adaptive control is to calculate an input signal $u(k)$ such that the system tracks $y^{*}(k)$ from the reference model given the reference input signal $r(k)$. The model reference control is designed by solving the following polynomial equation,
+
+
+
+%(WHERE I'M CURRENTLY AT WITH CORRECTIONS)
+
+The remaining steps of this section will describe how to design the MRACs for the subsystems. The objective of model reference adaptive control is to calculate an input signal $u(k)$ such that the system tracks $y^{*}(k)$ from the reference model given the reference input signal $r(k)$. The model reference control is designed by solving the following polynomial equation,
     \begin{equation}
 	E(q^{-1})=F(q^{-1})A(q^{-1})+q^{-d}G(q^{-1})
 	\end{equation}
@@ -136,7 +107,7 @@ with the unknown vector $\bm{\theta}_0$ and known signal vector $\bm{\theta}_0$,
 	\end{split}
 	\end{align}
 	
-Since we want the system to have the same characteristics as the reference model \eqref{eq:reference model}, we need to estimate the true parameter vector $\bm{\theta}_0$ with the estimated parameter vector $\bm{\theta}^T(k)$. 
+Since we want the system to have the same characteristics as the reference model \eqref{eq:reference model_q}, we need to estimate the true parameter vector $\bm{\theta}_0$ with the estimated parameter vector $\bm{\theta}^T(k)$. 
     \begin{equation}
     \bm{\theta}(k)=(\theta_1(k), \dots ,\theta_n(k),\theta_{n+1}(k), \dots ,\theta_{n+m+d}(k))^T
 	\end{equation}
@@ -151,6 +122,21 @@ We update the estimate $\bm{\theta}^T(k)$ of the true parameter vector $\bm{\the
 	\begin{align*}
 	\varepsilon<a(k)<2-\varepsilon, 0,\varepsilon<1, c>0
 	\end{align*}
+	
+Properties of the modified projection algorithm \eqref{eq:Modified_Proj_Algorithm} include:
+    \begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
+	\item every iteration improves estimation:
+	    \begin{align}
+	        \|\bm{\theta}(k)-\bm{\theta}_0\|\leq\|\bm{\theta}(k-1)-\bm{\theta}_0\|, k\geq1 \nonumber
+	    \end{align}
+	\item parameter variation converges to zero:
+	    \begin{align}
+	        \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-1))=0 \nonumber
+	    \end{align}
+	\end{enumerate}
+	\begin{align}
+	   \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-N))=0, \text{any finite } N>0 \nonumber
+	\end{align}
 	
 To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u(k)$ is then calculated from the equation:
     \begin{equation}
@@ -168,7 +154,8 @@ By rearranging \eqref{eq:tracking_model} we isolate $u(k)$ to calculate our next
 	\theta_{n+1}(k)\neq0 \nonumber
 	\end{equation}
 	
-
+%Estimation of the true system characteristic model's coefficients give us this desired performance	
+	
 
 \subsection{Estimation Confidence Region}
 

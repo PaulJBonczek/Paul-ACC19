@@ -74,7 +74,7 @@ with the state matrix $\bm{A}(t) \in \R^{p\times p}$, the input matrix $\bm{B}(t
 %	\end{equation}
 
     \begin{equation}
-	\bm{A}(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) & 0 & 0\\ 0 & 1 & sin(\theta_h) & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
+	\bm{A}(t)=\begin{bmatrix} 0 & 0 & cos(\theta_h) & 0 & 0\\ 0 & 0 & sin(\theta_h) & 0 & 0 \\ 0 & 0 & -(B_s+B_r) & 0 & 0 \\ 0 & 0 & 0 & 0 & 1 \\ 0 & 0 & 0 & 0 & -B_l \end{bmatrix} \nonumber
 	\end{equation}
 	\begin{equation}
 	\bm{B}(t)=\begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{m} & 0 \\ 0 & 0 \\ 0 & \frac{B}{2I_z} \end{bmatrix}, 
@@ -124,6 +124,7 @@ Now, by defining
 	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n})
 	\end{equation}
 	\begin{equation}
+	\label{eq:B_prime}
 	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m})
 	\end{equation}
 we can revise \eqref{ARMA_equation} to the system expressed as:
@@ -133,23 +134,25 @@ we can revise \eqref{ARMA_equation} to the system expressed as:
 	\end{equation}
 We want to design an input signal $u(k)$ that ensures our system's output $y(k)$ tracks $y^*(k)$ from the reference model, with a given input reference signal $r(k)$. This reference model is expressed as,
 	\begin{equation}
-	\label{eq:reference model}
+	\label{eq:reference model_q}
 	E(q^{-1})y^*(k+d)=q^{-d}gH(q^{-1})r(k)
 	\end{equation}
 	
 to create a stable model reference transfer function in the form:
 	\begin{equation}
+	\label{eq:reference model_z}
 	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
 	\end{equation}
+The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$.
 
 
  \subsection{Noise and Disturbance Model}
-When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}_a(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
+When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
     \begin{equation}
 	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k)
 	\end{equation}
 	\begin{equation}
-	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}_a(k)
+	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
 	\end{equation}
 The vector $y(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $C \in \R^{s\times n}$.  
 
