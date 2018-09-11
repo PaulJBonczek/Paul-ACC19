@@ -118,9 +118,10 @@ the system (\ref{eq:transfer_function}) is now expressed as:
 	&=q^{-d}(b_0+b_1q^{-1}+...+b_mq^{-m})u(k)
 	\end{split}
 	\end{align}
-Now, by defining 
+Now, by defining, 
 %where:
 	\begin{equation}
+	\label{eq:A_q}
 	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n})
 	\end{equation}
 	\begin{equation}
@@ -137,13 +138,20 @@ We want to design an input signal $u(k)$ that ensures our system's output $y(k)$
 	\label{eq:reference model_q}
 	E(q^{-1})y^*(k+d)=q^{-d}gH(q^{-1})r(k)
 	\end{equation}
-	
-to create a stable model reference transfer function in the form:
+with,
+    \begin{equation}
+    \label{eq:E_q}
+	E(q^{-1})=1+e_1q^{-1}+ \dots +e_wq^{-w}
+	\end{equation}
+	\begin{equation}
+	H(q^{-1})=1+h_1q^{-1}+ \dots +h_{w-1}q^{-w+1}
+	\end{equation}
+This creates a stable model reference transfer function in the form:
 	\begin{equation}
 	\label{eq:reference model_z}
 	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
 	\end{equation}
-The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$.
+The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. $E$
 
 
  \subsection{Noise and Disturbance Model}
