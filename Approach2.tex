@@ -88,10 +88,10 @@ Since we want the system to have the same characteristics as the reference model
 We update the estimate $\bm{\theta}^T(k)$ of the true parameter vector $\bm{\theta}_0$ using a \textit{Modified Projection Algorithm}:
 	\begin{equation}
 	\label{eq:Modified_Proj_Algorithm}
-	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\phi(k-d)e(k)}{c+\phi^T(k-d)\phi(k-d)}
+	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
 	\end{equation}
 	\begin{equation}
-	\bm{e}(k)=E(q^{-1})y_i(k)-\theta^T(k-1)\phi(k-d)
+	\bm{e}(k)=E(q^{-1})y_i(k)-\theta^T(k-1)\bm{\phi}(k-d)
 	\end{equation}
 	\begin{align*}
 	\varepsilon<a(k)<2-\varepsilon, 0,\varepsilon<1, c>0
@@ -125,22 +125,26 @@ where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respec
 For detection, a difference matrix $\Psi(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
     \begin{equation}
     \label{eq:error_matrix}
-	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,M}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{M,1}(k) &  &  & \psi_{M,M}(k) \end{bmatrix}
+	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,s}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{s,1}(k) &  &  & \psi_{s,s}(k) \end{bmatrix}
 	\end{equation}
-where $\bm{\Psi}(k) \in \R^{M\times M}$ with $M$ is the number of measurements from the available measurement set $\mathcal{S} \in \R^M$. Each element within $\bm{\Psi}(k)$ is represented as the absolute difference between two temporary inputs.
+where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ is the number of measurements from the available measurement set $\bm{y} \in \R^s$. Each element within $\bm{\Psi}(k)$ is represented as the absolute difference between two temporary inputs.
     \begin{equation}
         \psi_{i,j}(k)=|u^*_i(k)-u^*_j(k)|
     \end{equation}
 We take an $l_1$ vector norm of the $i^{th}$ row from the difference matrix \eqref{eq:error_matrix} which gives us the following column vector:
     \begin{equation}
-	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 \end{bmatrix}, \in \R^M
+	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 \end{bmatrix}
 	\end{equation}
-Next, another column vector $\breve{\bm{\Psi}}(k) \in \R^M$ is created with every element equal to $\inf \bm{\Psi}^{'}(k)$. We now define the error vector as:
+Next, another column vector $\bm{V}(k) \in \R^s$ is created with every element equal to $\min \bm{\Psi}^{'}(k)$:
+    \begin{equation}
+	\bm{V}(k)=\begin{bmatrix} \min \bm{\Psi}^{'}(k) & \min \bm{\Psi}^{'}(k) & \dots & \min \bm{\Psi}^{'}(k) \end{bmatrix}^T
+	\end{equation}
+We now define the error vector as:
     \begin{equation}
     \label{eq:Psi2}
-	\bm{\Psi^{''}}(k)=\bm{\Psi^{'}}(k)-\breve{\bm{\Psi}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \inf \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \inf \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 - \inf \bm{\Psi}^{'}(k) \end{bmatrix}
+	\bm{\Psi^{''}}(k)=\bm{\Psi^{'}}(k)-\bm{V}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
 	\end{equation}
-From \eqref{eq:u_to_0} while under ideal conditions, the error vector \eqref{eq:Psi2} has all elements equal to zero. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
+From \eqref{eq:u_to_0} while under ideal conditions, the error vector \eqref{eq:Psi2} has all elements equal to zero. To constitute ideal conditions, uncertainties due to sensor and actuator noise, or any other unaccounted for changes to the state or measurement vectors are not considered. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
 
 Under non-ideal conditions where uncertainties exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, we say all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
     \begin{align}
@@ -150,25 +154,26 @@ Under non-ideal conditions where uncertainties exist, the elements of the error 
 	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \inf \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \inf \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 - \inf \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}
 	\end{split}
 	\end{align}
-with the vector $\bm{\delta} \in \R^M$ has elements all equal to $\delta$. When an $i^{th}$ element of $\bm{\Psi^{''}}(k)$ breaks the $\delta$ threshold, the corresponding $i^{th}$ measurement is placed into the set $\mathcal{S}_a$ and no longer used by the system. The updated measurement set is $\mathcal{S}=\mathcal{S}_0-\mathcal{S}_a$ where $\mathcal{S}_0$ is the initial full set of measurements and $\mathcal{S}_a$ is the set of removed measurements due to attacks.
+with the vector $\bm{\delta} \in \R^s$ has elements all equal to $\delta$. When an $i^{th}$ element of $\bm{\Psi^{''}}(k)$ breaks the $\delta$ threshold, the corresponding $i^{th}$ measurement is placed into the set $\bm{Y}_a$ and no longer used by the system. The updated measurement set is $\bm{Y}=\bm{Y}_0\setminus\bm{Y}_a$ where $\bm{Y}_0$ is the initial full set of measurements and $\bm{Y}_a$ is the set of removed measurements due to attacks.
 Effective detection is constrained to when less than of the measurements of the same controlled state are attacked. Once all temporary inputs $u_i^*(k)$ have been checked, the best available (e.g. measurement with lowest noise profile) is chosen to be used for the true control signal $u_i(k)$ to the system.
+
 
 
 % DO I NEED THIS?
 
-Properties of the modified projection algorithm \eqref{eq:Modified_Proj_Algorithm} include:
-    \begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
-	\item every iteration improves estimation:
-	    \begin{align}
-	        \|\bm{\theta}(k)-\bm{\theta}_0\|\leq\|\bm{\theta}(k-1)-\bm{\theta}_0\|, k\geq1 \nonumber
-	    \end{align}
-	\item parameter variation converges to zero:
-	    \begin{align}
-	        \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-N))=0, \text{any finite } N>0 \nonumber
-	    \end{align}
-	\end{enumerate}
+%Properties of the modified projection algorithm \eqref{eq:Modified_Proj_Algorithm} include:
+%    \begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
+%	\item every iteration improves estimation:
+%	    \begin{align}
+%	        \|\bm{\theta}(k)-\bm{\theta}_0\|\leq\|\bm{\theta}(k-1)-\bm{\theta}_0\|, k\geq1 \nonumber
+%	    \end{align}
+%	\item parameter variation converges to zero:
+%	    \begin{align}
+%	        \lim_{k\to\infty}(\bm{\theta}(k)-\bm{\theta}(k-N))=0, \text{any finite } N>0 \nonumber
+%	    \end{align}
+%	\end{enumerate}
 	
-(TALK ABOUT PERSISTENT EXCITATION BRIEFLY)
+%(TALK ABOUT PERSISTENT EXCITATION BRIEFLY)
 	
 
 \subsection{Estimation Confidence}
@@ -203,20 +208,22 @@ Similar to the calculation of confidence intervals, it is under the assumption t
 
 A pseudo-static form of a confidence region is made to compensate for translation of previous position measurements $\hat{\bm{p}}(k-i)$, where $i=1,2,\dots,N-1$. These $N-1$ number of previous position data points need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data to calculate the confidence region. As shown in Fig. \ref{fig:gauss_pdf}, we want to have the data samples for calculation of the confidence region look as if the vehicle is stationary. The $N$ position estimate samples are described in the set,
 \begin{equation}
-    \bm{P}=\begin{bmatrix} \hat{\bm{p}}(k) ,\hat{\bm{p}}(k-1),\dots,\hat{\bm{p}}(k-N+1) \end{bmatrix} 
+    \hat{\bm{P}}=\begin{bmatrix} \hat{\bm{p}}(k) ,\hat{\bm{p}}(k-1),\dots,\hat{\bm{p}}(k-N+1) \end{bmatrix} 
 \end{equation}
 for the position coordinates in the $x$ and $y$ direction. Translating the data coordinates into a pseudo-static form will create the updated set,
 \begin{equation}
-    \bm{P}^*=\begin{bmatrix} \hat{\bm{p}}^*(k) ,\hat{\bm{p}}^*(k-1),\dots,\hat{\bm{p}}^*(k-N+1) \end{bmatrix} \nonumber
+    \hat{\bm{P}}^*=\begin{bmatrix} \hat{\bm{p}}^*(k) ,\hat{\bm{p}}^*(k-1),\dots,\hat{\bm{p}}^*(k-N+1) \end{bmatrix} \nonumber
 \end{equation}
 Each element of these updated sets are calculated as,
-    \begin{equation}
-    \begin{split}
-	\hat{p}_x^*(k-i) = \hat{p}_x(k-i)+\sum_{j=1}^i v(k-j)\cos{\theta_h(k-j)t_s} \\
-	\hat{p}_y^*(k-i) = \hat{p}_y(k-i)+\sum_{j=1}^i v(k-j)\sin{\theta_h(k-j)t_s}
-	\end{split}
+	\begin{equation}
+	\hat{\bm{p}}^*(k-i) = \hat{\bm{p}}(k-i)+\sum_{j=i}^1 v(k-j)\theta_h(k-j)t_s 
 	\end{equation}
-where $i=1,2,\dots,N-1$, $\hat{p}_x^*$ and $\hat{p}_y^*$ are the $x$ and $y$ position coordinates within $\hat{\bm{p}}^*$ and the most recent position estimate at the time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$. The mean of the updated set is written as $\hat{\bar{\bm{p}}}^*$, which is used for the calculation of the estimated confidence interval region. To demonstrate how this works, Fig. \ref{fig:pseudo_static} gives a visualization of how the position estimates are transitioned into a pseudo-static case.
+where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$. The mean of the updated set is written as $\hat{\bar{\bm{p}}}^*$, which is used for the calculation of the estimated confidence region. To demonstrate how this works, Fig. \ref{fig:pseudo_static} gives a visualization of how the position estimates are transitioned into a pseudo-static case. Updating \eqref{Confidence_region}, we get
+    \begin{equation}
+    \label{Confidence_region_updated}
+		\hat{\bm{\varepsilon}}_{\hat{\bar{\bm{p}}}^*|N} = \hat{\bar{\bm{p}}}^* + z^{*}\frac{\sigma_p}{\sqrt{N}}
+	\end{equation}
+ to account for all $N-1$ translated previous data points to appear as if they all were sampled at time interval k.
 
 \begin{figure}[ht!]
 \vspace{1pt}

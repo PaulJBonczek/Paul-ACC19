@@ -92,8 +92,10 @@ Since the adaptive control algorithm used is based on a discrete-time state spac
     \begin{equation}
 	\bm{x}(k+1) = \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k)
 	\end{equation}
-
-with a discrete-time transfer function:
+	\begin{equation}
+	y(k)=\bm{C}\bm{x}(k)
+	\end{equation}
+with the vector $y(k)$ is described as a generalized scalar output of the system, the output matrix is defined as $C \in \R^{1\times p}$, while $A_d \in \R^{p\times p}$ and $B_d \in \R^{p\times m}$ retain the same dimensions as the continuous-time case. The state space model's discrete-time transfer function is,
 	\begin{align}
 	\begin{split}
 	\label{eq:transfer_function}
@@ -101,9 +103,6 @@ with a discrete-time transfer function:
 	& = \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n} 
 	\end{split}
 	\end{align}
-	\begin{equation}
-	\text{where } b_0\ne{0}, d>0, \text{ and } n-d-m\geq{0} \nonumber
-	\end{equation}
 with $b_0\ne{0}$, $d>0$, $n-d-m\geq{0}$, $n$ and $m$ are orders of the transfer function's denominator and numerator, and $d$ is the system delay. 
 
 Using an Autoregressive Moving Average (ARMA) model and defining the operators $q^{-1}$ (delay) and $q$ (advance),
@@ -118,8 +117,7 @@ the system (\ref{eq:transfer_function}) is now expressed as:
 	&=q^{-d}(b_0+b_1q^{-1}+...+b_mq^{-m})u(k)
 	\end{split}
 	\end{align}
-Now, by defining, 
-%where:
+Now, by defining from \eqref{ARMA_equation}, 
 	\begin{equation}
 	\label{eq:A_q}
 	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n})
@@ -162,6 +160,6 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
 	\end{equation}
-The vector $y(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $C \in \R^{s\times n}$.  
+The vector $y(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $C \in \R^{s\times p}$.  
 
 \end{section}
