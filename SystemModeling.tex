@@ -51,7 +51,7 @@ This presents a high-level model of the vehicle, describing only the motion equa
     \begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
-with the state matrix $\bm{A}(t) \in \R^{p\times p}$, the input matrix $\bm{B}(t) \in \R^{p\times m}$, state vector $\bm{x}(t) \in \R^{p}$, and system input $\bm{u}(t) \in \R^{m}$. $\bm{A}(t)$, $\bm{B}(t)$, $\bm{x}(t)$, and $\bm{u}(t)$ are given by:
+with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t) \in \R^{n\times m}$, state vector $\bm{x}(t) \in \R^{n}$, and system input $\bm{u}(t) \in \R^{m}$. $\bm{A}(t)$, $\bm{B}(t)$, $\bm{x}(t)$, and $\bm{u}(t)$ are given by:
 
 %    \begin{equation}
 %	\bm{A}_v(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) \\ 0 & 1 & sin(\theta_h) \\ 0 & 0 & -(B_s+B_r) \end{bmatrix},
@@ -95,71 +95,123 @@ Since the adaptive control algorithm used is based on a discrete-time state spac
 	\begin{equation}
 	y(k)=\bm{C}\bm{x}(k)
 	\end{equation}
-with the vector $y(k)$ is described as a generalized scalar output of the system, the output matrix is defined as $C \in \R^{1\times p}$, while $A_d \in \R^{p\times p}$ and $B_d \in \R^{p\times m}$ retain the same dimensions as the continuous-time case. The state space model's discrete-time transfer function is,
+with $y(k)$ is described as a generalized scalar output of the system, the output matrix is defined as $\bm{C} \in \R^{n}$, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$ retain the same dimensions as the continuous-time case. The state space model's discrete-time transfer function is,
+% 	\begin{align}
+% 	\begin{split}
+% 	\label{eq:transfer_function}
+%         G(z) & = \frac{y(z)}{u(z)} = \bm{C}(z\bm{I}-\bm{A}_d)^{-1}\bm{B}_d  \\
+% 	& = \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n} 
+% 	\end{split}
+% 	\end{align}
+% with $b_0\ne{0}$, $d>0$, $n-d-m\geq{0}$, $n$ and $m$ are orders of the transfer function's denominator and numerator, and $d$ is the system delay. 
+
+% Using an Autoregressive Moving Average (ARMA) model and defining the operators $q^{-1}$ (delay) and $q$ (advance),
+% 	\begin{equation}
+% 	q^{-1}x(k) = x(k-1), \;\;qx(k) = x(k+1)
+% 	\end{equation}
+% the system (\ref{eq:transfer_function}) is now expressed as:
+%     \begin{align}
+%     \begin{split}
+%     \label{ARMA_equation}
+% 	(1+&a_1q^{-1}+...+a_nq^{-n})y(k) \\
+% 	&=q^{-d}(b_0+b_1q^{-1}+...+b_mq^{-m})u(k)
+% 	\end{split}
+% 	\end{align}
+% Now, by defining from \eqref{ARMA_equation}, 
+% 	\begin{equation}
+% 	\label{eq:A_q}
+% 	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n})
+% 	\end{equation}
+% 	\begin{equation}
+% 	\label{eq:B_prime}
+% 	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m})
+% 	\end{equation}
+% we can revise \eqref{ARMA_equation} to the system expressed as:
+% 	\begin{equation}
+% 	\label{eq:ARMA_equation_revise}
+% 	A(q^{-1})y(k)=q^{-d}B^{'}(q^{-1})u(k)
+% 	\end{equation}
+% We want to design an input signal $u(k)$ that ensures our system's output $y(k)$ tracks $y^*(k)$ from the reference model, with a given input reference signal $r(k)$. This reference model is expressed as,
+% 	\begin{equation}
+% 	\label{eq:reference model_q}
+% 	E(q^{-1})y^*(k+d)=q^{-d}gH(q^{-1})r(k)
+% 	\end{equation}
+% with,
+%     \begin{equation}
+%     \label{eq:E_q}
+% 	E(q^{-1})=1+e_1q^{-1}+ \dots +e_wq^{-w}
+% 	\end{equation}
+% 	\begin{equation}
+% 	H(q^{-1})=1+h_1q^{-1}+ \dots +h_{w-1}q^{-w+1}
+% 	\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% Beginning of Change %%%%%%%%%%%%%%%%%%%%%%%
+
+
 	\begin{align}
 	\begin{split}
 	\label{eq:transfer_function}
         G(z) & = \frac{y(z)}{u(z)} = \bm{C}(z\bm{I}-\bm{A}_d)^{-1}\bm{B}_d  \\
-	& = \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n} 
+	& = \frac{b_0z^{p-d}+b_1z^{p-d-1} +...+b_mz^{p-d-q}}{z^{p}+a_1z^{p-1}+...+a_{p-1}z+a_p} 
 	\end{split}
 	\end{align}
-with $b_0\ne{0}$, $d>0$, $n-d-m\geq{0}$, $n$ and $m$ are orders of the transfer function's denominator and numerator, and $d$ is the system delay. 
-
-Using an Autoregressive Moving Average (ARMA) model and defining the operators $q^{-1}$ (delay) and $q$ (advance),
-	\begin{equation}
-	q^{-1}x(k) = x(k-1), \;\;qx(k) = x(k+1)
-	\end{equation}
-the system (\ref{eq:transfer_function}) is now expressed as:
+with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the transfer function's denominator and numerator, and $d$ is the system delay. From \eqref{eq:transfer_function}, the system can be expressed as:
     \begin{align}
     \begin{split}
     \label{ARMA_equation}
-	(1+&a_1q^{-1}+...+a_nq^{-n})y(k) \\
-	&=q^{-d}(b_0+b_1q^{-1}+...+b_mq^{-m})u(k)
+	(1+&a_1z^{-1}+...+a_pz^{-p})y(k) \\
+	&=z^{-d}(b_0+b_1z^{-1}+...+b_qz^{-q})u(k)
 	\end{split}
 	\end{align}
 Now, by defining from \eqref{ARMA_equation}, 
 	\begin{equation}
 	\label{eq:A_q}
-	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n})
+	A(z^{-1})=(1+a_1z^{-1}+...+a_pz^{-p})
 	\end{equation}
 	\begin{equation}
 	\label{eq:B_prime}
-	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m})
+	B^{'}(z^{-1})=(b_0+b_1z^{-1}+...+b_qz^{-q})
 	\end{equation}
 we can revise \eqref{ARMA_equation} to the system expressed as:
 	\begin{equation}
 	\label{eq:ARMA_equation_revise}
-	A(q^{-1})y(k)=q^{-d}B^{'}(q^{-1})u(k)
+	A(z^{-1})y(k)=z^{-d}B^{'}(z^{-1})u(k)
 	\end{equation}
 We want to design an input signal $u(k)$ that ensures our system's output $y(k)$ tracks $y^*(k)$ from the reference model, with a given input reference signal $r(k)$. This reference model is expressed as,
 	\begin{equation}
 	\label{eq:reference model_q}
-	E(q^{-1})y^*(k+d)=q^{-d}gH(q^{-1})r(k)
+	E(z^{-1})y^*(k+d)=z^{-d}gH(z^{-1})r(k)
 	\end{equation}
 with,
     \begin{equation}
     \label{eq:E_q}
-	E(q^{-1})=1+e_1q^{-1}+ \dots +e_wq^{-w}
+	E(z^{-1})=1+e_1z^{-1}+ \dots +e_wz^{-w}
 	\end{equation}
 	\begin{equation}
-	H(q^{-1})=1+h_1q^{-1}+ \dots +h_{w-1}q^{-w+1}
+	H(z^{-1})=1+h_1z^{-1}+ \dots +h_{w-1}z^{-w+1}
 	\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% END OF CHANGE %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 This creates a stable model reference transfer function in the form:
 	\begin{equation}
 	\label{eq:reference model_z}
 	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
 	\end{equation}
-The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. $E$
+The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$.
 
 
  \subsection{Noise and Disturbance Model}
-When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
+When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty vectors due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
     \begin{equation}
 	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k)
 	\end{equation}
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
 	\end{equation}
-The vector $y(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $C \in \R^{s\times p}$.  
+The vector $\bm{y}(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $\bm{C} \in \R^{s\times n}$.  
 
 \end{section}
