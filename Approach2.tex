@@ -215,11 +215,11 @@ We take an $l_1$ vector norm of the $i^{th}$ row from the difference matrix \eqr
     \begin{equation}
 	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 \end{bmatrix}
 	\end{equation}
-Next, another column vector $\bm{V}(k) \in \R^s$ is created with every element equal to $\min \bm{\Psi}^{'}(k)$:
+\NB{Let's consider the minimum ....  }Next, another column vector $\bm{V}(k) \in \R^s$ is created with every element equal to $\min \bm{\Psi}^{'}(k)$:
     \begin{equation}
 	\bm{V}(k)=\begin{bmatrix} \min \bm{\Psi}^{'}(k) & \min \bm{\Psi}^{'}(k) & \dots & \min \bm{\Psi}^{'}(k) \end{bmatrix}^T
 	\end{equation}
-We now define the error vector as:
+We now define \NB{a new error vector}the error vector as:
     \begin{align}
     \label{eq:Psi2}
 	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{V}(k) \\
