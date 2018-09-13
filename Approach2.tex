@@ -313,17 +313,26 @@ where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k
 \end{figure}
 
 Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\hat{\bm{P}}^*$ is calculated as:
-    \begin{equation}
-	\hat{\varepsilon}_{v,\theta_h|N}^{*}=\sqrt{(v^{*}\cos{\theta_h^{*}})^2+(v^{\star}\sin{\theta_h^{*}})^2} \cdot Nt_s
-	\end{equation}
+    \begin{align}
+    \begin{split}
+	\hat{\varepsilon}_{v,\theta_h|N}^{*}=\Big( \big[(\bar{v}^*& \cos{\bar{\theta}_h^*} - \bar{v}\cos{\bar{\theta}_h})(N-1)t_s \big]^2 \\
+	&+ \big[ (\bar{v}^* \sin{\bar{\theta}_h^*} - \bar{v}\sin{\bar{\theta}_h})(N-1)t_s \big]^2 \Big) ^{1/2}
+	\end{split}
+	\end{align}
 where,
     \begin{equation}
-	v^{*}=\bar{v}(k-i_{\varepsilon^{*}})+c_p\sigma_v \nonumber
+	\bar{v}^{*}=\bar{v}(k-i_{\varepsilon^{*}})+c_p\sigma_v \nonumber
+	\end{equation}
+    \begin{equation}
+	\bar{v}=\bar{v}(k-i_{\varepsilon^{*}}) \nonumber
 	\end{equation}
 	\begin{equation}
-	\theta_h^{*}=\bar{\theta}_h(k-i_{\varepsilon^{*}})+c_p\sigma_h \nonumber
+	\bar{\theta}_h^{*}=\bar{\theta}_h(k-i_{\varepsilon^{*}})+c_p\sigma_h \nonumber
 	\end{equation}
-with $i_{\varepsilon^{*}}=[1,2,,\dots,N]$ while average measured velocity and average measured heading angles over the past $N$ samples are denoted by $\bar{v}$ and $\bar{\theta}_h$, respectively. Doing this account for velocity and heading angle measurement error and ensure the vehicle's position is within our estimation region.
+	\begin{equation}
+	\bar{\theta}_h=\bar{\theta}_h(k-i_{\varepsilon^{*}}) \nonumber
+	\end{equation}
+with $i_{\varepsilon^{*}}=[1,2,,\dots,N-1]$ while average measured velocity and average measured heading angles over the past $N-1$ samples of range $i_{\varepsilon^{*}}$ are denoted by $\bar{v}$ and $\bar{\theta}_h$, respectively. Doing this account for velocity and heading angle measurement error and ensure the vehicle's position is within our estimation region.
 
 
 \subsection{Adaptive Motion Planning}
