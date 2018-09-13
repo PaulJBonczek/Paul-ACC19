@@ -1,7 +1,7 @@
 
 \begin{section}{Approach}
 \label{sec:approach}
-In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} to guarantee vehicle safety. We follow the architecture in the block diagrams of Fig. \ref{fig:system_arch} to accomplish these problems. A detector monitors sensor measurements and calculated inputs for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the position estimator along with the high level motion planner update the reference $r(k)$ to the controller to ensure safety.
+In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to accomplish these problems \NB{what do you mean to accomplish a problem?}. A detector monitors sensor measurements and calculates inputs for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the position estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety.
 
 \begin{figure}[ht!]
 \vspace{1pt}
@@ -14,14 +14,14 @@ In this section we describe the framework for detection of sensor attacks for sy
 \subsection{Resilient Adaptive Control}
 \label{sec:Res_adapt_control}
 
-A Resilient Adaptive Controller will allow the system to detect sensor attacks while maintaining control performance as dynamical and disturbance uncertainties occur. To maintain this control performance, a Model Reference Adaptive Controller is used. First, we want to ensure adequate information of the system is known in order to design the resilient adaptive controller, the following assumptions need to be true:
+A Resilient Adaptive Controller \NB{you didn't show it yet. You are talking about this controller as if it hasalready been presented} will allow the system to detect sensor attacks while maintaining control performance as dynamical and disturbance uncertainties occur. To maintain this control performance, a Model Reference Adaptive Controller is used. First, we want to ensure adequate information of the system is known \NB{not clear} in order to design the resilient adaptive controller, the following assumptions need to be true:
 	\begin{enumerate}[leftmargin=3\parindent]
 	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^q$ from \eqref{eq:B_prime} are within $|z|<1$. 
 	\item[$A2)$] $p$ and $q$ are known. 
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. For detection of sensor attacks in dynamically changing or unknown systems, the model reference adaptive control is an effective solution to the problem. We utilize many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive},
+The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. For detection of sensor attacks in dynamically changing or unknown systems, the model reference adaptive control is an effective solution to the problem \NB{why?}. We utilize \NB{you mean leverage?} many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive},
 	\begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\label{assumtions_ensure}
 	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
@@ -29,13 +29,14 @@ The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, an
 	\label{Truth2}
 	\item[$T3)$] $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
 	\end{enumerate}
-with $y(k)$ as the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time.
+where $y(k)$ is the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time.\NB{nope! You are showing the properties but haven't show yet how it works}\NB{this should go after} \NB{this section needs to be reorganized: first you present the architecture and introduce the reader with the subsystems and explain that each subsystems is associated with a sensor. For each subsystem we compute the adaptive control input and here you show briefly how to calculate these inputs and what are the properties of the adaptive controller and then you discuss about the error}
 
-The resilient adaptive controller will employ an architecture of redundant subsystems, as shown in Fig. \ref{fig:det_arch}. Each sensor measurement $y_i$ where $i=1,2,\dots,s$ has its own adaptive controller to generate an input $u^*_i$ to follow a desired tracking signal $y^*_i$. Each of the output sensor measurements, when uncompromised, have convergence (T2) towards their desired tracking signal from the corresponding reference model. 
+The resilient adaptive controller will employ \NB{you didn't show it yet. You are talking about this controller as if it has already been presented} an architecture of redundant subsystems, as shown in Fig. \ref{fig:det_arch}. Each sensor measurement $y_i$ where $i=1,2,\dots,s$ has its own adaptive controller to generate an input $u^*_i$ to follow a desired tracking signal $y^*_i$. Each of the output sensor measurements, when uncompromised, have convergence (T2) towards their desired tracking signal from the corresponding reference model. 
     \begin{equation}
     \label{multiple_output_tracking}
     \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0, \text{ }\forall i
     \end{equation}
+    \NB{remove $\forall i$}
 This remains true with a changing reference signal $r_i(k)$, changing dynamics, or bounded disturbances. 
 
 \begin{figure}[ht!]
@@ -46,7 +47,7 @@ This remains true with a changing reference signal $r_i(k)$, changing dynamics, 
 \label{fig:det_arch}
 \end{figure}
 
-To following equations \eqref{eq:Start}$-$\eqref{eq:End} will illustrate how to compute the input $u^*_i$ of each subsystem. Many steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted and can be found in \cite{tao2003adaptive,Goodwin1643720}, but we will emphasize the important equations. The model reference control is designed by solving the following polynomial equation,
+To following equations \eqref{eq:Start}$-$\eqref{eq:End} will illustrate how to compute the input $u^*_i$ of each subsystem \NB{fix}. Many steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted and can be found in \cite{tao2003adaptive,Goodwin1643720}, but we will emphasize the important equations. The model reference control is designed by solving the following polynomial equation,
 %     \begin{equation}
 %     \label{eq:Start}
 % 	E(q^{-1})=F(q^{-1})A(q^{-1})+q^{-d}G(q^{-1})
@@ -167,6 +168,8 @@ We update the estimate $\bm{\theta}^T(k)$ of the true parameter vector $\bm{\the
 	\begin{align*}
 	\varepsilon<a(k)<2-\varepsilon, 0,\varepsilon<1, c>0
 	\end{align*}
+	
+	\NB{too many details ...cut this part to the bare minimum. This is already been done. It's not our contribution}
 To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u(k)$ is then calculated from the equation:
     \begin{equation}
     \label{eq:tracking_model}
@@ -223,7 +226,7 @@ We now define the error vector as:
 	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
 	\end{align}
 	
-From \eqref{eq:u_to_0} while under ideal conditions, the error vector \eqref{eq:Psi2} has all elements equal to zero. To constitute ideal conditions, uncertainties due to sensor and actuator noise, or any other unaccounted for changes to the state or measurement vectors are not considered. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
+From \eqref{eq:u_to_0} while under ideal conditions, the error vector \eqref{eq:Psi2} has all elements equal to zero. To constitute ideal conditions, uncertainties due to sensor and actuator noise, or any other unaccounted for changes to the state or measurement vectors are not considered \NB{they are assumed 0}. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
 
 Under non-ideal conditions where uncertainties exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, we say all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
     \begin{align}
