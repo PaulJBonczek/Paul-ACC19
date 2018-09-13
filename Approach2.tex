@@ -42,7 +42,7 @@ This remains true with a changing reference signal $r_i(k)$, changing dynamics, 
 \vspace{1pt}
 \centering
 \includegraphics[width=0.48\textwidth]{con_and_det.png}
-\caption{Architecture of the detection scheme within the adaptive controlled system. Representing  the $s$ number of available measurement sensors for that output.}
+\caption{Architecture of the detection scheme within the adaptive controlled system. Representing  the $s$ number of available measurements, each of their adaptive subsystems generate a temporary input to be sent to the attack detector. From there, the detector removes measurement subsystems that are compromised.}
 \label{fig:det_arch}
 \end{figure}
 
@@ -305,7 +305,7 @@ where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k
 \vspace{1pt}
 \centering
 \includegraphics[width=0.48\textwidth]{pseudo_static.png}
-\caption{Translation of the original position estimates $\hat{\bm{p}}(k)$ to a pseudo-static case $\hat{\bm{p}}^*(k)$ as if all the position estimates were sampled from the vehicle at the current time $k$.}
+\caption{Translation of the original position estimates $\hat{\bm{p}}$ to a pseudo-static case $\hat{\bm{p}}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
 \label{fig:pseudo_static}
 \end{figure}
 
