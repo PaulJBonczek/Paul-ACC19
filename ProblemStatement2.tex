@@ -7,13 +7,7 @@ We are interested in finding a strategy to detect sensor attacks in an unknown, 
 
 
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
-% be able to distinguish between dynamical changes and attacks and also adapt the motion planning to safety travel in the environment
 
-
-% 1st section of adaptive control (approach) talk more about detection
-% What kind of attacks can I detect?
-
-% Lemmas to show something
 Our first objective is to detect sensor attacks within a dynamically unknown system and then remove any compromised sensor to maintain stable and safe control of the vehicle through the remaining of its mission. Formally:
 
 \begin{problem} 
@@ -24,22 +18,35 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 	\end{equation}
 find a policy $\mathcal{P}$ to:
 \begin{enumerate}
-	\item differentiate between malicious sensor attacks and changing dynamics or failures; \NB{add a mathematical representation of this}
-	\item remove the compromised sensors to restore system integrity. \NB{add a mathematical representation of this to be used in Problem 2} %for all future time instances $k+h$. 
+	\item differentiate between malicious sensor attacks and changing dynamics or failures; 
+	\begin{equation}
+	\label{eq:detect_attack}
+	    error(y_i) > \delta
+	\end{equation}
+	(REFINE THIS EQUATION)
+	where ... is ... and $\delta$ is an error threshold.
+	\item remove the compromised sensor measurements to restore system integrity.
+	\begin{equation}
+	\label{eq:remove_sensors}
+	    \bm{y}=\bm{y}_0 \setminus \bm{y}_a
+	\end{equation}
 \end{enumerate}
-all while maintaining the adaptive system's control performance\NB{what's this adaptive system's performance ???}. \NB{we need to clearly state that part of this problem is to adapt the controller to deal with non-attacks scenarios}\NB{what's next is not part of the problem formulation. It should go after the problem!}Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
+where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial set of measurements, and $\bm{y}_a$ is the set of removed measurements due to attack.
+
+
 % needs to be taken into account during replanning. Thus we need to replan to consider that we have fewer sensors.
 \end{problem}
 Solving Problem 1 removes the compromised sensors, however leaving the system with fewer sensors as designed. Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}}
-\NB{this problem is still not formal. You should start with: Find a policy to adapt the motion planning strategy if the condition in [cite the equation above in problem 1] is satisfied to guarantee safety, i.e. adapt motion in such a way that the vehicle never enters a known undesired region}With Problem 1 solved, we want to find a policy to operate safely given a few number of sensors than originally designed. We want to develop a policy to adapt motion in such a way that the vehicle never enters a known undesired region, ...of Given .... find a policy
+Find a policy to adapt the motion planning strategy if \eqref{eq:detect_attack},\eqref{eq:remove_sensors} are satisfied to guarantee safety, i.e. adapt motion in such a way that the vehicle doesn't enter an undesired state:
 	\begin{equation}
-		\lVert {\bm{p}(k)-\bm{p}_{r_i}} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
+		\lVert {\bm{p}(k)-\bm{p}_r} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
-where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_{r_i}$ is the positions of the ${i}^{th}$ regions to avoid in the $x-y$ plane \NB{no no...what's the ith region in the x-y plane??? Let's be formal and talk about states. }, $\Delta(k)$ is a defined distance between the vehicle's position and an undesired region, and $N_r \in \N$ is the total number of undesired regions. 
-\NB{rewrite this problem more formally!}
+where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_r$ is the position of any known undesired region, $\Delta(k)$ is a defined distance between the vehicle's position and an undesired region, and $N_r \in \N$ is the total number of undesired regions. 
 \end{problem}
+
+%Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
 
 Solving this problem allows the autonomous vehicle to adapt its motion according to the new sensor set, guaranteeing the vehicle never enters an undesired region.
 

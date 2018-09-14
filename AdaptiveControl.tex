@@ -1,0 +1,69 @@
+% From Approach
+
+    \begin{equation}
+    \label{eq:Start}
+	E(z^{-1})=F(z^{-1})A(z^{-1})+z^{-d}G(z^{-1})
+	\end{equation}
+by matching the coefficients of $z^{-i}$ for both $F(z^{-1})$ and $G(z^{-1})$ with known polynomials $E(z^{-1})$ and $A(z^{-1})$ from \eqref{eq:E_q} and \eqref{eq:A_q}.
+Now, we express \eqref{eq:ARMA_equation_revise} as,
+	\begin{equation}
+	\label{eq:ARMA_equation_revise2}
+	E(z^{-1})y_i(k+d)={\alpha}z^{-1}y_i(k) + {\beta}z^{-1}u_i(k)
+	\end{equation}
+with the polynomials,
+	\begin{equation}
+	\alpha(z^{-1})=G(z^{-1})=\alpha_0+\alpha_1z^{-1}+ \dots +\alpha_{p-1}z^{-p+1}
+	\end{equation}
+	\begin{align}
+	\begin{split}
+	\beta( z^{-1})= F(z^{-1})&B^{'}(z^{-1})=\beta_0+\beta_1z^{-1} \\
+	& + \dots +\beta_{q+d-1}z^{-q-d+1}, \beta_0\neq0
+	\end{split}
+	\end{align}
+The right side of equation \eqref{eq:ARMA_equation_revise2} can be expressed by para-metrization in the form,
+    \begin{equation}
+	E(z^{-1})y_i(k+d)=\bm{\theta}_0(k)\bm{\phi}(k)
+	\end{equation}
+with the unknown vector $\bm{\theta}_0$ and known signal vector $\bm{\phi}(k)$:
+    \begin{equation}
+	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
+	\end{equation}
+	\begin{align}
+	\begin{split}
+	\bm{\phi}(k)&=(y_i(k), \dots ,y_i(k-p+1),u_i(k), \dots , \\
+	& u_i(k-q-d+1))^T \in \R^{p+q+d}
+	\end{split}
+	\end{align}
+Since we want the system to have the same characteristics as the reference model \eqref{eq:reference model_q}, we need to estimate the true parameter vector $\bm{\theta}_0$ with the estimated parameter vector $\bm{\theta}^T(k)$. 
+    \begin{equation}
+    \bm{\theta}(k)=(\theta_1(k), \dots ,\theta_p(k),\theta_{p+1}(k), \dots ,\theta_{p+q+d}(k))^T
+	\end{equation}
+We update the estimate $\bm{\theta}^T(k)$ of the true parameter vector $\bm{\theta}_0$ using a \textit{Modified Projection Algorithm}:
+	\begin{equation}
+	\label{eq:Modified_Proj_Algorithm}
+	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
+	\end{equation}
+	\begin{equation}
+	e(k)=E(z^{-1})y_i(k)-\theta^T(k-1)\bm{\phi}(k-d)
+	\end{equation}
+	\begin{align*}
+	\varepsilon<a(k)<2-\varepsilon, 0,\varepsilon<1, c>0
+	\end{align*}
+	
+	\NB{too many details ...cut this part to the bare minimum. This is already been done. It's not our contribution}
+To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u(k)$ is then calculated from the equation:
+    \begin{equation}
+    \label{eq:tracking_model}
+	\bm{\theta}^T(k)\bm{\phi}(k)=E(z^{-1})y_i^*(k+d)
+	\end{equation}
+By rearranging \eqref{eq:tracking_model} we isolate $u(k)$ to calculate our next input signal for each subsystem:
+	\begin{align}
+	\label{eq:End}
+	u_i(k)=\frac{1}{\theta_{p+1}(k)}&(-\theta_1(k)y_i(k)-\theta_2(k)y_i(k-1)  \nonumber \\
+    -\dots-\theta_p(k)y_i(k&-p-1)-\theta_{p+2}(k)u_i(k-1)  \\
+	-\theta_{p+3}(k)u_i(k-2)-& \dots - \theta_{p+q+d}(k)u_i(k-q-d+1) \nonumber \\
+	+g&H(z^{-1})r_i(k))^T \nonumber
+	\end{align}
+    \begin{equation}
+	\theta_{p+1}(k)\neq0 \nonumber
+	\end{equation}

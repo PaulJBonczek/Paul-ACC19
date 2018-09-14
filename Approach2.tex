@@ -1,7 +1,7 @@
 
 \begin{section}{Approach}
 \label{sec:approach}
-In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to accomplish these problems \NB{what do you mean to accomplish a problem?}. A detector monitors sensor measurements and calculates inputs for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the position estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety.
+In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors sensor measurements and calculates inputs for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the position estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety.
 
 \begin{figure}[ht!]
 \vspace{1pt}
@@ -14,14 +14,59 @@ In this section we describe the framework for detection of sensor attacks for sy
 \subsection{Resilient Adaptive Control}
 \label{sec:Res_adapt_control}
 
-A Resilient Adaptive Controller \NB{you didn't show it yet. You are talking about this controller as if it hasalready been presented} will allow the system to detect sensor attacks while maintaining control performance as dynamical and disturbance uncertainties occur. To maintain this control performance, a Model Reference Adaptive Controller is used. First, we want to ensure adequate information of the system is known \NB{not clear} in order to design the resilient adaptive controller, the following assumptions need to be true:
+In this section we describe our framework to detect sensor attacks and the sensor reconfiguration problems using a series of adaptive controlled subsystems. The architecture followed in this work is shown in Fig. \ref{fig:det_arch}, which consists of a subsystem for each sensor measurement within the same controlled state. Each subsystem consists of a model reference adaptive controller to generate the next input $u^*_i$ where $i=1,2,\dots,s$ given its corresponding measurement signal $y_i$.
+First, to design the resilient model reference adaptive controller, the assumption is the following information is true:
 	\begin{enumerate}[leftmargin=3\parindent]
 	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^q$ from \eqref{eq:B_prime} are within $|z|<1$. 
 	\item[$A2)$] $p$ and $q$ are known. 
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. For detection of sensor attacks in dynamically changing or unknown systems, the model reference adaptive control is an effective solution to the problem \NB{why?}. We utilize \NB{you mean leverage?} many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive},
+The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted, which are be found in \cite{tao2003adaptive,Goodwin1643720}, but we will emphasize the important equations to calculate for the next input. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
+    \begin{equation}
+	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
+	\end{equation}
+The objective of the adaptive control is to estimate the true parameters of $\bm{\theta}_0$ with the parameter estimate vector $\bm{\theta}^T(k)$:
+    \begin{equation}
+    \bm{\theta}(k)=(\theta_1(k), \dots ,\theta_p(k),\theta_{p+1}(k), \dots ,\theta_{p+q+d}(k))^T
+	\end{equation}
+With our known input and measurement signals within a signal vector $\bm{\phi}(k)$,
+    
+	\begin{align}
+	\begin{split}
+	\bm{\phi}(k)&=(y_i(k), \dots ,y_i(k-p+1),u^*_i(k), \dots , \\
+	& u^*_i(k-q-d+1))^T \in \R^{p+q+d}
+	\end{split}
+	\end{align}
+we can to estimate the true parameter vector $\bm{\theta}_0$ by updating the parameter estimate vector $\bm{\theta}^T(k)$ using a \textit{Modified Projection Algorithm}:
+	\begin{equation}
+	\label{eq:Modified_Proj_Algorithm}
+	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
+	\end{equation}
+	\begin{equation}
+	e(k)=E(z^{-1})y_i(k)-\theta^T(k-1)\bm{\phi}(k-d)
+	\end{equation}
+	\begin{align*}
+	\epsilon<a(k)<2-\epsilon, 0,\epsilon<1, c>0
+	\end{align*}
+To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u^*_i(k)$ is then calculated from the equation:
+    \begin{equation}
+    \label{eq:tracking_model}
+	\bm{\theta}^T(k)\bm{\phi}(k)=E(z^{-1})y^*(k+d)
+	\end{equation}
+By rearranging \eqref{eq:tracking_model} we isolate $u^*_i(k)$ to calculate our next input signal for each subsystem:
+	\begin{align}
+	\label{eq:End}
+	u^*_i(k)=\frac{1}{\theta_{p+1}(k)}&(-\theta_1(k)y_i(k)-\theta_2(k)y_i(k-1)  \nonumber \\
+    -\dots-\theta_p(k)y_i(k&-p-1)-\theta_{p+2}(k)u^*_i(k-1)  \\
+	-\theta_{p+3}(k)u^*_i(k-2)-& \dots - \theta_{p+q+d}(k)u^*_i(k-q-d+1) \nonumber \\
+	+g&H(z^{-1})r(k))^T \nonumber
+	\end{align}
+    \begin{equation}
+	\theta_{p+1}(k)\neq0 \nonumber
+	\end{equation}
+
+We leverage many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive},
 	\begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\label{assumtions_ensure}
 	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
@@ -29,15 +74,14 @@ The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, an
 	\label{Truth2}
 	\item[$T3)$] $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
 	\end{enumerate}
-where $y(k)$ is the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time.\NB{nope! You are showing the properties but haven't show yet how it works}\NB{this should go after} \NB{this section needs to be reorganized: first you present the architecture and introduce the reader with the subsystems and explain that each subsystems is associated with a sensor. For each subsystem we compute the adaptive control input and here you show briefly how to calculate these inputs and what are the properties of the adaptive controller and then you discuss about the error}
+where $y(k)$ is the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time. \NB{this section needs to be reorganized: first you present the architecture and introduce the reader with the subsystems and explain that each subsystems is associated with a sensor. For each subsystem we compute the adaptive control input and here you show briefly how to calculate these inputs and what are the properties of the adaptive controller and then you discuss about the error}
 
-The resilient adaptive controller will employ \NB{you didn't show it yet. You are talking about this controller as if it has already been presented} an architecture of redundant subsystems, as shown in Fig. \ref{fig:det_arch}. Each sensor measurement $y_i$ where $i=1,2,\dots,s$ has its own adaptive controller to generate an input $u^*_i$ to follow a desired tracking signal $y^*_i$. Each of the output sensor measurements, when uncompromised, have convergence (T2) towards their desired tracking signal from the corresponding reference model. 
+The resilient adaptive controller employs the architecture of redundant subsystems where each sensor measurement $y_i$ has its adaptive controller to generate an input $u^*_i$ to follow a desired tracking signal $y^*_i$. Each of the sensor measurements, when uncompromised, have convergence (T2) towards their desired tracking signal from the corresponding reference model,
     \begin{equation}
     \label{multiple_output_tracking}
-    \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0, \text{ }\forall i
+    \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0
     \end{equation}
-    \NB{remove $\forall i$}
-This remains true with a changing reference signal $r_i(k)$, changing dynamics, or bounded disturbances. 
+for $i=1,2,\dots,s$. This remains true with a changing reference signal $r_i(k)$, changing dynamics, or bounded disturbances. 
 
 \begin{figure}[ht!]
 \vspace{1pt}
@@ -47,153 +91,10 @@ This remains true with a changing reference signal $r_i(k)$, changing dynamics, 
 \label{fig:det_arch}
 \end{figure}
 
-To following equations \eqref{eq:Start}$-$\eqref{eq:End} will illustrate how to compute the input $u^*_i$ of each subsystem \NB{fix}. Many steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted and can be found in \cite{tao2003adaptive,Goodwin1643720}, but we will emphasize the important equations. The model reference control is designed by solving the following polynomial equation,
-%     \begin{equation}
-%     \label{eq:Start}
-% 	E(q^{-1})=F(q^{-1})A(q^{-1})+q^{-d}G(q^{-1})
-% 	\end{equation}
-% by matching the coefficients of $q^{-i}$ for both $F(q^{-1})$ and $G(q^{-1})$ with known polynomials $E(q^{-1})$ and $A(q^{-1})$ from \eqref{eq:E_q} and \eqref{eq:A_q}.
-% Now, we express \eqref{eq:ARMA_equation_revise} as,
-% 	\begin{equation}
-% 	\label{eq:ARMA_equation_revise2}
-% 	E(q^{-1})y_i(k+d)={\alpha}q^{-1}y_i(k) + {\beta}q^{-1}u_i(k)
-% 	\end{equation}
-% with the polynomials,
-% 	\begin{equation}
-% 	\alpha(q^{-1})=G(q^{-1})=\alpha_0+\alpha_1q^{-1}+ \dots +\alpha_{n-1}q^{-n+1}
-% 	\end{equation}
-% 	\begin{align}
-% 	\begin{split}
-% 	\beta( q^{-1})= F(q^{-1})&B^{'}(q^{-1})=\beta_0+\beta_1q^{-1} \\
-% 	& + \dots +\beta_{m+d-1}q^{-m-d+1}, \beta_0\neq0
-% 	\end{split}
-% 	\end{align}
-% The right side of equation \eqref{eq:ARMA_equation_revise2} can be expressed by para-metrization in the form,
-%     \begin{equation}
-% 	E(q^{-1})y_i(k+d)=\bm{\theta}_0(k)\bm{\phi}(k)
-% 	\end{equation}
-% with the unknown vector $\bm{\theta}_0$ and known signal vector $\bm{\phi}(k)$:
-%     \begin{equation}
-% 	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{n-1},\beta_0, \dots ,\beta_{m+d-1})^T \in \R^{n+m+d}
-% 	\end{equation}
-% 	\begin{align}
-% 	\begin{split}
-% 	\bm{\phi}(k)&=(y_i(k), \dots ,y_i(k-n+1),u_i(k), \dots , \\
-% 	& u_i(k-m-d+1))^T \in \R^{n+m+d}
-% 	\end{split}
-% 	\end{align}
-% Since we want the system to have the same characteristics as the reference model \eqref{eq:reference model_q}, we need to estimate the true parameter vector $\bm{\theta}_0$ with the estimated parameter vector $\bm{\theta}^T(k)$. 
-%     \begin{equation}
-%     \bm{\theta}(k)=(\theta_1(k), \dots ,\theta_n(k),\theta_{n+1}(k), \dots ,\theta_{n+m+d}(k))^T
-% 	\end{equation}
-% We update the estimate $\bm{\theta}^T(k)$ of the true parameter vector $\bm{\theta}_0$ using a \textit{Modified Projection Algorithm}:
-% 	\begin{equation}
-% 	\label{eq:Modified_Proj_Algorithm}
-% 	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
-% 	\end{equation}
-% 	\begin{equation}
-% 	\bm{e}(k)=E(q^{-1})y_i(k)-\theta^T(k-1)\bm{\phi}(k-d)
-% 	\end{equation}
-% 	\begin{align*}
-% 	\varepsilon<a(k)<2-\varepsilon, 0,\varepsilon<1, c>0
-% 	\end{align*}
-% To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u(k)$ is then calculated from the equation:
-%     \begin{equation}
-%     \label{eq:tracking_model}
-% 	\bm{\theta}^T(k)\bm{\phi}(k)=E(q^{-1})y_i^*(k+d)
-% 	\end{equation}
-% By rearranging \eqref{eq:tracking_model} we isolate $u(k)$ to calculate our next input signal for each subsystem:
-% 	\begin{align}
-% 	\label{eq:End}
-% 	u_i(k)=\frac{1}{\theta_{n+1}(k)}&(-\theta_1(k)y_i(k)-\theta_2(k)y_i(k-1)  \nonumber \\
-%     -\dots-\theta_n(k)y_i(k&-n-1)-\theta_{n+2}(k)u_i(k-1)  \\
-% 	-\theta_{n+3}(k)u_i(k-2)-& \dots - \theta_{n+m+d}(k)u_i(k-m-d+1) \nonumber \\
-% 	+g&H(q^{-1})r_i(k))^T \nonumber
-% 	\end{align}
-%     \begin{equation}
-% 	\theta_{n+1}(k)\neq0 \nonumber
-% 	\end{equation}
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%% Beginning of Changes %%%%%%%%%%%%%%%%%%%%%
-
-    \begin{equation}
-    \label{eq:Start}
-	E(z^{-1})=F(z^{-1})A(z^{-1})+z^{-d}G(z^{-1})
-	\end{equation}
-by matching the coefficients of $z^{-i}$ for both $F(z^{-1})$ and $G(z^{-1})$ with known polynomials $E(z^{-1})$ and $A(z^{-1})$ from \eqref{eq:E_q} and \eqref{eq:A_q}.
-Now, we express \eqref{eq:ARMA_equation_revise} as,
-	\begin{equation}
-	\label{eq:ARMA_equation_revise2}
-	E(z^{-1})y_i(k+d)={\alpha}z^{-1}y_i(k) + {\beta}z^{-1}u_i(k)
-	\end{equation}
-with the polynomials,
-	\begin{equation}
-	\alpha(z^{-1})=G(z^{-1})=\alpha_0+\alpha_1z^{-1}+ \dots +\alpha_{p-1}z^{-p+1}
-	\end{equation}
-	\begin{align}
-	\begin{split}
-	\beta( z^{-1})= F(z^{-1})&B^{'}(z^{-1})=\beta_0+\beta_1z^{-1} \\
-	& + \dots +\beta_{q+d-1}z^{-q-d+1}, \beta_0\neq0
-	\end{split}
-	\end{align}
-The right side of equation \eqref{eq:ARMA_equation_revise2} can be expressed by para-metrization in the form,
-    \begin{equation}
-	E(z^{-1})y_i(k+d)=\bm{\theta}_0(k)\bm{\phi}(k)
-	\end{equation}
-with the unknown vector $\bm{\theta}_0$ and known signal vector $\bm{\phi}(k)$:
-    \begin{equation}
-	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
-	\end{equation}
-	\begin{align}
-	\begin{split}
-	\bm{\phi}(k)&=(y_i(k), \dots ,y_i(k-p+1),u_i(k), \dots , \\
-	& u_i(k-q-d+1))^T \in \R^{p+q+d}
-	\end{split}
-	\end{align}
-Since we want the system to have the same characteristics as the reference model \eqref{eq:reference model_q}, we need to estimate the true parameter vector $\bm{\theta}_0$ with the estimated parameter vector $\bm{\theta}^T(k)$. 
-    \begin{equation}
-    \bm{\theta}(k)=(\theta_1(k), \dots ,\theta_p(k),\theta_{p+1}(k), \dots ,\theta_{p+q+d}(k))^T
-	\end{equation}
-We update the estimate $\bm{\theta}^T(k)$ of the true parameter vector $\bm{\theta}_0$ using a \textit{Modified Projection Algorithm}:
-	\begin{equation}
-	\label{eq:Modified_Proj_Algorithm}
-	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
-	\end{equation}
-	\begin{equation}
-	e(k)=E(z^{-1})y_i(k)-\theta^T(k-1)\bm{\phi}(k-d)
-	\end{equation}
-	\begin{align*}
-	\varepsilon<a(k)<2-\varepsilon, 0,\varepsilon<1, c>0
-	\end{align*}
-	
-	\NB{too many details ...cut this part to the bare minimum. This is already been done. It's not our contribution}
-To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u(k)$ is then calculated from the equation:
-    \begin{equation}
-    \label{eq:tracking_model}
-	\bm{\theta}^T(k)\bm{\phi}(k)=E(z^{-1})y_i^*(k+d)
-	\end{equation}
-By rearranging \eqref{eq:tracking_model} we isolate $u(k)$ to calculate our next input signal for each subsystem:
-	\begin{align}
-	\label{eq:End}
-	u_i(k)=\frac{1}{\theta_{p+1}(k)}&(-\theta_1(k)y_i(k)-\theta_2(k)y_i(k-1)  \nonumber \\
-    -\dots-\theta_p(k)y_i(k&-p-1)-\theta_{p+2}(k)u_i(k-1)  \\
-	-\theta_{p+3}(k)u_i(k-2)-& \dots - \theta_{p+q+d}(k)u_i(k-q-d+1) \nonumber \\
-	+g&H(z^{-1})r_i(k))^T \nonumber
-	\end{align}
-    \begin{equation}
-	\theta_{p+1}(k)\neq0 \nonumber
-	\end{equation}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%% End of Changes %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+%\eqref{eq:Start}$-$\eqref{eq:End}
 
 	
-As shown in Fig. \ref{fig:det_arch}, each $i^{th}$ MRAC subsystem has its own measurement signal, but they all share the same reference model and input $u_i$ that is directly used to control the specific state. Each MRAC subsystem calculates an updated temporary input $u^*_i(k)$ that is fed into the detector, which analyses each $i^{th}$ input $u^*_i$ to check for attacks.
+As shown in Fig. \ref{fig:det_arch}, each $i^{th}$ MRAC subsystem has its own measurement signal, but they all share the same reference model and input $u(k)$ that is directly used to control the specific state. Each MRAC subsystem calculates an updated temporary input $u^*_i(k)$ that is fed into the detector, which analyses each to check for attacks.
 
 Since \eqref{multiple_output_tracking} should hold during any operation, the following is also true:
 \begin{equation}
@@ -202,41 +103,42 @@ Since \eqref{multiple_output_tracking} should hold during any operation, the fol
 \end{equation}
 where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respected subsystems to control their measurement signal $y_i(k)$ towards the same tracking signal $y_i^*(k)$. Each temporary input, under ideal conditions, should be the same value as all other temporary inputs controlling their output to track the same tracking signal. For each subsystem to properly calculate the next input $u^*_i(k)$, their sensor measurement $y_i$ needs to be uncompromised. When one or more measurements have a non-zero value from the sensor attack vector $\xi_i(k) \neq 0$, those corresponding $i^{th}$ subsystem inputs $u^*_i$ diverge from the uncompromised subsystems.
 
-For detection, a difference matrix $\Psi(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
+For detection, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
     \begin{equation}
     \label{eq:error_matrix}
 	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,s}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{s,1}(k) &  &  & \psi_{s,s}(k) \end{bmatrix}
 	\end{equation}
-where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ is the number of measurements from the available measurement set $\bm{y} \in \R^s$. Each element within $\bm{\Psi}(k)$ is represented as the absolute difference between two temporary inputs.
+where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ is the number of measurements from the available measurement set $\bm{y} \in \R^s$. Each element within $\bm{\Psi}(k)$ is represented as the absolute difference between two temporary inputs:
     \begin{equation}
         \psi_{i,j}(k)=|u^*_i(k)-u^*_j(k)|
     \end{equation}
-We take an $l_1$ vector norm of the $i^{th}$ row from the difference matrix \eqref{eq:error_matrix} which gives us the following column vector:
+We take an $l_1$ vector norm of the $i^{th}$ row from the difference matrix \eqref{eq:error_matrix} which gives us the following difference vector:
     \begin{equation}
-	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 \end{bmatrix}
+    \label{eq:difference_vector}
+	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}
 	\end{equation}
-\NB{Let's consider the minimum ....  }Next, another column vector $\bm{V}(k) \in \R^s$ is created with every element equal to $\min \bm{\Psi}^{'}(k)$:
+Let's consider the minimum valued element of \eqref{eq:difference_vector} to form another vector $\bm{\Psi}^{'}_{min}(k) \in \R^s$, with every element equal to $\min \bm{\Psi}^{'}(k)$:
     \begin{equation}
-	\bm{V}(k)=\begin{bmatrix} \min \bm{\Psi}^{'}(k) & \min \bm{\Psi}^{'}(k) & \dots & \min \bm{\Psi}^{'}(k) \end{bmatrix}^T
+	\bm{\Psi}^{'}_{min}(k)=\begin{bmatrix} \min \bm{\Psi}^{'}(k),& \dots \text{ },&\min \bm{\Psi}^{'}(k) \end{bmatrix}^T
 	\end{equation}
-We now define \NB{a new error vector}the error vector as:
+We now define the error vector as:
     \begin{align}
     \label{eq:Psi2}
-	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{V}(k) \\
-	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
+	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \\
+	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
 	\end{align}
 	
-From \eqref{eq:u_to_0} while under ideal conditions, the error vector \eqref{eq:Psi2} has all elements equal to zero. To constitute ideal conditions, uncertainties due to sensor and actuator noise, or any other unaccounted for changes to the state or measurement vectors are not considered \NB{they are assumed 0}. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
+From \eqref{eq:u_to_0} while under ideal conditions, where all uncertainties are assumed 0, the error vector \eqref{eq:Psi2} has all elements equal to zero. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
 
 Under non-ideal conditions where uncertainties exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, we say all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
     \begin{align}
     \begin{split}
     \label{eq:Psi2_nonideal}
-	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}(k) \\
-	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_M(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}
+	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \\
+	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}
 	\end{split}
 	\end{align}
-with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar value $\delta$. When an $i^{th}$ element of $\bm{\Psi^{''}}(k)$ breaks the $\delta$ threshold, the corresponding $i^{th}$ measurement is placed into the set $\bm{y}_a$ for measurements no longer used by the system. The updated measurement set is $\bm{y}=\bm{y}_0\setminus\bm{y}_a$ where $\bm{y}_0$ was the initial full set of measurements and $\bm{y}_a$ is the set of removed measurements due to attacks. The updated measurement vector is of the dimensions $\bm{y} \in \R^{(s-s_{a})}$ with $s_a$ representing the size of set $\bm{y}_a$. The new updated dimensions of the output matrix due to the changing measurement vector is $\bm{C} \in \R^{(s-s_a)\times n}$. Effective detection is constrained to when less than of the measurements of the same controlled state are attacked. Once all temporary inputs $u_i^*(k)$ have been checked, the best available (e.g. measurement with lowest noise profile) is chosen to be used for the true control signal $u_i(k)$ to the system.
+with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar value $\delta$. When an $i^{th}$ element of $\bm{\Psi^{''}}(k)$ breaks the $\delta$ threshold, the corresponding $i^{th}$ measurement is placed into the set $\bm{y}_a$ for measurements no longer used by the system. The updated measurement set is $\bm{y}=\bm{y}_0\setminus\bm{y}_a$ where $\bm{y}_0$ was the initial full set of measurements and $\bm{y}_a$ is the set of removed measurements due to attacks. The updated measurement vector is of the dimensions $\bm{y} \in \R^{s}$ with $\bm{s}_0$ as the initial set of sensor measurements and $s_a$ representing the size of attacked sensor measurement set $\bm{y}_a$. The new dimension of the output matrix due to the changing measurement vector is $\bm{C} \in \R^{s\times n}$ where $s=s_0-s_a$. Effective detection is constrained to when less than half of the measurements of the same controlled state are attacked. Once all temporary inputs $u_i^*(k)$ have been checked, the best available (e.g. measurement with lowest noise profile) is chosen to be used for the true control signal $u_i(k)$ to the system.
 
 
 
@@ -277,12 +179,27 @@ with $c_p$ defining the value for a specific confidence percentage, which can be
 		\hat{\varepsilon} = c_p\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
 Similar to the calculation of confidence intervals, it is under the assumption the true mean is static, is not changing over time. This cannot be assumed in our case of position estimation of a navigating vehicle. 
+
+% \begin{figure}[ht!]
+% \vspace{1pt}
+% \centering
+% \includegraphics[width=0.48\textwidth]{Gaussian2D.png}
+% \caption{Distribution of vehicle's estimated position over 100 samples in an $X-Y$ plane with equal noise variance on the $X$ and $Y$ axis. Creating a psuedo-static case allows for the calculation of a confidence region for vehicle position.}
+% \label{fig:gauss_pdf}
+% \end{figure}
+
+
 \begin{figure}[ht!]
-\vspace{1pt}
-\centering
-\includegraphics[width=0.48\textwidth]{Gaussian2D.png}
-\caption{Distribution of vehicle's estimated position over 100 samples in an $X-Y$ plane with equal noise variance on the $X$ and $Y$ axis. Creating a psuedo-static case allows for the calculation of a confidence region for vehicle position.}
 \label{fig:gauss_pdf}
+\begin{tabular}{cc}
+
+\subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{sample_1.png}} &	
+
+\subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{sample_5.png}}
+
+\end{tabular}
+\caption{A comparison of the size of the estimated confidence region as the $N$ number of data samples grow. In \ref{fig:1sample}, the estimated confidence region with 1 data sample is not as accurate. In \ref{fig:5samples}, the $N$ number of samples used is five, which gives a much smaller size and more accurate confidence region.}
+
 \end{figure}
 
 A pseudo-static form of a confidence region is made to compensate for translation of previous position measurements $\hat{\bm{p}}(k-i)$, where $i=1,2,\dots,N-1$. These $N-1$ number of previous position data points need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data to calculate the confidence region. As shown in Fig. \ref{fig:gauss_pdf}, we want to have the data samples for calculation of the confidence region look as if the vehicle is stationary. The $N$ position estimate samples are described in the set,
@@ -304,13 +221,29 @@ where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k
 	\end{equation}
  to account for all $N-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
 
+% \begin{figure}[ht!]
+% \vspace{1pt}
+% \centering
+% \includegraphics[width=0.48\textwidth]{pseudo_static.png}
+% \caption{Translation of the original position estimates $\hat{\bm{p}}$ to a pseudo-static case $\hat{\bm{p}}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
+% \label{fig:pseudo_static}
+% \end{figure}
+
+
 \begin{figure}[ht!]
-\vspace{1pt}
-\centering
-\includegraphics[width=0.48\textwidth]{pseudo_static.png}
-\caption{Translation of the original position estimates $\hat{\bm{p}}$ to a pseudo-static case $\hat{\bm{p}}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
 \label{fig:pseudo_static}
+\begin{tabular}{cc}
+
+\subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.18\textwidth]{pseudo_static_left.png}} &	
+
+\subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.18\textwidth]{pseudo_static_right.png}}
+
+\end{tabular}
+\caption{Translation of the original position estimates $\hat{\bm{p}}$ to a pseudo-static case $\hat{\bm{p}}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
+
 \end{figure}
+
+
 
 Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to the actuator and sensor noises over the furthest sample in time in $\hat{\bm{P}}^*$ is calculated as:
     \begin{align}
