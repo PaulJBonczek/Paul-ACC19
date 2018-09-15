@@ -1,7 +1,7 @@
 
 \begin{section}{Approach}
 \label{sec:approach}
-In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors sensor measurements and calculates inputs for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the position estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety.
+In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors sensor measurements and calculates inputs for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the position estimator \NB{state estimator not position} along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety.
 
 \begin{figure}[ht!]
 \vspace{1pt}
@@ -14,15 +14,18 @@ In this section we describe the framework for detection of sensor attacks for sy
 \subsection{Resilient Adaptive Control}
 \label{sec:Res_adapt_control}
 
-In this section we describe our framework to detect sensor attacks and the sensor reconfiguration problems using a series of adaptive controlled subsystems. The architecture followed in this work is shown in Fig. \ref{fig:det_arch}, which consists of a subsystem for each sensor measurement within the same controlled state. Each subsystem consists of a model reference adaptive controller to generate the next input $u^*_i$ where $i=1,2,\dots,s$ given its corresponding measurement signal $y_i$.
-First, to design the resilient model reference adaptive controller, the assumption is the following information is true:
+In this section \NB{avoid "In this section, In this work"} \NB{this first part can go in the previous section, something like: Next, we described the framework for attack detection and ...}we describe our framework to detect sensor attacks and the sensor reconfiguration problems using a series of adaptive controlled subsystems. 
+\NB{In order to detect and remove attacks we propose the architecture in Fig. 2 in which redundant sensor measurements are considered. Specifically multiple subsystems are considered, one for each sensor measurement and whiting each subsystem a model reference adaptive control scheme is implemented to obtain the desired input to track a reference signal $y^*$. As in our previous work \cite{NICOLA IROS14 AND ICCPS14} here we assume that at most $N/2$ sensors can be compromised in order to estimate the state of the system.}
+The architecture followed in this work is shown in Fig. \ref{fig:det_arch}, which consists of a subsystem for each sensor measurement within the same controlled state. Each subsystem consists of a model reference adaptive controller to generate the next input $u^*_i$ where $i=1,2,\dots,s$ given its corresponding measurement signal $y_i$.
+
+First, to design the resilient model reference adaptive controller, we assume that:
 	\begin{enumerate}[leftmargin=3\parindent]
 	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^q$ from \eqref{eq:B_prime} are within $|z|<1$. 
 	\item[$A2)$] $p$ and $q$ are known. 
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted, which are be found in \cite{tao2003adaptive,Goodwin1643720}, but we will emphasize the important equations to calculate for the next input. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
+The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted here, which can be found in \cite{tao2003adaptive,Goodwin1643720}, however we provide the important\NB{main...avoid expressions like important, beautiful, awesome, incredible, etc} equations \NB{needed to compute next input $u(k+1)$}to calculate for the next input. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
     \begin{equation}
 	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
 	\end{equation}
@@ -38,7 +41,7 @@ With our known input and measurement signals within a signal vector $\bm{\phi}(k
 	& u^*_i(k-q-d+1))^T \in \R^{p+q+d}
 	\end{split}
 	\end{align}
-we can to estimate the true parameter vector $\bm{\theta}_0$ by updating the parameter estimate vector $\bm{\theta}^T(k)$ using a \textit{Modified Projection Algorithm}:
+we can estimate the true parameter vector $\bm{\theta}_0$ by updating the parameter estimate vector $\bm{\theta}^T(k)$ using a \textit{Modified Projection Algorithm}:
 	\begin{equation}
 	\label{eq:Modified_Proj_Algorithm}
 	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
@@ -54,7 +57,7 @@ To follow the desired tracking output $y^*(k)$ from the reference model, the ada
     \label{eq:tracking_model}
 	\bm{\theta}^T(k)\bm{\phi}(k)=E(z^{-1})y^*(k+d)
 	\end{equation}
-By rearranging \eqref{eq:tracking_model} we isolate $u^*_i(k)$ to calculate our next input signal for each subsystem:
+By rearranging \eqref{eq:tracking_model} we isolate $u^*_i(k)$ to calculate our next input signal for each subsystem \NB{$i=1...complete$}:
 	\begin{align}
 	\label{eq:End}
 	u^*_i(k)=\frac{1}{\theta_{p+1}(k)}&(-\theta_1(k)y_i(k)-\theta_2(k)y_i(k-1)  \nonumber \\
@@ -66,6 +69,7 @@ By rearranging \eqref{eq:tracking_model} we isolate $u^*_i(k)$ to calculate our 
 	\theta_{p+1}(k)\neq0 \nonumber
 	\end{equation}
 
+\NB{Once these subsystems inputs are computed, under the assumptions in (A1-A4), we leverage the following MRAC properties to detect...:}
 We leverage many of the MRAC's assurances and guarantees for our technique to detect sensor attacks when the system model is changing or unknown. We know that under the assumptions of (A1-A4), the following are true \cite{tao2003adaptive},
 	\begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
 	\label{assumtions_ensure}
@@ -95,25 +99,26 @@ for $i=1,2,\dots,s$. This remains true with a changing reference signal $r_i(k)$
 %\eqref{eq:Start}$-$\eqref{eq:End}
 
 	
-As shown in Fig. \ref{fig:det_arch}, each $i^{th}$ MRAC subsystem has its own measurement signal, but they all share the same reference model and input $u(k)$ that is directly used to control the specific state. Each MRAC subsystem calculates an updated temporary input $u^*_i(k)$ that is fed into the detector, which analyses each to check for attacks.
+As shown in Fig. \ref{fig:det_arch}, each $i^{th}$ MRAC subsystem has its own measurement signal, but they all share the same reference model and input $u(k)$ that is directly used to control the specific state. Each MRAC subsystem calculates an updated temporary input $u^*_i(k)$ that is fed into the detector, which analyses each to check for attacks. \NB{this section from "The resilient adaptive controller employs...till here" is confusing and redundant. Shrink it to the bare minimum and just add any new information or anything that may help to clarify if needed}
 
 Since \eqref{multiple_output_tracking} should hold during any operation, the following is also true:
 \begin{equation}
     \label{eq:u_to_0}
     \lim_{k\to\infty}(u^*_i(k)-u^*_j(k))=0, \text{ }i\neq j
 \end{equation}
-where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respected subsystems to control their measurement signal $y_i(k)$ towards the same tracking signal $y_i^*(k)$. Each temporary input, under ideal conditions, should be the same value as all other temporary inputs controlling their output to track the same tracking signal. For each subsystem to properly calculate the next input $u^*_i(k)$, their sensor measurement $y_i$ needs to be uncompromised. When one or more measurements have a non-zero value from the sensor attack vector $\xi_i(k) \neq 0$, those corresponding $i^{th}$ subsystem inputs $u^*_i$ diverge from the uncompromised subsystems.
+\NB{specify in the equation $i,j=1...N$}
+where $u^*_i$ and $u^*_j$ refer to temporary inputs calculated from their respected subsystems\NB{to track the same signal $y_i^*(k)$. remove the rest} to control their measurement signal $y_i(k)$ towards the same tracking signal $y_i^*(k)$. Each temporary input, under ideal conditions, should be the same value as all other temporary inputs controlling their output to track the same tracking signal. For each subsystem to properly calculate the next input $u^*_i(k)$, their sensor measurement $y_i$ needs to be uncompromised. When one or more measurements have a non-zero value from the sensor attack vector $\xi_i(k) \neq 0$, those corresponding $i^{th}$ subsystem inputs $u^*_i$ diverge from the uncompromised subsystems.\NB{this last sentence is hard to read...fix it}
 
-For detection, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
+For attack detection, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
     \begin{equation}
     \label{eq:error_matrix}
 	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,s}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{s,1}(k) &  &  & \psi_{s,s}(k) \end{bmatrix}
 	\end{equation}
-where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ is the number of measurements from the available measurement set $\bm{y} \in \R^s$. Each element within $\bm{\Psi}(k)$ is represented as the absolute difference between two temporary inputs:
+where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ is \NB{"with s is" is not english}the number of measurements from the available measurement set $\bm{y} \in \R^s$. Each \NB{$\psi_{i,j}\in\bm{\Psi}$} element within $\bm{\Psi}(k)$ is \NB{computed as the absolute error between the two subsystem i and j inputs}represented as the absolute difference between two temporary inputs:
     \begin{equation}
         \psi_{i,j}(k)=|u^*_i(k)-u^*_j(k)|
     \end{equation}
-We take an $l_1$ vector norm of the $i^{th}$ row from the difference matrix \eqref{eq:error_matrix} which gives us the following difference vector:
+\NB{use passive form as much as possible. The $l_1$ norm for each raw in ... is then computed which...}We take an $l_1$ vector norm of the $i^{th}$ row from the difference matrix \eqref{eq:error_matrix} which gives us the following difference vector:
     \begin{equation}
     \label{eq:difference_vector}
 	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}
@@ -122,16 +127,16 @@ Let's consider the minimum valued element of \eqref{eq:difference_vector} to for
     \begin{equation}
 	\bm{\Psi}^{'}_{min}(k)=\begin{bmatrix} \min \bm{\Psi}^{'}(k),& \dots \text{ },&\min \bm{\Psi}^{'}(k) \end{bmatrix}^T
 	\end{equation}
-We now define the error vector as:
+We now define the updated error vector as:
     \begin{align}
     \label{eq:Psi2}
 	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \\
 	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
 	\end{align}
 	
-From \eqref{eq:u_to_0} while under ideal conditions, where all uncertainties are assumed 0, the error vector \eqref{eq:Psi2} has all elements equal to zero. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
+From \eqref{eq:u_to_0} while under ideal conditions (i.e., with no noise), the error vector \eqref{eq:Psi2} has all elements equal to zero. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
 
-Under non-ideal conditions where uncertainties exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, we say all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
+Under non-ideal conditions where noises exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, we say \NB{NO NO NO NO...in papers we don't say anythingå} all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
     \begin{align}
     \begin{split}
     \label{eq:Psi2_nonideal}
@@ -139,7 +144,7 @@ Under non-ideal conditions where uncertainties exist, the elements of the error 
 	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}
 	\end{split}
 	\end{align}
-with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar value $\delta$. When an $i^{th}$ element of $\bm{\Psi^{''}}(k)$ breaks the $\delta$ threshold, the corresponding $i^{th}$ measurement is placed into the set $\bm{y}_a$ for measurements no longer used by the system. The updated measurement set is $\bm{y}=\bm{y}_0\setminus\bm{y}_a$ where $\bm{y}_0$ was the initial full set of measurements and $\bm{y}_a$ is the set of removed measurements due to attacks. The updated measurement vector is of the dimensions $\bm{y} \in \R^{s}$ with $\bm{s}_0$ as the initial set of sensor measurements and $s_a$ representing the size of attacked sensor measurement set $\bm{y}_a$. The new dimension of the output matrix due to the changing measurement vector is $\bm{C} \in \R^{s\times n}$ where $s=s_0-s_a$. Effective detection is constrained to when less than half of the measurements of the same controlled state are attacked. Once all temporary inputs $u_i^*(k)$ have been checked, the best available (e.g. measurement with lowest noise profile) is chosen to be used for the true control signal $u_i(k)$ to the system.
+with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar value $\delta$\NB{how is $\delta$ computed...show}. When an $i^{th}$ element of $\bm{\Psi^{''}}(k)$ breaks the $\delta$ threshold, the corresponding $i^{th}$ measurement is placed into the set $\bm{y}_a$ for measurements no longer used by the system. The updated measurement set is $\bm{y}=\bm{y}_0\setminus\bm{y}_a$ where $\bm{y}_0$ was the initial full set of measurements and $\bm{y}_a$ is the set of removed measurements due to attacks. The updated measurement vector is of the dimensions $\bm{y} \in \R^{s}$ with $\bm{s}_0$ as the initial set of sensor measurements and $s_a$ representing the size of attacked sensor measurement set $\bm{y}_a$ \NB{this sentence is odd...remove it}. The new dimension of the output matrix due to the changing measurement vector is $\bm{C} \in \R^{s\times n}$ where $s=s_0-s_a$ \NB{all of the above overcomplicated sentences can be summarized as: After detecting and removing the compromised sensors, the updated measurement matrix shrinks to $\bm{C} \in \R^{s'\times n}$ with $s'=s_0-s_a$}. Effective detection is constrained to when less than half of the measurements of the same controlled state are attacked \NB{we state this before, also "to when" not good grammar}. Once all temporary \NB{why temporary? Are there not temporary inputs in this work? What's a temporary input?} inputs $u_i^*(k)$ have been checked, the best available (e.g. measurement with lowest noise profile) is chosen to be used for the true control signal $u_i(k)$ to the system.\NB{red flag here.How is this obtained?}
 
 
 
@@ -162,15 +167,15 @@ with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar valu
 
 \subsection{Estimation Confidence}
 
-In this work we leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are important because they calculate a confidence percentage that the true mean lies within the estimated bounds. As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean. Assuming the knowledge of the confidence percentage $z^{*}$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval of a percentage of confidence can be calculated:
+In this work \NB{remove in this work. It kills the fluidity of the paper} we leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate \NB{why? what's the problem here? Why do we need this? Please be clear and present the issues, something like...The vehicle has multiple sensors with different noise profiles, some of which are fused to obtain better state estimation, for example using Kalman filtering techniques. If a sensor is compromised, our detection scheme will remove it, however leaving the system with a smaller set of sensors. Thus here we are interested to compute a confidence interval around our state estimation and adapt the vehicle's motion plan if safety constraints could be violated.}. Confidence intervals are important because they calculate a confidence percentage that the true mean lies within the estimated bounds. As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean \NB{you are giving the results before showing how!}. Assuming the knowledge of the confidence percentage $z^{*}$ \NB{change symbol, confusing with previous z}, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval of a percentage of confidence can be calculated:
     \begin{equation}
      \label{Confidence_interval}
 		C_x = \bar{x} + z^{*}\frac{\sigma}{\sqrt{N}}
 	\end{equation}
 	
-For position estimation with sensor uncertainties, we need a guarantee the vehicle is within a region to prevent navigation into an undesired state. To do this, uncompromised sensor measurements are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\hat{\bm{p}}=[\hat{x},\hat{y}]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from data sheet specifications. Using an $N$ number of data samples of variance $\sigma_p^2$, we are able to estimate an interval of specific confidence that the vehicle is within the these boundaries.
+For position estimation with sensor uncertainties, we need a guarantee the vehicle is within a region to prevent navigation into an undesired state. To do this, \NB{avoid as much as possible these opening "to do this"} uncompromised sensor measurements are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\hat{\bm{p}}=[\hat{x},\hat{y}]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from data sheet specifications. Using an $N$ number of data samples of variance $\sigma_p^2$, we are able to estimate an interval of specific confidence that the vehicle is within the these boundaries \NB{rewrite better please, not clear}.
 
-For our case, we want to estimate a 2-dimensional interval. By calculating this multivariate confidence interval, we name it a confidence region, we estimate a region which the vehicle is within. This method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation has the form $\mathcal{N}(0,\sigma_p)$ where the position estimate data's population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety,
+For our case, we want to estimate a 2-dimensional interval. By calculating this multivariate confidence interval, we name it a confidence region, we estimate a region which the vehicle is within \NB{rewrite, terrible form.} \NB{I'm stopping here. This last part is really bad written. Rewrite in good english and form!}. This method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation has the form $\mathcal{N}(0,\sigma_p)$ where the position estimate data's population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety,
     \begin{equation}
     \label{Confidence_region}
 		\hat{\bm{\varepsilon}}_{\hat{\bar{\bm{p}}}|N} = \hat{\bar{\bm{p}}} + c_p\frac{\sigma_p}{\sqrt{N}}

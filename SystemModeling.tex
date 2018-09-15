@@ -1,7 +1,7 @@
 \begin{section}{System Models and Architecture}
 	
 \label{sec:modeling}
-In this section, the system dynamical, noise, and disturbance models used for control and motion plannign are described. We also introduce the adaptive control model that will be used later on in our approach in Section \ref{sec:Res_adapt_control}.
+In this section, the system dynamical, noise, and disturbance models used for control and motion planning are described. We also introduce the adaptive control model that will be used later on in our approach in Section \ref{sec:Res_adapt_control}.
 
 % Bold letters only for vectors
 % Approach
@@ -44,12 +44,13 @@ In this work we consider a differential-drive ground vehicle model \cite{nutaro2
 	\end{align}
 in which $x$ and $y$ coordinates represent position, $\theta_h$ represents the vehicle's heading
 % angle measured from the positive $x$ axis, 
- and $v$ is the speed in this direction of motion. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. 
+ and $v$ is the speed in this direction of motion. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling. \NB{what about $B_s$}
 % If the assumption is that the wheels do not slip.
 This presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in a time-varying continuous-time state space form,
     \begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
+\NB{add y=Cx here}
 with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t) \in \R^{n\times m}$, state vector $\bm{x}(t) \in \R^{n}$, and system input $\bm{u}(t) \in \R^{m}$. $\bm{A}(t)$, $\bm{B}(t)$, $\bm{x}(t)$, and $\bm{u}(t)$ are given by:
 
 %    \begin{equation}
@@ -92,18 +93,18 @@ Since the adaptive control algorithm used is based on a discrete-time state spac
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)
 	\end{equation}
-with $\bm{y}(k) \in \R^{s}$ is described as the output measurement vector, $\bm{C} \in \R^{s\times n}$ is defined as the output matrix, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$ retain the same dimensions as their continuous-time case equivalents.
+with $\bm{y}(k) \in \R^{s}$ is described as the output measurement vector, $\bm{C} \in \R^{s\times n}$ is defined as the output matrix, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$ retain the same dimensions as their continuous-time case equivalents. \NB{fix grammar here..."with y is" not good}
 
 
  \subsection{Noise, Disturbance, and Attack Models}
-When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty vectors due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
+When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty vectors due to measurement noise and sensor attacks \NB{emphasize more attacks in this section. It is barely mentioned. } is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}(k)$, respectively. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
     \begin{equation}
 	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k)
 	\end{equation}
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
 	\end{equation}
-The vector $\bm{y}(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $\bm{C} \in \R^{s\times n}$.  
+The vector $\bm{y}(k) \in \R^{s}$ is described as the sensor measurement vector of $s$ sensor measurements and the output matrix is defined as $\bm{C} \in \R^{s\times n}$. \NB{why again? You have already defined this before}  
 
 
 
@@ -112,7 +113,7 @@ The vector $\bm{y}(k) \in \R^{s}$ is described as the sensor measurement vector 
 
 \subsection{Adaptive Control Model}
 
-In this work we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model's \eqref{eq:discritzed_SS_model} discrete-time transfer function is,
+In this work\NB{too many "In this work". In stead say something like: To solve Problem 1 and detect cyber- attacks while adapting the system, we leverage} we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model's \eqref{eq:discritzed_SS_model} discrete-time transfer function is, \NB{in the z domain...add some details otherwise the reader will be confused why you have t,k, and z}
 
 	\begin{align}
 	\begin{split}
@@ -168,5 +169,6 @@ This creates a stable model reference transfer function in the form:
 	\end{equation}
 The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. 
 
+\NB{the adaptive control section is so-so. We are mentioning input and not showing how is calculated the input and postponing to later...this is usually not good.}
 
 \end{section}

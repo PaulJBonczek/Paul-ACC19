@@ -3,7 +3,7 @@
 \label{sec:problem}
 
 In this work we consider autonomous vehicle operations in cluttered environments under different uncertainties including noise, failures, and cyber-attacks on its sensors. 
-We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment. Specifically, a ground vehicle has an objective to navigate to one or more goals $g_i$ with $ i = \{1, 2, \dots, N_g\}$, $N_g \in \N$ positioned at $\bm{p}_{g_i}={\begin{bmatrix} x,y \end{bmatrix}}^T$, while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-attacks.
+We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment. Specifically, a ground vehicle has an objective to navigate to one or more goals $g_i$ with $ i = 1, 2, \dots, N_g$, $N_g \in \N$ positioned at $\bm{p}_{g_i}={\begin{bmatrix} x,y \end{bmatrix}}^T$, while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-attacks.
 
 
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
@@ -31,7 +31,7 @@ find a policy $\mathcal{P}$ to:
 	    \bm{y}=\bm{y}_0 \setminus \bm{y}_a
 	\end{equation}
 \end{enumerate}
-where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial set of measurements, and $\bm{y}_a$ is the set of removed measurements due to attack.
+where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial set of measurements, and $\bm{y}_a$ is the set of measurements under attack.
 
 
 % needs to be taken into account during replanning. Thus we need to replan to consider that we have fewer sensors.
@@ -39,15 +39,19 @@ where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial s
 Solving Problem 1 removes the compromised sensors, however leaving the system with fewer sensors as designed. Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}}
-Find a policy to adapt the motion planning strategy if \eqref{eq:detect_attack},\eqref{eq:remove_sensors} are satisfied to guarantee safety, i.e. adapt motion in such a way that the vehicle doesn't enter an undesired state:
+Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} satisfied, find a policy to adapt the motion planning strategy  to guarantee safety, i.e. adapt motion in such a way that the vehicle is guaranteed to never enter any undesired state $\bm{x}_r$:
 	\begin{equation}
-		\lVert {\bm{p}(k)-\bm{p}_r} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
+		\lVert {\bm{x}(k)-\bm{x}_r} \rVert >\Delta(k),  i \in \begin{bmatrix} 1,N_r \end{bmatrix}
 	\end{equation}
+	\NB{what is $i$?}
+	where $\Delta(k)$ is a user defined threshold.
+	\end{problem}
+	\NB{here explain that in our specific problem we look at the position of the vehicle in relation to undesired states like obstacles...}
 where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_r$ is the position of any known undesired region, $\Delta(k)$ is a defined distance between the vehicle's position and an undesired region, and $N_r \in \N$ is the total number of undesired regions. 
-\end{problem}
+
 
 %Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
 
-Solving this problem allows the autonomous vehicle to adapt its motion according to the new sensor set, guaranteeing the vehicle never enters an undesired region.
+Solving this problem allows the autonomous vehicle to adapt its motion according to the new sensor set, guaranteeing the vehicle never enters an undesired region in his workspace.
 
 \end{section}
