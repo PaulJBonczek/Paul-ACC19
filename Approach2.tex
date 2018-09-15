@@ -95,7 +95,7 @@ for $i=1,2,\dots,s$. This remains true with a changing reference signal $r_i(k)$
 \caption{Architecture of the detection scheme within the adaptive controlled system. Representing  the $s$ number of available measurements, each of their adaptive subsystems generate a temporary input to be sent to the attack detector. From there, the detector removes measurement subsystems that are compromised.}
 \label{fig:det_arch}
 \end{figure}
-
+\NB{Figure 2 needs to be moved above}
 %\eqref{eq:Start}$-$\eqref{eq:End}
 
 	
@@ -175,7 +175,7 @@ In this work \NB{remove in this work. It kills the fluidity of the paper} we lev
 	
 For position estimation with sensor uncertainties, we need a guarantee the vehicle is within a region to prevent navigation into an undesired state. To do this, \NB{avoid as much as possible these opening "to do this"} uncompromised sensor measurements are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\hat{\bm{p}}=[\hat{x},\hat{y}]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from data sheet specifications. Using an $N$ number of data samples of variance $\sigma_p^2$, we are able to estimate an interval of specific confidence that the vehicle is within the these boundaries \NB{rewrite better please, not clear}.
 
-For our case, we want to estimate a 2-dimensional interval. By calculating this multivariate confidence interval, we name it a confidence region, we estimate a region which the vehicle is within \NB{rewrite, terrible form.} \NB{I'm stopping here. This last part is really bad written. Rewrite in good english and form!}. This method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation has the form $\mathcal{N}(0,\sigma_p)$ where the position estimate data's population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety,
+For our case, we want to estimate a 2-dimensional interval. By calculating this multivariate confidence interval, we name it a confidence region, we estimate a region which the vehicle is within \NB{rewrite, terrible form.} \NB{I'm stopping here. This last part is really bad. Rewrite in good english and form!}. This method guarantees the center of the vehicle has a specific percentage of confidence that it's within this region. The data being used for estimation has the form $\mathcal{N}(0,\sigma_p)$ where the position estimate data's population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we can find a multivariate region of a determined confidence percentage that the vehicle is within to ensure safety,
     \begin{equation}
     \label{Confidence_region}
 		\hat{\bm{\varepsilon}}_{\hat{\bar{\bm{p}}}|N} = \hat{\bar{\bm{p}}} + c_p\frac{\sigma_p}{\sqrt{N}}
