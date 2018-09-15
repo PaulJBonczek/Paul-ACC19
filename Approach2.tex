@@ -74,7 +74,8 @@ We leverage many of the MRAC's assurances and guarantees for our technique to de
 	\label{Truth2}
 	\item[$T3)$] $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
 	\end{enumerate}
-where $y(k)$ is the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time. \NB{this section needs to be reorganized: first you present the architecture and introduce the reader with the subsystems and explain that each subsystems is associated with a sensor. For each subsystem we compute the adaptive control input and here you show briefly how to calculate these inputs and what are the properties of the adaptive controller and then you discuss about the error}
+where $y(k)$ is the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time. 
+
 
 The resilient adaptive controller employs the architecture of redundant subsystems where each sensor measurement $y_i$ has its adaptive controller to generate an input $u^*_i$ to follow a desired tracking signal $y^*_i$. Each of the sensor measurements, when uncompromised, have convergence (T2) towards their desired tracking signal from the corresponding reference model,
     \begin{equation}
@@ -193,9 +194,9 @@ Similar to the calculation of confidence intervals, it is under the assumption t
 \label{fig:gauss_pdf}
 \begin{tabular}{cc}
 
-\subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{sample_1.png}} &	
+\subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{sample1.png}} &	
 
-\subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{sample_5.png}}
+\subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{sample5.png}}
 
 \end{tabular}
 \caption{A comparison of the size of the estimated confidence region as the $N$ number of data samples grow. In \ref{fig:1sample}, the estimated confidence region with 1 data sample is not as accurate. In \ref{fig:5samples}, the $N$ number of samples used is five, which gives a much smaller size and more accurate confidence region.}
@@ -234,9 +235,9 @@ where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k
 \label{fig:pseudo_static}
 \begin{tabular}{cc}
 
-\subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.18\textwidth]{pseudo_static_left.png}} &	
+\subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.21\textwidth]{pseudo_static_left.png}} &	
 
-\subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.18\textwidth]{pseudo_static_right.png}}
+\subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.21\textwidth]{pseudo_static_right.png}}
 
 \end{tabular}
 \caption{Translation of the original position estimates $\hat{\bm{p}}$ to a pseudo-static case $\hat{\bm{p}}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}

@@ -80,7 +80,19 @@ with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t
      \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)= \begin{bmatrix} F_l+F_r \\ F_l-F_r  \end{bmatrix}  \nonumber
 	\end{equation}
 
-
+The dynamically changing model is defined to a set point from initially known parameters within the $\bm{A}$ and $\bm{B}$ matrices:
+	\begin{equation}
+	\dot{\bm{x}}(t) = \bm{A}\bm{x}(t) + \bm{B}\bm{u}(t)
+	\end{equation}
+Since the adaptive control algorithm used is based on a discrete-time state space model, the continuous-time model needs to be discretized. With a suitable sampling time $t_s$, the linearized discrete-time model is written as,
+    \begin{equation}
+    \label{eq:discritzed_SS_model}
+	\bm{x}(k+1) = \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k)
+	\end{equation}
+	\begin{equation}
+	\bm{y}(k)=\bm{C}\bm{x}(k)
+	\end{equation}
+with $\bm{y}(k) \in \R^{s}$ is described as the output measurement vector, $\bm{C} \in \R^{s\times n}$ is defined as the output matrix, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$ retain the same dimensions as their continuous-time case equivalents.
 
 
  \subsection{Noise, Disturbance, and Attack Models}
@@ -99,70 +111,8 @@ The vector $\bm{y}(k) \in \R^{s}$ is described as the sensor measurement vector 
 
 
 \subsection{Adaptive Control Model}
-In this work we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A}$ and  $\bm{B}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The dynamically changing model is linearized to a defined set point from initially known parameters within the $\bm{A}$ and $\bm{B}$ matrices:
-	\begin{equation}
-	\dot{\bm{x}}(t) = \bm{A}\bm{x}(t) + \bm{B}\bm{u}(t)
-	\end{equation}
-Since the adaptive control algorithm used is based on a discrete-time state space model, the continuous-time model needs to be discretized. With a suitable sampling time $t_s$, the linearized discrete-time model is written as,
-    \begin{equation}
-	\bm{x}(k+1) = \bm{A}_d\bm{x}(k) + \bm{B}_du(k)
-	\end{equation}
-	\begin{equation}
-	y(k)=\bm{C}\bm{x}(k)
-	\end{equation}
-with $y(k)$ is described as a generalized scalar output of the system \NB{WHAT???? }, the output matrix is defined as $\bm{C} \in \R^{n}$, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$ retain the same dimensions as the continuous-time case. The state space model's discrete-time transfer function is,
-% 	\begin{align}
-% 	\begin{split}
-% 	\label{eq:transfer_function}
-%         G(z) & = \frac{y(z)}{u(z)} = \bm{C}(z\bm{I}-\bm{A}_d)^{-1}\bm{B}_d  \\
-% 	& = \frac{b_0z^{n-d}+b_1z^{n-d-1} +...+b_mz^{n-d-m}}{z^{n}+a_1z^{n-1}+...+a_{n-1}z+a_n} 
-% 	\end{split}
-% 	\end{align}
-% with $b_0\ne{0}$, $d>0$, $n-d-m\geq{0}$, $n$ and $m$ are orders of the transfer function's denominator and numerator, and $d$ is the system delay. 
 
-% Using an Autoregressive Moving Average (ARMA) model and defining the operators $q^{-1}$ (delay) and $q$ (advance),
-% 	\begin{equation}
-% 	q^{-1}x(k) = x(k-1), \;\;qx(k) = x(k+1)
-% 	\end{equation}
-% the system (\ref{eq:transfer_function}) is now expressed as:
-%     \begin{align}
-%     \begin{split}
-%     \label{ARMA_equation}
-% 	(1+&a_1q^{-1}+...+a_nq^{-n})y(k) \\
-% 	&=q^{-d}(b_0+b_1q^{-1}+...+b_mq^{-m})u(k)
-% 	\end{split}
-% 	\end{align}
-% Now, by defining from \eqref{ARMA_equation}, 
-% 	\begin{equation}
-% 	\label{eq:A_q}
-% 	A(q^{-1})=(1+a_1q^{-1}+...+a_nq^{-n})
-% 	\end{equation}
-% 	\begin{equation}
-% 	\label{eq:B_prime}
-% 	B^{'}(q^{-1})=(b_0+b_1q^{-1}+...+b_mq^{-m})
-% 	\end{equation}
-% we can revise \eqref{ARMA_equation} to the system expressed as:
-% 	\begin{equation}
-% 	\label{eq:ARMA_equation_revise}
-% 	A(q^{-1})y(k)=q^{-d}B^{'}(q^{-1})u(k)
-% 	\end{equation}
-% We want to design an input signal $u(k)$ that ensures our system's output $y(k)$ tracks $y^*(k)$ from the reference model, with a given input reference signal $r(k)$. This reference model is expressed as,
-% 	\begin{equation}
-% 	\label{eq:reference model_q}
-% 	E(q^{-1})y^*(k+d)=q^{-d}gH(q^{-1})r(k)
-% 	\end{equation}
-% with,
-%     \begin{equation}
-%     \label{eq:E_q}
-% 	E(q^{-1})=1+e_1q^{-1}+ \dots +e_wq^{-w}
-% 	\end{equation}
-% 	\begin{equation}
-% 	H(q^{-1})=1+h_1q^{-1}+ \dots +h_{w-1}q^{-w+1}
-% 	\end{equation}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%% Beginning of Change %%%%%%%%%%%%%%%%%%%%%%%
-
+In this work we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model's \eqref{eq:discritzed_SS_model} discrete-time transfer function is,
 
 	\begin{align}
 	\begin{split}
@@ -216,8 +166,7 @@ This creates a stable model reference transfer function in the form:
 	\label{eq:reference model_z}
 	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
 	\end{equation}
-The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. \NB{need to summarize more this section}
-
+The variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. 
 
 
 \end{section}
