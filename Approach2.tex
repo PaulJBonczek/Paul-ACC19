@@ -41,7 +41,7 @@ The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, an
     \begin{equation}
 	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
 	\end{equation}
-The objective of the adaptive control is to estimate the true parameters of $\bm{\theta}_0$ with the parameter estimate vector $\bm{\theta}^T(k)$:
+The objective of the adaptive control is to estimate the true parameters of $\bm{\theta}_0$ with the parameter estimate vector $\bm{\theta}^T(k)$:\NB{no need to put the transpose in $\bm{\theta}^T(k)$}
     \begin{equation}
     \bm{\theta}(k)=(\theta_1(k), \dots ,\theta_p(k),\theta_{p+1}(k), \dots ,\theta_{p+q+d}(k))^T
 	\end{equation}
@@ -53,7 +53,7 @@ With our known input and measurement signals within a signal vector $\bm{\phi}(k
 	& u^*_i(k-q-d+1))^T \in \R^{p+q+d}
 	\end{split}
 	\end{align}
-we can estimate the true parameter vector $\bm{\theta}_0$ by updating the parameter estimate vector $\bm{\theta}^T(k)$ using a \textit{Modified Projection Algorithm}:
+we can estimate the true parameter vector $\bm{\theta}_0$ by updating the parameter estimate vector $\bm{\theta}^T(k)$ using a \textit{Modified Projection Algorithm} \NB{reference here?}:
 	\begin{equation}
 	\label{eq:Modified_Proj_Algorithm}
 	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
@@ -81,7 +81,7 @@ By rearranging \eqref{eq:tracking_model} we isolate $u^*_i(k)$ to calculate our 
 	\theta_{p+1}(k)\neq0 \nonumber
 	\end{equation}
 
-Once these subsystem inputs are computed, under the assumptions in (A1-A4), we leverage the following MRAC properties to detect sensor attacks when the system model is changing or unknown. The following properties are true \cite{tao2003adaptive},
+Once these subsystem inputs are computed, under the assumptions in (A1-A4), we leverage the following MRAC properties to detect sensor attacks when the system model is changing or unknown. The following properties are true \cite{tao2003adaptive},\NB{I would say that in \cite{tao2003adaptive} the following properties were found to be true when implementing a MRAC}
 	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
 	\label{assumtions_ensure}
 	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
@@ -101,7 +101,7 @@ for $i=1,2,\dots,s$. This remains true with a changing reference signal $r_i(k)$
 
 % Each MRAC subsystem calculates an input $u^*_i(k)$ that is fed into the detector, which analyses each to check for attacks. 
 
-Since \eqref{multiple_output_tracking} should hold during any operation, the following is also true:
+Since \eqref{multiple_output_tracking} should hold during any operation, the following \NB{the following what?} is also true:
 \begin{equation}
     \label{eq:u_to_0}
     \lim_{k\to\infty}(u^*_i(k)-u^*_j(k))=0, \text{ }i\neq j
@@ -109,7 +109,7 @@ Since \eqref{multiple_output_tracking} should hold during any operation, the fol
 \begin{equation}
     i,j = 1,2,\dots,s \nonumber
 \end{equation}
-where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y_i^*(k)$. Each input, under ideal conditions, should be the same value as all other subsystem inputs controlling their output to track the same tracking signal. For each subsystem to compute the next input $u^*_i(k)$, their sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs.
+where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y_i^*(k)$. Each input, under ideal \NB{what does it mean ideal? (i.e., considering perfect measurements with no noise)}conditions, should be the same value as all other subsystem inputs controlling their output to track the same tracking signal. For each subsystem to compute the next input $u^*_i(k)$, their \NB{fix grammar here} sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs. \NB{connect better this with what comes next, like: Mathematically, to detect attacks, a difference matrix...}
 
 
 
@@ -118,11 +118,11 @@ For attack detection, a difference matrix $\bm{\Psi}(k)$ is designed for every t
     \label{eq:difference_matrix}
 	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,s}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{s,1}(k) &  &  & \psi_{s,s}(k) \end{bmatrix}
 	\end{equation}
-where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ representing the number of available measurements from the measurement vector $\bm{y} \in \R^s$. Each element $\psi_{i,j}\in\bm{\Psi}$ is an error computed as the absolute difference between two temporary subsystem inputs:
+where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ representing the number of available measurements from the measurement vector $\bm{y} \in \R^s$ \NB{not needed...you have already presented s}. Each element $\psi_{i,j}\in\bm{\Psi}$ is an error computed as the absolute difference between two temporary \NB{remove temporary} subsystem inputs:
     \begin{equation}
         \psi_{i,j}(k)=|u^*_i(k)-u^*_j(k)|
     \end{equation}
-The $l_1$ vector norm for each row in the difference matrix \eqref{eq:difference_matrix} is computed which gives us the following difference vector:
+The $l_1$ vector norm for each row in the difference matrix \eqref{eq:difference_matrix} is computed which gives us the following difference vector \NB{why difference vector?}:
     \begin{equation}
     \label{eq:difference_vector}
 	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}
@@ -131,6 +131,7 @@ The minimum valued element of \eqref{eq:difference_vector} is used to form anoth
     \begin{equation}
 	\bm{\Psi}^{'}_{min}(k)=\begin{bmatrix} \min \bm{\Psi}^{'}(k),& \dots \text{ },&\min \bm{\Psi}^{'}(k) \end{bmatrix}^T
 	\end{equation}
+	\NB{maybe you can represent this as $\bm{\Psi}^{'}_{min}(k)=\min \bm{\Psi}^{'}(k) \left[\bf{1}\right]_s$ with $\left[\bf{1}\right]_s$ a column vector of 1s...check I think there is a formal way to represent such vector}
 We now define the updated error vector as:
     \begin{align}
     \label{eq:Psi2}
@@ -148,7 +149,7 @@ Under non-ideal conditions where noises exist, the elements of the error vector 
 	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}
 	\end{split}
 	\end{align}
-with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar value $\delta$, which is computed from the measurement with the highest noise profile. After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set is $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
+with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar value $\delta$, which is computed from the measurement with the highest noise profile \NB{more details needed here. How is $\delta$ computed?}. After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set is $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system \NB{block diagram needed here. Modify Fig.2 to show this}.
 
 % DO I NEED THIS?
 
@@ -175,7 +176,7 @@ The vehicle has multiple sensors of various noise profiles that provide state da
 	
 % . As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean \NB{you are giving the results before showing how!}	
 	
-For state estimation with sensor uncertainties, we need a guarantee the vehicle is within a region to prevent navigation into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\hat{\bm{p}}=[\hat{x},\hat{y}]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from data sheet specifications. For our case, a multivariate confidence interval is computed for position estimation, i.e. a confidence region. This method states the vehicle is within the computed region of a specific confidence percentage.
+For state estimation with sensor uncertainties, we need to guarantee the vehicle is within a region \NB{what region?} to prevent navigation into an undesired state \NB{fix this sentence.}. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\hat{\bm{p}}=[\hat{x},\hat{y}]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from data sheet specifications \NB{no need to add the datasheet}. For our case, a multivariate confidence interval is computed for position estimation, i.e. a confidence region \NB{Not clear. Rephrase}. This method states \NB{how can a method state something???} the vehicle is within the computed region of a specific confidence percentage.
 
 
 The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the data's population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we find a multivariate region the vehicle is within of a chosen confidence percentage,
@@ -183,12 +184,12 @@ The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the dat
     \label{Confidence_region}
 		\hat{\bm{\varepsilon}}_{\hat{\bar{\bm{p}}}|N} = \hat{\bar{\bm{p}}} + c_p\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
-with $c_p$ defining the value for a specific confidence percentage, which can be found in $z$-tables and $t$-tables in \cite{devore2011probability} and $\hat{\bar{\bm{p}}}$ is the mean position estimate from the $N$ data samples. The radius of the multivariate confidence region \eqref{Confidence_region} from the center point $\hat{\bar{\bm{p}}}$ is:
+with $c_p$ defining the value for a specific confidence percentage, which can be found in $z$-tables and $t$-tables \NB{tables...no need to state z-table because otherwise you need to change the symbol in your expression}in \cite{devore2011probability} and $\hat{\bar{\bm{p}}}$ is the mean position estimate from the $N$ data samples. \NB{This previous expression and explanation needs some work...too many hats and bars in the variables. The text is confusing} The radius of the multivariate confidence region \eqref{Confidence_region} from the center point $\hat{\bar{\bm{p}}}$ is:
     \begin{equation}
     \label{Confidence_radius}
 		\hat{\varepsilon} = c_p\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
-From \eqref{Confidence_radius}, it is clear with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, it is under the assumption that the true mean is static (i.e. is not changing over time). This cannot be assumed in the case of position estimation of a navigating vehicle. 
+From \eqref{Confidence_radius}, it is clear \NB{I've notices that you have the tendency to remove "that". Please use it}with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, it is under the assumption that the true mean is static (i.e. is not changing over time). This cannot be assumed in the case of position estimation of a navigating vehicle \NB{what's a navigating vehicle? you mean a mobile or moving vehicle}. 
 
 % \begin{figure}[ht!]
 % \vspace{1pt}
@@ -208,19 +209,19 @@ From \eqref{Confidence_radius}, it is clear with a larger number of $N$ data sam
 \label{fig:confidence_region}
 \end{figure}
 
-We created a pseudo-static form of a confidence region to compensate for translation of previous estimated position measurements $\hat{\bm{p}}(k-i)$, where $i=1,2,\dots,N-1$. These $N-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a pseudo-static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ position estimate samples are described in the set:
+\NB{To take into account mobility, we propose an adapted approach to compute the confidence interval...} \NB{no past tense!!!}We created a pseudo-static form of a confidence region to compensate for translation of previous estimated position measurements $\hat{\bm{p}}(k-i)$, where $i=1,2,\dots,N-1$. These $N-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a pseudo-static \NB{pseudo-static set??? What does it mean? Let's not use these terms unless you have already presented what they are and then given a name}set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy \NB{what's the purpose of this sentence? Didn't you present before this?}. The $N$ position estimate samples are described in the set:
 \begin{equation}
     \hat{\bm{P}}=\begin{bmatrix} \hat{\bm{p}}(k) ,\hat{\bm{p}}(k-1),\dots,\hat{\bm{p}}(k-N+1) \end{bmatrix} 
 \end{equation}
-Translating the data coordinates into a pseudo-static form will create the updated set,
+Translating the data coordinates into a pseudo-static form \NB{still not clear} will create the updated set,
 \begin{equation}
     \hat{\bm{P}}^*=\begin{bmatrix} \hat{\bm{p}}^*(k) ,\hat{\bm{p}}^*(k-1),\dots,\hat{\bm{p}}^*(k-N+1) \end{bmatrix} \nonumber
 \end{equation}
-Each element of these updated sets are calculated as,
+Each element of these updated sets are calculated as,\NB{first show hoe to translate an element from one time line to another and then show the resulting vector, not viceversa}
 	\begin{equation}
 	\hat{\bm{p}}^*(k-i) = \hat{\bm{p}}(k-i)+\sum_{j=i}^1 v(k-j)\theta_h(k-j)t_s 
 	\end{equation}
-where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$. The mean of the updated set is written as $\hat{\bar{\bm{p}}}^*$, which is the estimated center point used in the calculation of the confidence region. To demonstrate how this works, Fig. \ref{fig:pseudo_static} gives a visualization of position estimates translated into a pseudo-static case. Updating \eqref{Confidence_region}, we get
+where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$ \NB{?}. The mean of the updated set is written as $\hat{\bar{\bm{p}}}^*$, which is the estimated center point used in the calculation of the confidence region. To demonstrate how this works, Fig. \ref{fig:pseudo_static} gives a visualization of position estimates translated into a pseudo-static case. Updating \eqref{Confidence_region}, we get
     \begin{equation}
     \label{Confidence_region_updated}
 		\hat{\bm{\varepsilon}}_{\hat{\bar{\bm{p}}}^*|N} = \hat{\bar{\bm{p}}}^* + c_p\frac{\sigma_p}{\sqrt{N}}
@@ -247,7 +248,7 @@ where $i=1,2,\dots,N-1$ and the most recent position estimate at time instant $k
 
 
 
-Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to sensor noise over the furthest sample in time in $\hat{\bm{P}}^*$ is calculated as:
+Creating a pseudo-static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee \NB{that} the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to sensor noise over the furthest sample in time in $\hat{\bm{P}}^*$ is calculated as:
     \begin{align}
     \begin{split}
 	\hat{\varepsilon}_{v,\theta_h|N}^{*}=\Big( &\big[(\bar{v}^* \cos{\bar{\theta}_h^*} - \bar{v}\cos{\bar{\theta}_h})(N-1)t_s \big]^2 \\
@@ -267,7 +268,7 @@ where,
 	\begin{equation}
 	\bar{\theta}_h=\bar{\theta}_h(k-i_{\varepsilon^{*}}) \nonumber
 	\end{equation}
-with $i_{\varepsilon^{*}}=[1,2,,\dots,N-1]$ while average measured velocity and average measured heading angles over the past $N-1$ samples of range $i_{\varepsilon^{*}}$ are denoted by $\bar{v}$ and $\bar{\theta}_h$, respectively. Doing this account for velocity and heading angle measurement error and ensure the vehicle's position is within our estimation region.
+with $i_{\varepsilon^{*}}=[1,2,,\dots,N-1]$ \NB{i is not a vector} while average measured velocity and average measured heading angles over the past $N-1$ samples of range $i_{\varepsilon^{*}}$ are denoted by $\bar{v}$ and $\bar{\theta}_h$, respectively. Doing this \NB{doing this what?}account for velocity and heading angle measurement error and ensure the vehicle's position is within our estimation region.
 
 
 \subsection{Adaptive Motion Planning}
@@ -275,21 +276,21 @@ with $i_{\varepsilon^{*}}=[1,2,,\dots,N-1]$ while average measured velocity and 
 % Thus here we are interested to compute a confidence interval around our state estimation and adapt the vehicle's motion plan if safety constraints could be violated
 
 
-With uncertainty of sensor measurements, with or without a reconfigured set of sensors, there needs to be guarantees to navigate safely. As the vehicle approaches undesired regions or follows a trajectory through a passageway that's more narrow than the confidence region at the current time interval $k$, we need to be able to reduce the size of estimate region to guarantee safety. The only two options are to sample data faster or reduce speed to gather more samples within a certain distance. Since sampling at a faster rate can't be done, we need to slow the vehicle down to gather more data samples in a shorter distance to reduce estimation uncertainties.
+With uncertainty of sensor measurements, with or without a reconfigured set of sensors, there needs to be guarantees to navigate safely. As the vehicle approaches undesired regions or follows a trajectory through a passageway that's more narrow than the confidence region at the current time interval $k$, we need to be able to reduce the size of estimate region \NB{not clear} to guarantee safety. The only two options are to sample data faster or reduce speed to gather more samples within a certain distance. Since sampling at a faster rate can't be done \NB{why? state due to physical limitations}, we need to slow the vehicle down to gather more data samples in a shorter distance to reduce estimation uncertainties.
 
-To keep the vehicles estimated confidence region from intersecting with an unwanted region, a change to the number of current and past data samples in the calculation as well as an adaptation of the velocity. Without uncertainty of velocity and heading angle measurements, the equation to solve for the number of required $N$ samples to keep the confidence region within a specific radius is:
+To keep the vehicles estimated confidence region from intersecting with an unwanted region \NB{not clear}, a change to the number of current and past data samples in the calculation as well as an adaptation of the velocity \NB{fix grammar here}. Without uncertainty of velocity and heading angle measurements, the equation to solve for the number of required $N$ samples to keep the confidence region within a specific radius is:
     \begin{equation}
     \label{conf_region1}
 	    N^* = \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_r - \hat{\bar{\bm{p}}}^* \rVert} -\Delta(k) } \right)^2
 	\end{equation}
 where $ \min \lVert {\bm{x}_r-\hat{\bar{\bm{p}}}^*} \rVert$ is the distance from the closest undesired region to the estimated vehicle center point position $\hat{\bar{\bm{p}}}^*$.
-With the assumption of normally distributed sensor noise on the velocity and heading angle sensors, the above equation is not suitable. The uncertainty region $\hat{\varepsilon}_{v,\theta_h|N}^{*}$ from these sensors must be accounted for. The revision to equation (\ref{conf_region1}) for a sufficient value of $N$ is:
+With the assumption of normally distributed sensor noise on the velocity and heading angle sensors, the above equation is not suitable \NB{why? explain or go directly to the final results}. The uncertainty region $\hat{\varepsilon}_{v,\theta_h|N}^{*}$ from these sensors must be accounted for. The revision to equation (\ref{conf_region1}) for a sufficient value of $N$ \NB{what is sufficient here?} is:
     \begin{equation}
 	    N^* = \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_r - \hat{\bar{\bm{p}}}^* \rVert} -\hat{\varepsilon}_{v,\theta_h|N}^{*}-\Delta(k) } \right)^2
 	\end{equation}
 Due to the fact that $N^*$ represents the number of samples needed to reduce the estimation region to a desired size, $N^*$ needs to be an integer. We simply round $N^*$ up to the nearest integer to give us $N \in \N$.
 
-An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \hat{\varepsilon}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{*}+\Delta(k)$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by:
+An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \hat{\varepsilon}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{*}+\Delta(k)$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error \NB{not clear}. This reference velocity $r_v(k)$ update is calculated by:
     \begin{equation}
 	    r_v(k)=r_v(k-1) \left[ \frac{ \min \lVert \bm{x}_r - \hat{\bar{\bm{p}}}^* \rVert - \hat{\varepsilon}_1}{\hat{\varepsilon}_2 - \hat{\varepsilon}_1} \right]
 	\end{equation}
