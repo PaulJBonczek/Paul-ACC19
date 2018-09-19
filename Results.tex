@@ -11,28 +11,36 @@ The case study investigated in this paper is with a ground vehicle experiencing 
 
 \begin{figure*}[b!th]
 %\begin{figure*}[th!]
-\begin{tabular}{cccc}
+\begin{tabular}{ccc}
 
-\subfigure[\label{fig:low_noise} ]{\includegraphics[width = 0.22\textwidth]{Motion1.png}} &	
-
-\subfigure[\label{fig:high_noise} ]{\includegraphics[width = 0.22\textwidth]{Motion2.png}}  &
-	
-\subfigure[\label{fig:near_obstacle} ]{\includegraphics[width = 0.22\textwidth]{Motion3.png}} &
-
-\subfigure[\label{fig:far_obstacle} ]{\includegraphics[width = 0.22\textwidth]{Motion4.png}}
+\subfigure[\label{fig:low_noise} ]{\includegraphics[width = 0.3\textwidth]{Motion1.png}} &	
+\subfigure[\label{fig:low_noise2} ]{\includegraphics[width = 0.3\textwidth]{Motion2.png}} &
+\subfigure[\label{fig:at_attack} ]{\includegraphics[width = 0.3\textwidth]{Motion3.png}}
+\end{tabular} \\
+\begin{tabular}{ccc}
+\subfigure[\label{fig:after_detection} ]{\includegraphics[width = 0.3\textwidth]{Motion4.png}} &
+\subfigure[\label{fig:adapt_region} ]{\includegraphics[width = 0.3\textwidth]{Motion5.png}} & 
+\subfigure[\label{fig:continue_motion} ]{\includegraphics[width = 0.3\textwidth]{Motion6.png}}
 
 \end{tabular}
-\caption{A comparison in time of a vehicle navigating through an obstacle filled environment. In (a), the position sensor at this time has low uncertainty, in (b) the original position sensor has been removed and replaced by a sensor with higher uncertainty, in (c), the confidence region shrinks as more data samples are used and the velocity decreases to guarantee safety of nearby objects and in (d), the obstacles are again far away, so less data samples are needed and the velocity returns to it's desired state. }
+\caption{A comparison in time of a vehicle navigating through an obstacle filled environment. In (a), the sensors at this time are uncompromised, with low uncertainty,..... undecided if I should explain all the figures here or just do it in the text... }
 
 \end{figure*}
 
-In Figure \ref{fig:low_noise}, the vehicle moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is, in general, small because the best available sensor with low amount of noise is available . Velocity is unaltered due to the obstacles being well outside the uncertainty boundaries.
+In Figure \ref{fig:low_noise}, the vehicle moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is, in general, small because the best available sensors with low amount of noise are available . Velocity is unaltered due to the obstacles being well outside the uncertainty boundaries.
 
-Figure \ref{fig:high_noise} demonstrates the effects of the loss of a position sensor of low noise profile due to detection of a sensor attack. A different sensor of higher uncertainty is being used for positional coordinate data. The confidence estimation region has grown in size due to these differing uncertainties.
+While all sensors are uncompromised, Figure \ref{fig:low_noise2} shows a region where the vehicle is undergoing dynamical changes. The confidence region remains unchanged due to the full uncompromised set of sensors. The adaptive controller is maintaining a reference velocity, even while system dynamics are changing.
 
-Figure \ref{fig:near_obstacle} demonstrates the adaptive motion planner in action when obstacles come within the confidence region. More data past samples are used and velocity is decreased to minimize uncertainties for more effective estimation.
+Figure \ref{fig:at_attack} shows vehicle position at the starting time of the ramped sensor attack. The amplitude of the attack is still well within the sensor noise bounds, detection does not occur.
 
-In Figure \ref{fig:far_obstacle}, obstacles are again far away from the true position of the vehicle, outside of the confidence region's bounds. Velocity is restored toward desired levels and less data sampled are necessary to remain confident that the vehicle is safe.
+
+Detection of the spoofed sensor is demonstrated in Figure \ref{fig:after_detection}. The spoofed sensor has been removed from the system, leaving a smaller set of available sensors with higher uncertainty. The confidence region grows in size due to the changes in uncertainty. Obstacles are still well outside of the bounds, allowing the vehicle to continue navigating at its desired velocity.
+
+Figure \ref{fig:adapt_region} shows the confidence region shrinking in size when the vehicle navigates near obstacles of closer distances. More data points are used to improve this estimation, while the velocity is reduced to lessen uncertainty while moving.
+
+Once the vehicle is past the obstacles that are at close distances, shown in Figure \ref{fig:continue_motion}, the vehicle is able to move freely again at its desired velocity. The confidence region remains at a much larger radius due to the smaller set of available sensors.
+
+
 
 
 FUTURE FIGURES OF ENTIRE SYSTEM AS A WHOLE TO SHOW DETECTION OF ATTACKS (WITH ACTION), DETECTION OF DYNAMICAL CHANGES (WITH NO CORRECTIVE ACTIONS).
@@ -43,17 +51,33 @@ Figure Z) Showing the detection scheme can decipher the difference between dynam
 \begin{figure}
 \vspace{1pt}
 \centering
-\includegraphics[width=0.48\textwidth]{sim_environment.png}
-\caption{The obstacle filled environment the vehicle is traveling through to reach a specified goal point.}
-\label{fig:sim_env}
+\begin{tabular}{cc}
+\includegraphics[width=0.22\textwidth]{vel_Goals1and2.png} & 
+\includegraphics[width=0.22\textwidth]{Inputs_Goals1and2.png}
+\end{tabular}
+\label{fig:Goals1and2}
+\caption{The vehicle is traveling between Goals 1 and 2 with all sensors uncompromised. System dynamics are changing between the goal points.}
+\end{figure}
+
+
+
+\begin{figure}
+\vspace{1pt}
+\centering
+\begin{tabular}{cc}
+\includegraphics[width=0.22\textwidth]{vel_Goals2and3.png} & 
+\includegraphics[width=0.22\textwidth]{Inputs_Goals2and3.png}
+\end{tabular}
+\label{fig:Goals2and3}
+\caption{The vehicle is traveling between Goals 2 and 3 where the vehicle encounters a sensor attack. Detection of this attack occurs, dropping the compromised sensor, allowing the vehicle to follow the desired velocity. With a higher uncertainty of the available sensor set, velocity is adapted to ensure vehicle safety . }
 \end{figure}
 
 \begin{figure}
 \vspace{1pt}
 \centering
-\includegraphics[width=0.48\textwidth]{vel_t.png}
-\caption{Vehicle velocity over time exhibiting an attack on a velocity sensor while the system detects and corrects.}
-\label{fig:vel_t}
+\includegraphics[width=0.48\textwidth]{Error_Vector.png}
+\caption{The error vector is computing magnitudes of error for each of the sensors. As a sensor's error reaches a threshold, the sensor will be removed from the system.}
+\label{fig:sensor error}
 \end{figure}
 
 % \begin{figure}
