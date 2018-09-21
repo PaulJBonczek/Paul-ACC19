@@ -21,10 +21,9 @@ find a policy $\mathcal{P}$ to:
 	\item differentiate between malicious sensor attacks and changing dynamics or failures; 
 	\begin{equation}
 	\label{eq:detect_attack}
-	    error(y_i) \leq \delta
+	    \| y_i - y_j \| \leq \delta
 	\end{equation}
-	(HOW TO PROPOSE THIS EQUATION?)
-	where ... is ... and $\delta$ is an error threshold.
+	where $y_i$ and $y_j$ are different measurements of the same state and $\delta$ is an error threshold.
 	\item remove the compromised sensor measurements to restore system integrity.
 	\begin{equation}
 	\label{eq:remove_sensors}
