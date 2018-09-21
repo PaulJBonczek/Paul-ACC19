@@ -7,7 +7,7 @@ In this section we describe the framework for detection of sensor attacks for sy
 \begin{figure}[ht!]
 \vspace{1pt}
 \centering
-\includegraphics[width=0.46\textwidth]{sys_arch.png}
+\includegraphics[width=0.46\textwidth]{Figures/sys_arch.png}
 \caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
 \label{fig:system_arch}
 \end{figure}
@@ -24,7 +24,7 @@ In order to detect and remove attacks we propose the architecture in Fig. \ref{f
 \begin{figure}[ht!]
 \vspace{1pt}
 \centering
-\includegraphics[width=0.48\textwidth]{con_and_det.png}
+\includegraphics[width=0.48\textwidth]{Figures/con_and_det.png}
 \caption{Architecture of the detection scheme within the adaptive controlled system. Representing  the $s$ number of available measurements, each of their adaptive subsystems generate a temporary input to be sent to the attack detector. From there, the detector removes measurement subsystems that are compromised.}
 \label{fig:det_arch}
 \end{figure}
@@ -204,8 +204,8 @@ From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ dat
 
 \begin{figure}[ht!]
 \begin{tabular}{cc}
-\subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{sample1.png}} &	
-\subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{sample5.png}}
+\subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample1.png}} &	
+\subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample5.png}}
 \end{tabular}
 \caption{A comparison of the size of the estimated confidence region as the $N$ number of data samples grow. In \ref{fig:1sample}, the estimated confidence region with 1 data sample is not as accurate. In \ref{fig:5samples}, the $N$ number of samples used is five, which gives a much smaller size and more accurate confidence region.}
 \label{fig:confidence_region}
@@ -242,8 +242,8 @@ Translating the data coordinates into a pseudo-static form creates the updated s
 
 \begin{figure}[ht!]
 \begin{tabular}{cc}
-\subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.21\textwidth]{pseudo_static_left.png}} &	
-\subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.21\textwidth]{pseudo_static_right.png}}
+\subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_left.png}} &	
+\subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_right.png}}
 \end{tabular}
 \caption{Translation of the original position estimates $\bm{p}$ to a pseudo-static case $\bm{p}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
 \label{fig:pseudo_static}

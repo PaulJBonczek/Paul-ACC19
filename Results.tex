@@ -13,14 +13,14 @@ The case study investigated in this paper is with a ground vehicle experiencing 
 %\begin{figure*}[th!]
 \begin{tabular}{ccc}
 
-\subfigure[\label{fig:low_noise} ]{\includegraphics[width = 0.3\textwidth]{Motion1.png}} &	
-\subfigure[\label{fig:low_noise2} ]{\includegraphics[width = 0.3\textwidth]{Motion2.png}} &
-\subfigure[\label{fig:at_attack} ]{\includegraphics[width = 0.3\textwidth]{Motion3.png}}
+\subfigure[\label{fig:low_noise} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion1.png}} &	
+\subfigure[\label{fig:low_noise2} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion2.png}} &
+\subfigure[\label{fig:at_attack} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion3.png}}
 \end{tabular} \\
 \begin{tabular}{ccc}
-\subfigure[\label{fig:after_detection} ]{\includegraphics[width = 0.3\textwidth]{Motion4.png}} &
-\subfigure[\label{fig:adapt_region} ]{\includegraphics[width = 0.3\textwidth]{Motion5.png}} & 
-\subfigure[\label{fig:continue_motion} ]{\includegraphics[width = 0.3\textwidth]{Motion6.png}}
+\subfigure[\label{fig:after_detection} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion4.png}} &
+\subfigure[\label{fig:adapt_region} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion5.png}} & 
+\subfigure[\label{fig:continue_motion} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion6.png}}
 
 \end{tabular}
 \caption{A comparison in time of a vehicle navigating through an obstacle filled environment. In (a), the sensors at this time are uncompromised, with low uncertainty,..... undecided if I should explain all the figures here or just do it in the text... }
@@ -42,18 +42,14 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 
 
 
-
-FUTURE FIGURES OF ENTIRE SYSTEM AS A WHOLE TO SHOW DETECTION OF ATTACKS (WITH ACTION), DETECTION OF DYNAMICAL CHANGES (WITH NO CORRECTIVE ACTIONS).
-Figure Y) displays all sensor measurements for velocity, capturing when the attack occurs and the consequent recovery. 
-Figure Z) Showing the detection scheme can decipher the difference between dynamical changes and an attack
-
-
 \begin{figure}
 \vspace{1pt}
 \centering
 \begin{tabular}{cc}
-\includegraphics[width=0.22\textwidth]{vel_Goals1and2.png} & 
-\includegraphics[width=0.22\textwidth]{Inputs_Goals1and2.png}
+
+\subfigure[\label{fig:vel_G1and2} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals1and2.png}} &	
+\subfigure[\label{fig:input_G1and2} ]{\includegraphics[width = 0.22\textwidth]{Figures/Inputs_Goals1and2.png}}
+
 \end{tabular}
 \label{fig:Goals1and2}
 \caption{The vehicle is traveling between Goals 1 and 2 with all sensors uncompromised. System dynamics are changing between the goal points.}
@@ -65,8 +61,8 @@ Figure Z) Showing the detection scheme can decipher the difference between dynam
 \vspace{1pt}
 \centering
 \begin{tabular}{cc}
-\includegraphics[width=0.22\textwidth]{vel_Goals2and3.png} & 
-\includegraphics[width=0.22\textwidth]{Inputs_Goals2and3.png}
+\subfigure[\label{fig:vel_G2and3} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals2and3.png}} & 
+\subfigure[\label{fig:input_G2and3} ]{\includegraphics[width =0.22\textwidth]{Figures/Inputs_Goals2and3.png}}
 \end{tabular}
 \label{fig:Goals2and3}
 \caption{The vehicle is traveling between Goals 2 and 3 where the vehicle encounters a sensor attack. Detection of this attack occurs, dropping the compromised sensor, allowing the vehicle to follow the desired velocity. With a higher uncertainty of the available sensor set, velocity is adapted to ensure vehicle safety . }
@@ -75,9 +71,17 @@ Figure Z) Showing the detection scheme can decipher the difference between dynam
 \begin{figure}
 \vspace{1pt}
 \centering
-\includegraphics[width=0.48\textwidth]{Error_Vector.png}
+\includegraphics[width=0.48\textwidth]{Figures/Error_Vector.png}
 \caption{The error vector is computing magnitudes of error for each of the sensors. As a sensor's error reaches a threshold, the sensor will be removed from the system.}
 \label{fig:sensor error}
+\end{figure}
+
+\begin{figure}
+\vspace{1pt}
+\centering
+\includegraphics[width=0.48\textwidth]{Figures/Velocities.png}
+\caption{Velocities are shown over the entire simulation. Sensor 3 measurements are no longer used by the system as soon as it diverges from the remaining sensors. }
+\label{fig:total_velocity}
 \end{figure}
 
 % \begin{figure}
