@@ -32,7 +32,8 @@ In order to detect and remove attacks we propose the architecture in Fig. \ref{f
 
 First, to design the resilient model reference adaptive controller, we assume that:
 	\begin{enumerate}[leftmargin=3\parindent]
-	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^q$ from \eqref{eq:B_prime} are within $|z|<1$. 
+%	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^q$ from \eqref{eq:B_prime} are within $|z|<1$. 
+	\item[$A1)$] all numerator zeros of \eqref{eq:transfer_function} are within $|z|<1$.
 	\item[$A2)$] $p$ and $q$ are known. 
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
@@ -109,11 +110,7 @@ Since \eqref{multiple_output_tracking} should hold during any operation, the fol
 \begin{equation}
     i,j = 1,2,\dots,s \nonumber
 \end{equation}
-where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y_i^*(k)$. Each input while under ideal conditions (i.e., considering perfect measurements with no noise), should be the same value as all other subsystem inputs controlling their output to track the same tracking signal. For each subsystem to compute the next input $u^*_i(k)$, its sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs. \NB{connect better this with what comes next, like: Mathematically, to detect attacks, a difference matrix...}
-
-
-
-For attack detection, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
+where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y_i^*(k)$. Each input while under ideal conditions (i.e., considering perfect measurements with no noise), should be the same value as all other subsystem inputs controlling their output to track the same tracking signal. For each subsystem to compute the next input $u^*_i(k)$, its sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs. Mathematically, to detect attacks, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
     \begin{equation}
     \label{eq:difference_matrix}
 	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,s}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{s,1}(k) &  &  & \psi_{s,s}(k) \end{bmatrix}
@@ -293,7 +290,7 @@ With the assumption that there is sensor noise on the velocity and heading angle
 	\end{equation}
 Due to the fact that $N^*$ represents the number of samples needed to reduce the estimation region to a desired size, $N^*$ needs to be an integer. We simply round $N^*$ up to the nearest integer to give us $N \in \N$.
 
-An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \hat{\varepsilon}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{*}+\Delta(k)$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error \NB{not clear}. This reference velocity $r_v(k)$ update is calculated by:
+An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \hat{\varepsilon}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{*}+\Delta(k)$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by:
     \begin{equation}
 	    r_v(k)=r_v(k-1) \left[ \frac{ \min \lVert \bm{x}_r - \bar{\bm{p}}^* \rVert - \varepsilon_1}{\varepsilon_2 - \varepsilon_1} \right]
 	\end{equation}
@@ -311,36 +308,38 @@ where $\varepsilon_1$ and $\varepsilon_2$ are both radii from the estimated cent
 %where $[\delta, \delta_v] \in R^{\geq0}$ are chosen values that determine the desired distance between the closest unwanted region to the estimation region as a function of velocity.
 
 
-% INSERT ALGORITHM FOR REPLANNING VELOCITY
-\begin{algorithm}
-   \caption{Adaptive Motion for Safe Navigation} 
-   \label{alg:adapt_motion} 
-    \begin{algorithmic}[1]
-	\State Initial conditions of system: $k=0$,$\bm{x}(0)=\bm{x}_0$
-	\State Set $r_v(0)$ to desired velocity $r_{des}$
-    \While{$1<k\leq\infty$}
-        \State \Longunderstack[l]{ Calculate $\bar{\bm{p}}^*$ then measure closest distance\\ to undesired region $\min \lVert \bm{x}_r - \bar{\bm{p}}^* \rVert$.}
-        \State Calculate radii of intervals $\varepsilon_1$ and $\varepsilon_2$ for $N$.
-        \If{ $\min \lVert \bm{x}_r - \bar{\bm{p}}^*\rVert < \varepsilon_2(k)$}
-            \State Solve for $N$ of next iteration
-            \State Update reference for velocity $r_v(k)$
-        \Else
-            \If{$\min \lVert \bm{x}_r - \bar{\bm{p}}^*\rVert < \varepsilon_2(k)$ when $N=1$}
-                \State Solve for $N$ of next iteration
-                \State Update reference for velocity $r_v(k)$
-            \Else
-                \If{$r_v(k) \neq r_{des}$}
-                    \State Reference velocity $r_v(k)=r_{des}$
-                    \State $N = 1$
-                \Else
-                    \State Reference velocity $r_v(k) = r_v(k-1)$
-                    \State $N = 1$
-                \EndIf
-            \EndIf
-        \EndIf
-    \EndWhile
-	\end{algorithmic}
-\end{algorithm}
+
+
+% % INSERT ALGORITHM FOR REPLANNING VELOCITY
+% \begin{algorithm}
+%   \caption{Adaptive Motion for Safe Navigation} 
+%   \label{alg:adapt_motion} 
+%     \begin{algorithmic}[1]
+% 	\State Initial conditions of system: $k=0$,$\bm{x}(0)=\bm{x}_0$
+% 	\State Set $r_v(0)$ to desired velocity $r_{des}$
+%     \While{$1<k\leq\infty$}
+%         \State \Longunderstack[l]{ Calculate $\bar{\bm{p}}^*$ then measure closest distance\\ to undesired region $\min \lVert \bm{x}_r - \bar{\bm{p}}^* \rVert$.}
+%         \State Calculate radii of intervals $\varepsilon_1$ and $\varepsilon_2$ for $N$.
+%         \If{ $\min \lVert \bm{x}_r - \bar{\bm{p}}^*\rVert < \varepsilon_2(k)$}
+%             \State Solve for $N$ of next iteration
+%             \State Update reference for velocity $r_v(k)$
+%         \Else
+%             \If{$\min \lVert \bm{x}_r - \bar{\bm{p}}^*\rVert < \varepsilon_2(k)$ when $N=1$}
+%                 \State Solve for $N$ of next iteration
+%                 \State Update reference for velocity $r_v(k)$
+%             \Else
+%                 \If{$r_v(k) \neq r_{des}$}
+%                     \State Reference velocity $r_v(k)=r_{des}$
+%                     \State $N = 1$
+%                 \Else
+%                     \State Reference velocity $r_v(k) = r_v(k-1)$
+%                     \State $N = 1$
+%                 \EndIf
+%             \EndIf
+%         \EndIf
+%     \EndWhile
+% 	\end{algorithmic}
+% \end{algorithm}
 
 
 

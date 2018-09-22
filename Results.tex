@@ -23,7 +23,7 @@ The case study investigated in this paper is with a ground vehicle experiencing 
 \subfigure[\label{fig:continue_motion} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion6.png}}
 
 \end{tabular}
-\caption{A comparison in time of a vehicle navigating through an obstacle filled environment. In (a), the sensors at this time are uncompromised, with low uncertainty,..... undecided if I should explain all the figures here or just do it in the text... }
+\caption{A comparison in time of a vehicle navigating through an obstacle filled environment. In (a),(b), and (c) the measurement set is uncompromised and the system is only experiencing dynamical changes. Subfigures (d),(e), and (f) are post detection of a sensor attack where the sensor has been removed from the measurement set. Uncertainty is increased with the smaller sensor set, now the vehicle adapts the velocity as it approaches obstacles.}
 
 \end{figure*}
 
@@ -71,7 +71,7 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 \begin{figure}
 \vspace{1pt}
 \centering
-\includegraphics[width=0.48\textwidth]{Figures/Error_Vector.png}
+\includegraphics[width=0.48\textwidth]{Figures/Error_vector.png}
 \caption{The error vector is computing magnitudes of error for each of the sensors. As a sensor's error reaches a threshold, the sensor will be removed from the system.}
 \label{fig:sensor error}
 \end{figure}
@@ -84,15 +84,51 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 \label{fig:total_velocity}
 \end{figure}
 
-% \begin{figure}
-% \vspace{1pt}
-% \centering
-% \includegraphics[width=0.48\textwidth]{ang_t.png}
-% \caption{Vehicle heading angle over time exhibiting an attack on an angle sensor while the system detects and corrects.}
-% \label{fig:ang_t}
-% \end{figure}
+
+\begin{figure}
+\vspace{1pt}
+\centering
+\begin{tabular}{cc}
+\subfigure[\label{fig:MRAC_tracking} ]{\includegraphics[width = 0.22\textwidth]{Figures/VelocityTracking_MRAC.png}} & 
+\subfigure[\label{fig:PID_tracking} ]{\includegraphics[width =0.22\textwidth]{Figures/VelocityTracking_PID.png}}
+\end{tabular}
+\label{fig:ControllerComparisons}
+\caption{A performance comparison between the model reference adaptive controller (MRAC) vs Proportional-Integral-Derivative (PID) controller tuned for the initial dynamics without sensor attacks. As dynamics change at approximately 13 seconds, the PID controller loses control performance. The MRAC adapts to the new dynamics to track the reference signal.}
+\end{figure}
 
 
 
+\begin{figure}
+%\begin{figure*}[th!]
+\begin{tabular}{cc}
+
+\subfigure[\label{fig:NoDet_AtAttack} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection1.png}} &	
+\subfigure[\label{fig:NoDet_TurnDetOn} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection2.png}}
+\end{tabular} \\
+\begin{tabular}{cc}
+\subfigure[\label{fig:NoDet_Continue} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection3.png}} &
+\subfigure[\label{fig:NoDet_Vel} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection_Vel.png}}
+
+\end{tabular}
+\caption{A demonstration of the result of an attack with the detector not operating for a period of time during an attack. Subfigure (a) represents when the attack begins, (b) shows a few time intervals after the detector is turned on. The red colored region in (d) is the time frame the attack occurred without the detector operating. }
+
+\end{figure}
+
+
+\begin{figure}
+%\begin{figure*}[th!]
+\begin{tabular}{cc}
+
+\subfigure[\label{fig:error_comp1} ]{\includegraphics[width = 0.22\textwidth]{Figures/ErrorComparison1.png}} &	
+\subfigure[\label{fig:error_comp2} ]{\includegraphics[width = 0.22\textwidth]{Figures/ErrorComparison2.png}}
+\end{tabular} \\
+\begin{tabular}{cc}
+\subfigure[\label{fig:error_comp3} ]{\includegraphics[width = 0.22\textwidth]{Figures/ErrorComparison3.png}} &
+\subfigure[\label{fig:error_comp4} ]{\includegraphics[width = 0.22\textwidth]{Figures/ErrorComparison4.png}}
+
+\end{tabular}
+\caption{Stealthy attacks within the sensor noise profile can be detected by using the same principle as confidence intervals \eqref{Confidence_interval}. As shown in (a),(b), and (c), the threshold $\delta$ is reduced by $sqrt{N_p}$ when averaging the past $N_p$ input values. In this case, the attack on Sensor 1 was not detected when computing the error vector of only input values of the current interval in time, but is detected when using $16$ previous values. }
+
+\end{figure}
 
 \end{section}
