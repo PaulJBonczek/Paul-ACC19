@@ -4,7 +4,7 @@
 
 % Need to label states of the state vector in the modeling section [x y v \theta]
 
-The case study investigated in this paper is with a ground vehicle experiencing the effects of sensor and process noise, dynamical changes, while also succumbing to wind disturbances and sensor attacks. The vehicle will be traveling along a pre-planned trajectory with assumed to be known obstacles throughout the environment. We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 22,10 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. The objective for the vehicle is to reach a goal point while following a desired trajectory with obstacles of varying distances from the path. It is assumed the maximum velocity of the vehicle is 3.0m/s and the desired reference velocity it wants to maintain is 2.5m/s. For simulations...
+The case study investigated in this paper is with a ground vehicle experiencing the effects of sensor noise, dynamical changes, while also succumbing to sensor attacks. The vehicle will be traveling along a pre-planned trajectory with assumed to be known obstacles throughout the environment. We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 0,0 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. The objective for the vehicle is to reach multiple goal points while following a desired trajectory with obstacles of varying distances from the path. It is assumed the maximum velocity of the vehicle is 3.5m/s and the desired reference velocity it wants to maintain is 2.5m/s. Throughout the simulation, dynamics are changing that effect velocity before, during, and after an attack. 
 
 
 
@@ -44,7 +44,7 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 
 \begin{figure}
 \vspace{1pt}
-\centering
+%\centering
 \begin{tabular}{cc}
 
 \subfigure[\label{fig:vel_G1and2} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals1and2.png}} &	
@@ -52,25 +52,25 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 
 \end{tabular}
 \label{fig:Goals1and2}
-\caption{The vehicle is traveling between Goals 1 and 2 with all sensors uncompromised. System dynamics are changing between the goal points.}
+\caption{The vehicle is traveling between Goals B and C with all sensors uncompromised. System dynamics are changing between the goal points.}
 \end{figure}
 
 
 
 \begin{figure}
 \vspace{1pt}
-\centering
+%\centering
 \begin{tabular}{cc}
 \subfigure[\label{fig:vel_G2and3} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals2and3.png}} & 
 \subfigure[\label{fig:input_G2and3} ]{\includegraphics[width =0.22\textwidth]{Figures/Inputs_Goals2and3.png}}
 \end{tabular}
 \label{fig:Goals2and3}
-\caption{The vehicle is traveling between Goals 2 and 3 where the vehicle encounters a sensor attack. Detection of this attack occurs, dropping the compromised sensor, allowing the vehicle to follow the desired velocity. With a higher uncertainty of the available sensor set, velocity is adapted to ensure vehicle safety . }
+\caption{The vehicle is traveling between Goals C and D where the vehicle encounters a sensor attack. Detection of this attack occurs, dropping the compromised sensor, allowing the vehicle to follow the desired velocity. With a higher uncertainty of the available sensor set, velocity is adapted to ensure vehicle safety . }
 \end{figure}
 
 \begin{figure}
 \vspace{1pt}
-\centering
+%\centering
 \includegraphics[width=0.48\textwidth]{Figures/Error_vector.png}
 \caption{The error vector is computing magnitudes of error for each of the sensors. As a sensor's error reaches a threshold, the sensor will be removed from the system.}
 \label{fig:sensor error}
@@ -78,7 +78,7 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 
 \begin{figure}
 \vspace{1pt}
-\centering
+%\centering
 \includegraphics[width=0.48\textwidth]{Figures/Velocities.png}
 \caption{Velocities are shown over the entire simulation. Sensor 3 measurements are no longer used by the system as soon as it diverges from the remaining sensors. }
 \label{fig:total_velocity}
@@ -87,7 +87,7 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 
 \begin{figure}
 \vspace{1pt}
-\centering
+%\centering
 \begin{tabular}{cc}
 \subfigure[\label{fig:MRAC_tracking} ]{\includegraphics[width = 0.22\textwidth]{Figures/VelocityTracking_MRAC.png}} & 
 \subfigure[\label{fig:PID_tracking} ]{\includegraphics[width =0.22\textwidth]{Figures/VelocityTracking_PID.png}}
@@ -127,7 +127,7 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 \subfigure[\label{fig:error_comp4} ]{\includegraphics[width = 0.22\textwidth]{Figures/ErrorComparison4.png}}
 
 \end{tabular}
-\caption{Stealthy attacks within the sensor noise profile can be detected by using the same principle as confidence intervals \eqref{Confidence_interval}. As shown in (a),(b), and (c), the threshold $\delta$ is reduced by $sqrt{N_p}$ when averaging the past $N_p$ input values. In this case, the attack on Sensor 1 was not detected when computing the error vector of only input values of the current interval in time, but is detected when using $16$ previous values. }
+\caption{Stealthy attacks within the sensor noise profile can be detected by using the same principle as confidence intervals \eqref{Confidence_interval}. As shown in (a),(b), and (c), the threshold $\delta$ is reduced by $\sqrt{N_p}$ when averaging the past $N_p$ input values. In this case, the attack on Sensor 1 was not detected when computing the error vector of only input values of the current interval in time, but is detected when using $16$ previous values. }
 
 \end{figure}
 

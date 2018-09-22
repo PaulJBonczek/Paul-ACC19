@@ -122,6 +122,7 @@ where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsys
 	\end{equation}
 where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ representing the number of available measurements from the measurement vector. Each element $\psi_{i,j}\in\bm{\Psi}$ is an error computed as the absolute difference between two subsystem inputs:
     \begin{equation}
+        \label{eq:input_diff}
         \psi_{i,j}(k)=|u^*_i(k)-u^*_j(k)|
     \end{equation}
 The $l_1$ vector norm for each row in the difference matrix \eqref{eq:difference_matrix} is computed which gives us the following vector:
@@ -150,10 +151,36 @@ Under non-ideal conditions where noises exist, the elements of the error vector 
     \begin{split}
     \label{eq:Psi2_nonideal}
 	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \\
-	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}
+	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}(k)
 	\end{split}
 	\end{align}
-with the vector $\bm{\delta} \in \R^s$ has elements all equal to the scalar value $\delta$, which is computed from the measurement with the highest noise profile \NB{more details needed here. How is $\delta$ computed?}. After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set is $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system \NB{block diagram needed here. Modify Fig.2 to show this}.
+with the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar value $\delta(k)$, which is computed from the measurement with the highest noise profile $\sigma_{max}$. Changing \eqref{eq:End} to,
+%u^*_i(k)
+\begin{align}
+	\label{eq:delta}
+	\delta(k)=& \lVert{ \frac{1}{\theta_{p+1}(k)}(-\theta_1(k)e_{max}-\theta_2(k)e_{max} }-\dots \nonumber \\
+    -\theta_p(k)&e_{max}-\theta_{p+2}(k)u(k-1)-\theta_{p+3}(k)u(k-2)  \\
+	&- \dots - \theta_{p+q+d}(k)u(k-q-d+1) \rVert  \nonumber
+	\end{align}
+	\begin{equation}
+	    \label{eq:max_error}
+	    e_{max} = 2N_s\sigma_{max}
+	\end{equation}
+where $N_s$ is the chosen number of standard deviations, and $e_{max}$ is the maximum measurement uncertainty, the maximum error is computed. 
+
+A restriction to this detection scheme is the ability of an attacker to hide within the noise profile of the sensor with higher uncertainty. To look for stealthier attacks within the noise, an average of $N_p$ number of subsystem inputs $u^*_i$ are computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. \eqref{eq:input_diff} is reformulated to,
+    \begin{equation}
+        \label{eq:input_diff2}
+        \psi_{i,j}(k)=|\bar{u}^*_i(k)-\bar{u}^*_j(k)|
+    \end{equation}
+where $\bar{u}^*(k)$ is the mean of the past $N_p$ subsystem inputs $u^*(k-i)$ for $i=0,1,\dots,N_p-1$. The other alteration is the computation of \eqref{eq:max_error} for a smaller error threshold:
+    \begin{equation}
+	    \label{eq:max_error2}
+	    e_{max} = \frac{2N_s\sigma_{max}}{\sqrt{N_p}}
+	\end{equation}
+Reducing the error threshold enables the detector to find attacks that are slowly pushing the measurement signal away while remaining within the noise profile of highest uncertainty.
+
+After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set is $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
 
 % DO I NEED THIS?
 

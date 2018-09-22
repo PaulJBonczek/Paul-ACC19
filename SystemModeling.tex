@@ -117,11 +117,17 @@ Now that we have a model of the system and know what may change \NB{no need to s
 	\begin{split}
 	\label{eq:transfer_function}
         G(z) & = \frac{y(z)}{u(z)} = \bm{C}(z\bm{I}-\bm{A}_d)^{-1}\bm{B}_d  \\
-	& = \frac{b_0z^{p-d}+b_1z^{p-d-1} +...+b_mz^{p-d-q}}{z^{p}+a_1z^{p-1}+...+a_{p-1}z+a_p} 
+	& = \frac{b_0z^{p-d}+b_1z^{p-d-1} +...+b_qz^{p-d-q}}{z^{p}+a_1z^{p-1}+...+a_{p-1}z+a_p} 
 	\end{split}
 	\end{align}
-with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the transfer function's denominator and numerator, and $d$ is the system delay. 
-
+with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the transfer function's denominator and numerator, and $d$ is the system delay. The difference equation describing the system is:
+    \begin{align}
+    \begin{split}
+	\label{eq:difference_equation}
+	&y(k+1)=a_1y(k)+\dots+a_py(k-p) \\
+	+b_0&u(k-d+1)+\dots+b_qy(k-q-d+1)
+	\end{split}
+	\end{align}
 To achieve desired performance, a reference model is chosen for the system in \eqref{eq:transfer_function} to have the same characteristics. The reference model is expressed as:
 
 
