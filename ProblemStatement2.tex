@@ -12,11 +12,11 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 
 \begin{problem} 
 \label{problem1} {\textbf{Attack Detection and Sensor Reconfiguration:}} 
- Given the system dynamics as a function of its state $ \bm{x} $, its input $ \bm{u}$, and disturbances $ \bm{d} $,
+ Given the system dynamics as a function of its state $ \bm{x} $ and input $ \bm{u}$,
 	\begin{equation}
 	\begin{split}
-		\bm{x}(k+1) = f(\bm{x}(k), \bm{u}(k), \bm{d}(k)) \\
-		\bm{y}(k)=h(x)
+		\bm{x}(k+1) = f&(\bm{x}(k), \bm{u}(k)) \\
+		\bm{y}(k)=&h(x)
     \end{split}
 	\end{equation}
 find a policy $\mathcal{P}$ to:
@@ -26,10 +26,11 @@ find a policy $\mathcal{P}$ to:
 	\begin{split}
 	\label{eq:detect_attack}
 	    %\| y_i - y_j \| \leq \delta
-	    \bm{y}(k)=h(x) + \bm{\xi}
+	    \bm{x}(k+1) = f&(\bm{x}(k), \bm{u}(k), \bm{d}(k)) \\
+	    \bm{y}(k)&=h(x) + \bm{\xi}
 	\end{split}    
 	\end{equation}
-	where $y_i$ and $y_j$ are different measurements of the same state and $\delta$ is an error threshold.
+	where $\bm{d}(k)$ represents any dynamical changes or disturbances and $\bm{\xi}$ is a sensor measurement attack.
 	\item remove the compromised sensor measurements to restore system integrity.
 	\begin{equation}
 	\label{eq:remove_sensors}
