@@ -2,7 +2,7 @@
 
 \begin{section}{Approach}
 \label{sec:approach}
-In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors sensor measurements and calculates inputs for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. \NB{no from the figure the detector is receiving inputs and returning one input } At the same time, the state estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety. 
+In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors multiple input measurements for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the state estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety. 
 
 \begin{figure}[ht!]
 \vspace{1pt}
@@ -11,9 +11,9 @@ In this section we describe the framework for detection of sensor attacks for sy
 \caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
 \label{fig:system_arch}
 \end{figure}
-\NB{FIGURE: where is the adaptive controller? Group blocks together that represent the Resilient AC.}
-\NB{FIGURE: we need to have multiple arrows going out from the controller}
-\NB{FIGURE: name the motion planner differently like adaptive motion planner}
+% \NB{FIGURE: where is the adaptive controller? Group blocks together that represent the Resilient AC.}
+% \NB{FIGURE: we need to have multiple arrows going out from the controller}
+% \NB{FIGURE: name the motion planner differently like adaptive motion planner}
 
 Next, we describe the framework for attack detection and sensor reconfiguration problems using a series of adaptive controlled systems.
 

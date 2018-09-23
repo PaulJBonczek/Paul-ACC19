@@ -14,23 +14,27 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 \label{problem1} {\textbf{Attack Detection and Sensor Reconfiguration:}} 
  Given the system dynamics as a function of its state $ \bm{x} $, its input $ \bm{u}$, and disturbances $ \bm{d} $,
 	\begin{equation}
-		\bm{x}(k+1) = f(\bm{x}(k), \bm{u}(k), \bm{d}(k))
+	\begin{split}
+		\bm{x}(k+1) = f(\bm{x}(k), \bm{u}(k), \bm{d}(k)) \\
+		\bm{y}(k)=h(x)
+    \end{split}
 	\end{equation}
-	\NB{add the expression for y=h(x)}
 find a policy $\mathcal{P}$ to:
 \begin{enumerate}
 	\item differentiate between malicious sensor attacks and changing dynamics or failures; 
 	\begin{equation}
+	\begin{split}
 	\label{eq:detect_attack}
-	    \| y_i - y_j \| \leq \delta
+	    %\| y_i - y_j \| \leq \delta
+	    \bm{y}(k)=h(x) + \bm{\xi}
+	\end{split}    
 	\end{equation}
-	where $y_i$ and $y_j$ are different measurements of the same state and $\delta$ is an error threshold. \NB{this is misleading because we are looking at the inputs...we need to find a better way to represent this}
+	where $y_i$ and $y_j$ are different measurements of the same state and $\delta$ is an error threshold.
 	\item remove the compromised sensor measurements to restore system integrity.
 	\begin{equation}
 	\label{eq:remove_sensors}
-	    \bm{y}=\bm{y}_0 \setminus \bm{y}_a
+	    \bm{y}'=\bm{y} \setminus \bm{y}_a
 	\end{equation}
-	\NB{y'=y-ya}
 \end{enumerate}
 where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial set of measurements, and $\bm{y}_a$ is the set of measurements under attack.
 
@@ -40,15 +44,14 @@ where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial s
 Solving Problem 1 removes the compromised sensors, however leaving the system with fewer sensors as designed. Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}}
-Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} satisfied, find a policy to adapt the motion planning strategy  to guarantee safety, i.e. adapt motion in such a way that the vehicle is guaranteed to never enter any undesired position $\bm{p}_r$: \NB{state not position!} \NB{change this. What are we manipulating exactly? Are finding an input, a reference to follow? State that....Find a policy to compute an adapted motion planning reference.}\NB{If you are using reference model, you need to mention this before in problem 1.}
+Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} are satisfied, find a policy to adapt the motion planning strategy to guarantee safety, i.e. adapt velocity in such a way that the vehicle is guaranteed to never enter any undesired state $\bm{x}_r$:  \NB{change this. What are we manipulating exactly? Are finding an input, a reference to follow? State that....Find a policy to compute an adapted motion planning reference.}
 	\begin{equation}
-		\lVert {\bm{p}(k)-\bm{p}_r} \rVert >\Delta(k)
+		\lVert {\bm{x}(k)-\bm{x}_r} \rVert > 0
 	\end{equation}
-where $\bm{p}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle, $\bm{p}_r$ is the position of any known undesired region, and $\Delta(k)$ is a defined distance between the vehicle's position and an undesired region.
+where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle and $\bm{x}_r$ is the position of any known undesired region.
 	\end{problem}
-\NB{change the equation and what after. $\Delta$ is also not a good symbol to use. That symbol is usually used before a variable to define an interval}
 
 %Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
-In our specific problem, we look at the position of the vehicle in relation to undesired states like obstacles and unsafe regions to navigate. As the system's configuration changes due to less available sensors, motion needs to adapt \NB{remove, you have already state this sentence...you can leave the next one}. Solving this problem allows the autonomous vehicle to adapt its motion according to the new sensor set, guaranteeing the vehicle never enters an undesired region.
+In our specific problem, we look at the position of the vehicle in relation to undesired states like obstacles and unsafe regions to navigate. Solving this problem allows the autonomous vehicle to adapt its motion according to the new sensor set, guaranteeing the vehicle never enters an undesired region.
 \NB{problem formulation needs more work!}
 \end{section}
