@@ -43,7 +43,7 @@ First, to design the resilient model reference adaptive controller, we assume th
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted here, which can be found in \cite{tao2003adaptive,Goodwin1643720}, however we provide the main equations to compute the next input. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
+The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted here, but can be found in \cite{tao2003adaptive,Goodwin1643720}. However, in what follows, we provide the main equations to compute the desired input when dealing with changing systems. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
     \begin{equation}
 	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
 	\end{equation}
@@ -95,15 +95,16 @@ Once these subsystem inputs are computed, under the assumptions in (A1-A4), we l
 	\label{Truth2}
 	\item[$T3)$] $\sum_{k=0}^\infty(y(k)-y^*(k))^2<\infty$
 	\end{enumerate}
-where $y(k)$ is the system output and $y^*(k)$ is a tracking signal from the reference model. This ensures the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time. 
+where $y(k)$ is the system output and $y^*(k)$ is a tracking signal from the reference model. These properties ensure that the system's output asymptotically converges to the reference model's tracking signal in a finite amount of time. 
 
 
 The resilient adaptive controller employs the architecture of redundant subsystems where each sensor measurement $y_i$ has its adaptive controller to generate an input $u^*_i$ to follow a desired tracking signal $y^*_i$. Each of the sensor measurements, when uncompromised, have convergence (T2) towards their desired tracking signal from the corresponding reference model,
     \begin{equation}
     \label{multiple_output_tracking}
-    \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0
+    \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0, \;\;\; i=1,\dots,s
     \end{equation}
-for $i=1,2,\dots,s$. This remains true with a changing reference signal $r_i(k)$, changing dynamics, or bounded disturbances. 
+%for $i=1,2,\dots,s$. 
+\eqref{multiple_output_tracking} remains true with a changing reference signal $r_i(k)$, changing dynamics, or bounded disturbances. 
 
 % Each MRAC subsystem calculates an input $u^*_i(k)$ that is fed into the detector, which analyses each to check for attacks. 
 
@@ -115,17 +116,17 @@ Since \eqref{multiple_output_tracking} should hold during any operation, the fol
 \begin{equation}
     i,j = 1,2,\dots,s \nonumber
 \end{equation}
-where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y_i^*(k)$. Each input while under ideal conditions (i.e., considering perfect measurements with no noise), should be the same value as all other subsystem inputs controlling their output to track the same tracking signal. For each subsystem to compute the next input $u^*_i(k)$, its sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs. Mathematically, to detect attacks, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
+where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y_i^*(k)$. Each input while under ideal conditions (i.e., considering perfect measurements with no noise), should be the same value as all other subsystem inputs controlling their output to track the same tracking signal. \NB{fix} For each subsystem to compute the next input $u^*_i(k)$, its sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs. Mathematically, to detect attacks, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
     \begin{equation}
     \label{eq:difference_matrix}
 	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,s}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{s,1}(k) &  &  & \psi_{s,s}(k) \end{bmatrix}
 	\end{equation}
-where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ representing the number of available measurements from the measurement vector. Each element $\psi_{i,j}\in\bm{\Psi}$ is an error computed as the absolute difference between two subsystem inputs:
+where $\bm{\Psi}(k) \in \R^{s\times s}$ with $s$ representing the number of available measurements from the measurement vector \NB{no need to repeat what s is here}. Each element $\psi_{i,j}\in\bm{\Psi}$ is an error computed as the absolute difference between two subsystem inputs:
     \begin{equation}
         \label{eq:input_diff}
         \psi_{i,j}(k)=|u^*_i(k)-u^*_j(k)|
     \end{equation}
-The $l_1$ vector norm for each row in the difference matrix \eqref{eq:difference_matrix} is computed which gives us the following vector:
+The $l_1$ vector norm for each row in \eqref{eq:difference_matrix} is computed giving the following vector:
     \begin{equation}
     \label{eq:difference_vector}
 	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}
@@ -166,21 +167,24 @@ with the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar v
 	    \label{eq:max_error}
 	    e_{max} = 2N_s\sigma_{max}
 	\end{equation}
-where $N_s$ is the chosen number of standard deviations, and $e_{max}$ is the maximum measurement uncertainty, the maximum error is computed. 
+where $N_s$ is the chosen number of standard deviations, and $e_{max}$ is the maximum measurement uncertainty, the maximum error is computed. \NB{talk first about emax and then show the expression for delta}
 
-A restriction to this detection scheme is the ability of an attacker to hide within the noise profile of the sensor with higher uncertainty. To look for stealthier attacks within the noise, an average of $N_p$ number of subsystem inputs $u^*_i$ are computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. \eqref{eq:input_diff} is reformulated to,
+A restriction to this detection scheme is the ability of an attacker to hide within the noise profile of the sensor with higher uncertainty. \NB{However, using the aforementioned approach an attack that is hiding within the noIse profile will be undetectable}. \NB{To deal with stealthy attacks} To look for stealthier attacks within the noise, an average of $N_p$ number of subsystem inputs $u^*_i$ are computed \NB{the mean of N previous inputs is computed}. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. \eqref{eq:input_diff} is reformulated to,
     \begin{equation}
         \label{eq:input_diff2}
         \psi_{i,j}(k)=|\bar{u}^*_i(k)-\bar{u}^*_j(k)|
     \end{equation}
-where $\bar{u}^*(k)$ is the mean of the past $N_p$ subsystem inputs $u^*(k-i)$ for $i=0,1,\dots,N_p-1$. The other alteration is the computation of \eqref{eq:max_error} for a smaller error threshold:
+where $\bar{u}^*(k)$ is the mean of the past $N_p$ subsystem inputs $u^*(k-i)$ for $i=0,1,\dots,N_p-1$.\NB{add teh expression $\sum ...$} The other alteration is the computation of \eqref{eq:max_error} for a smaller error threshold:
     \begin{equation}
 	    \label{eq:max_error2}
 	    e_{max} = \frac{2N_s\sigma_{max}}{\sqrt{N_p}}
 	\end{equation}
+	\NB{explain why and how you got to this expression}
+	\NB{add standard error.}
+	\NB{CHANGE EVERYTHING AFTER (36)}
 Reducing the error threshold enables the detector to find attacks that are slowly pushing the measurement signal away while remaining within the noise profile of highest uncertainty.
 
-After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set is $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
+After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set becomes $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
 
 % DO I NEED THIS?
 
@@ -198,8 +202,8 @@ After detecting and removing the compromised sensors, the updated measurement ma
 	
 
 \subsection{Estimation Confidence}
-
-The vehicle has multiple sensors of various noise profiles that provide state data of the system. Some of these sensors are fused to obtain a better estimation. When a compromised sensor has been removed by the detector, the system uses a smaller set of sensors for state estimation. Thus, we are interested in computing a region of confidence around the state estimate that adapts to the changing sensor set to ensure vehicle safety. We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds which the true mean lies within of a chosen confidence percentage. Assuming the knowledge of the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval of a percentage of confidence can be calculated:
+\NB{here first discuss the problem, then show the basic technique, and then show that in our work we are interested in position estimate and thus (39) in multivariate case becomes...}
+The vehicle has multiple sensors of various noise profiles that provide state data of the system. Some of these sensors are fused to obtain a better estimation. When a compromised sensor has been removed by the detector, the system uses a smaller set of sensors for state estimation \NB{obtaining a different uncertainty from the original set of measurements}. Thus, \NB{to take into account this change in sensor measurement noises, we develop an approach to compute confidence around state estimation. In this work we develop a technique to assess confidence around state estimation} we are interested in computing a region of confidence around the state estimate that adapts to the changing sensor set to ensure vehicle safety. We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds which the true mean lies within of a chosen confidence percentage. Assuming the knowledge of the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval of a percentage of confidence can be calculated:
     \begin{equation}
      \label{Confidence_interval}
 		C_x = \bar{x} + c_p\frac{\sigma}{\sqrt{N}}
@@ -207,7 +211,8 @@ The vehicle has multiple sensors of various noise profiles that provide state da
 	
 % . As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean \NB{you are giving the results before showing how!}	
 	
-For state estimation with sensor uncertainties, we need to guarantee the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\bm{p}=[x,y]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from specifications. For our case, a multivariate confidence interval is computed to create a confidence region for state estimation. This states the vehicle is within the computed region of a specific confidence percentage.
+For state estimation with sensor uncertainties, we need to guarantee that the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\bm{p}=[x,y]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from specifications. For our case, a multivariate confidence interval is computed to create a confidence region for state estimation. 
+%This states the vehicle is within the computed region of a specific confidence percentage. 
 
 
 The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the data's population standard deviation $\sigma_p$ is known for any sensor combination. Using \eqref{Confidence_interval} we find a multivariate region the vehicle is within of a chosen confidence percentage,
@@ -220,7 +225,8 @@ with $c_p$ defining the value for a specific confidence percentage, which can be
     \label{Confidence_radius}
 		\varepsilon = c_p\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
-From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, it is under the assumption that the true mean is static (i.e. is not changing over time). This cannot be assumed in the case of position estimation of a moving vehicle. 
+From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, \NB{the true mean is assumed static} it is under the assumption that the true mean is static (i.e. is not changing over time). 
+%This cannot be assumed in the case of position estimation of a moving vehicle. 
 
 % \begin{figure}[ht!]
 % \vspace{1pt}
@@ -300,7 +306,7 @@ where,
 	\begin{equation}
 	\bar{\theta}_h=\bar{\theta}_h(k-i_{\varepsilon^{*}}) \nonumber
 	\end{equation}
-with $i_{\varepsilon^{*}}=1,2,,\dots,N-1$ while average measured velocity and average measured heading angles over the past $N-1$ samples of range $i_{\varepsilon^{*}}$ are denoted by $\bar{v}$ and $\bar{\theta}_h$, respectively. Accounting for velocity and heading angle measurement error and ensure the vehicle's position is within our estimation region.
+with $i_{\varepsilon^{*}}=1,2,,\dots,N-1$ while average measured velocity and average measured heading angles over the past $N-1$ samples of range $i_{\varepsilon^{*}}$ are denoted by $\bar{v}$ and $\bar{\theta}_h$, respectively. Accounting for velocity and heading angle measurement error and ensure the vehicle's position is within our estimation region. \NB{simplify this last part. It's confusing.}
 
 
 \subsection{Adaptive Motion Planning}
@@ -315,11 +321,13 @@ To keep the vehicles estimated confidence region from intersecting with an undes
     \label{conf_region1}
 	    N^* = \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_r - \bar{\bm{p}}^* \rVert} -\Delta(k) } \right)^2
 	\end{equation}
+	\NB{NO $\Delta$}
 where $ \min \lVert {\bm{x}_r-\bar{\bm{p}}^*} \rVert$ is the distance from the closest undesired region to the estimated vehicle center point position $\bar{\bm{p}}^*$.
 With the assumption that there is sensor noise on the velocity and heading angle sensors, the above equation does not account for uncertainties while creating a static case. The uncertainty region $\varepsilon_{v,\theta_h|N}^{*}$ from these sensors must be accounted for. The revision to equation (\ref{conf_region1}) for a value of $N$ is:
     \begin{equation}
 	    N^* = \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_r - \bar{\bm{p}}^* \rVert} -\varepsilon_{v,\theta_h|N}^{*}-\Delta(k) } \right)^2
 	\end{equation}
+\NB{round inside the equation}
 Due to the fact that $N^*$ represents the number of samples needed to reduce the estimation region to a desired size, $N^*$ needs to be an integer. We simply round $N^*$ up to the nearest integer to give us $N \in \N$.
 
 An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ \hat{\varepsilon}_{\hat{\bar{\bm{p}}}^*|N} +\hat{\varepsilon}_{v,\theta_h|N}^{*}+\Delta(k)$ when $N=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by:
