@@ -4,7 +4,9 @@
 
 % Need to label states of the state vector in the modeling section [x y v \theta]
 
-The case study investigated in this paper is with a ground vehicle experiencing the effects of sensor noise, dynamical changes, while also succumbing to sensor attacks. The vehicle will be traveling along a pre-planned trajectory with assumed to be known obstacles throughout the environment. We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 0,0 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. The objective for the vehicle is to reach multiple goal points while following a desired trajectory with obstacles of varying distances from the path. It is assumed the maximum velocity of the vehicle is 3.5m/s and the desired reference velocity it wants to maintain is 2.5m/s. Throughout the simulation, dynamics are changing that effect velocity before, during, and after an attack. 
+The case study investigated in this paper is an autonomous unmanned ground vehicle (UGV) navigation under the effects of sensor noise, dynamical changes, and sensor attacks. The vehicle is tasked to travel along a pre-planned trajectory through an obstacle populated environment. 
+%We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 0,0 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. 
+The objective for the UGV is to reach multiple goal points while following a desired trajectory with obstacles of varying distances from the path. The maximum velocity of the vehicle is 3.5m/s and the desired reference velocity is set to 2.5m/s. Three sensors are available to obtain velocity measurements, each with a different level of noise. Throughout the simulation, dynamics are changing affecting the velocity before, during, and after an attack. 
 
 
 
@@ -27,7 +29,8 @@ The case study investigated in this paper is with a ground vehicle experiencing 
 
 \end{figure*}
 
-In Figure \ref{fig:low_noise}, the vehicle moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is, in general, small because the best available sensors with low amount of noise are available . Velocity is unaltered due to the obstacles being well outside the uncertainty boundaries.
+In Figure \ref{fig:low_noise}, the vehicle is moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is, small in this case because all sensors are available and fused togetehr. 
+%Velocity is unaltered due to the obstacles being well outside the uncertainty boundaries.
 
 While all sensors are uncompromised, Figure \ref{fig:low_noise2} shows a region where the vehicle is undergoing dynamical changes. The confidence region remains unchanged due to the full uncompromised set of sensors. The adaptive controller is maintaining a reference velocity, even while system dynamics are changing.
 
@@ -40,6 +43,7 @@ Figure \ref{fig:adapt_region} shows the confidence region shrinking in size when
 
 Once the vehicle is past the obstacles that are at close distances, shown in Figure \ref{fig:continue_motion}, the vehicle is able to move freely again at its desired velocity. The confidence region remains at a much larger radius due to the smaller set of available sensors.
 
+\NB{description of other figures?}
 
 
 \begin{figure}
