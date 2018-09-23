@@ -33,27 +33,28 @@ In this work we consider a differential-drive ground vehicle model \cite{nutaro2
     \right.\\
     \dot{\omega}&=\left\{
     \begin{array}{ll}
-    \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega, & \hbox{if } turning\\
-    0, & \hbox{if } not~turning
+    \frac{1}{I_z}(\frac{B}{2}(F_l-F_r)-B_l\omega, \text{      } & \text{     if } turning\\
+    0, \text{      } & \text{     if } not~turning
     \end{array}
     \right.\\
     \end{split}
     \end{equation}
     \begin{align}
+    \label{eq:plant2}
      \dot{\theta_h}=\omega,\text{ } \dot{x}=v\sin(\theta_h),\text{ } \dot{y}=v\cos(\theta_h).
 	\end{align}
 in which $x$ and $y$ coordinates represent position, $\theta_h$ represents the vehicle's heading
 % angle measured from the positive $x$ axis, 
- and $v$ is the speed \NB{is its speed...all the rest is redundant and not neccessay} in this direction of motion. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling and $B_s$ is the additional resistance when the vehicle is turning.\NB{is the resistance due to turning}
+ and $v$ is the velocity. $F_l$ and $F_r$ describe the left and right forces from the wheels, while $B_r$ is the mechanical resistance of the wheels to rolling and $B_s$ is the resistance due to turning.
 % If the assumption is that the wheels do not slip.
-This \NB{this what?}presents a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ are able \NB{can, they are not able?!} to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in a time-varying continuous-time state space form,
+\eqref{eqn:plant} and \eqref{eq:plant2} present a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ can to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in a time-varying continuous-time state space form,
     \begin{equation}
 	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
 	\end{equation}
     \begin{equation}
-	\dot{\bm{y}}(t) = \bm{C}\bm{x}(t)
+	\bm{y}(t) = \bm{C}\bm{x}(t)
 	\end{equation}
-with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t) \in \R^{n\times m}$, output matrix $\bm{C} \in \R^{s\times n}$, state vector $\bm{x}(t) \in \R^{n}$, and system input $\bm{u}(t) \in \R^{m}$. $\bm{A}(t)$, $\bm{B}(t)$, $\bm{x}(t)$, and $\bm{u}(t)$ are given by: \NB{and y?}
+with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t) \in \R^{n\times m}$, output matrix $\bm{C} \in \R^{s\times n}$, state vector $\bm{x}(t) \in \R^{n}$, system input $\bm{u}(t) \in \R^{m}$, and output vector $\bm{y}(t) \in \R^{s}$. $\bm{A}(t)$, $\bm{B}(t)$, $\bm{x}(t)$, and $\bm{u}(t)$ are given by: 
 
 %    \begin{equation}
 %	\bm{A}_v(t)=\begin{bmatrix} 1 & 0 & cos(\theta_h) \\ 0 & 1 & sin(\theta_h) \\ 0 & 0 & -(B_s+B_r) \end{bmatrix},
@@ -83,11 +84,7 @@ with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t
      \bm{x}(t)=\begin{bmatrix} x \\ y \\ v \\ \theta_h \\ \dot{\theta_h} \end{bmatrix}, \bm{u}(t)= \begin{bmatrix} F_l+F_r \\ F_l-F_r  \end{bmatrix}  \nonumber
 	\end{equation}
 
-The dynamically changing model is defined to a set point from initially known parameters \NB{not clear what you mean here} within the $\bm{A}$ and $\bm{B}$ matrices:
-	\begin{equation}
-	\dot{\bm{x}}(t) = \bm{A}\bm{x}(t) + \bm{B}\bm{u}(t)
-	\end{equation}
-Since the adaptive control algorithm used is \NB{"used is" is not good english! } based on a discrete-time state space model, the continuous-time model needs to be discretized. With a suitable sampling time $t_s$, the linearized discrete-time model is written as,
+The model is initially defined by known parameters within the $\bm{A}$ and $\bm{B}$ matrices. Since the adaptive control algorithm is based on a discrete-time state space model, the continuous-time model needs to be discretized. With a suitable sampling time $t_s$, the linearized discrete-time model is written as,
     \begin{equation}
     \label{eq:discritzed_SS_model}
 	\bm{x}(k+1) = \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k)
@@ -95,23 +92,24 @@ Since the adaptive control algorithm used is \NB{"used is" is not good english! 
 	\begin{equation}
 	\bm{y}(k)=\bm{C}\bm{x}(k)
 	\end{equation}
-with $\bm{y}(k) \in \R^{s}$ described as the output measurement vector, $\bm{C} \in \R^{s\times n}$ is defined as the output matrix, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$ retain the same dimensions as their continuous-time case equivalents.\NB{unnecccessary, remove}
+with $\bm{y}(k) \in \R^{s}$ described as the output measurement vector, $\bm{C} \in \R^{s\times n}$ is defined as the output matrix, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$.
 
 
  \subsection{Noise, Disturbance, and Attack Models}
-When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $ \bm{\eta}_a \in \mathcal{N}(0,\sigma_a) $, while any disturbances are described as $\bm{d}(k)$. The output uncertainty vectors due to measurement noise and sensor attacks is described by $ \bm{\eta}_s \in \mathcal{N}(0,\sigma_s) $ and $\bm{\xi}(k)$, respectively \NB{make the attack stand out more in this description. The output uncertainty due to measurement noise is described as.. . In this work we consider that an attacker can observe and manipulate some of the sensor measurements replacing and/or altering their value...  }. The sensor attack vector $\bm{\xi}$ has unknown statistical properties and we assume to have no prior knowledge of an impending attack. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
+When a ground vehicle is in motion, there are many factors that may cause it to behave differently. These factors can include sensor or actuator noises and actuator failure, as well as external influences like wind disturbance, and changing ground surfaces. The uncertainties from actuator noise are due to mechanical uncertainties of motors and gears, which are represented by $\bm{\eta}_a \in \mathcal{N}(0,\sigma_a)$, while any disturbances are described as $\bm{d}(k)$. The output uncertainty due to measurement noise is described as $\bm{\eta}_s \in \mathcal{N}(0,\sigma_s)$. In this work we consider that an attacker can observe and manipulate some of the sensor measurements by altering their value at any time. The sensor attack vector $\bm{\xi}$ has unknown statistical properties and we assume to have no prior knowledge of an impending attack. All noises are assumed to have a zero mean Gaussian distribution. The overall discretized system model accounting for noise, disturbance, and attack effects  can be described in in the following form:
     \begin{equation}
-	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k)
-	\end{equation}
-	\begin{equation}
+    \begin{split}
+    \label{eq:discrete_SS}
+	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k) \\
 	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
+	\end{split}
 	\end{equation}
 
 % λk is the attack vector in which each term represents attack of magnitude kλk,ik. The attack vector is assumed to be arbitrary, i.e., we assume no prior knowledge of statistical properties of bounds on the values of the attack vector.
 
 
 \subsection{Adaptive Control Model}
-Now that we have a model of the system and know what may change \NB{no need to say that we know what may change}, we represent it in a discrete-time transfer function that's \NB{that is...avoid abbreviations as much as possible}a usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model's \eqref{eq:discritzed_SS_model} discrete-time transfer function in the $z$-domain is, \NB{The state space model in \eqref{eq:discritzed_SS_model} transformed in discrete-time transfer function in the $z$-domain becomes:}
+Now that we have a model of the system, we represent it in a discrete-time transfer function that is a usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model in \eqref{eq:discrete_SS} transformed in discrete-time transfer function in the $z$-domain becomes:
 
 	\begin{align}
 	\begin{split}

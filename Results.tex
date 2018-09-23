@@ -68,13 +68,13 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 \caption{The vehicle is traveling between Goals C and D where the vehicle encounters a sensor attack. Detection of this attack occurs, dropping the compromised sensor, allowing the vehicle to follow the desired velocity. With a higher uncertainty of the available sensor set, velocity is adapted to ensure vehicle safety . }
 \end{figure}
 
-\begin{figure}
-\vspace{1pt}
-%\centering
-\includegraphics[width=0.48\textwidth]{Figures/Error_vector.png}
-\caption{The error vector is computing magnitudes of error for each of the sensors. As a sensor's error reaches a threshold, the sensor will be removed from the system.}
-\label{fig:sensor error}
-\end{figure}
+% \begin{figure}
+% \vspace{1pt}
+% %\centering
+% \includegraphics[width=0.48\textwidth]{Figures/Error_vector.png}
+% \caption{The error vector is computing magnitudes of error for each of the sensors. As a sensor's error reaches a threshold, the sensor will be removed from the system.}
+% \label{fig:sensor error}
+% \end{figure}
 
 \begin{figure}
 \vspace{1pt}
@@ -87,7 +87,7 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 
 \begin{figure}
 \vspace{1pt}
-%\centering
+\centering
 \begin{tabular}{cc}
 \subfigure[\label{fig:MRAC_tracking} ]{\includegraphics[width = 0.22\textwidth]{Figures/VelocityTracking_MRAC.png}} & 
 \subfigure[\label{fig:PID_tracking} ]{\includegraphics[width =0.22\textwidth]{Figures/VelocityTracking_PID.png}}
@@ -99,19 +99,11 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 
 
 \begin{figure}
-%\begin{figure*}[th!]
-\begin{tabular}{cc}
-
-\subfigure[\label{fig:NoDet_AtAttack} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection1.png}} &	
-\subfigure[\label{fig:NoDet_TurnDetOn} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection2.png}}
-\end{tabular} \\
-\begin{tabular}{cc}
-\subfigure[\label{fig:NoDet_Continue} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection3.png}} &
-\subfigure[\label{fig:NoDet_Vel} ]{\includegraphics[width = 0.22\textwidth]{Figures/NoDetection_Vel.png}}
-
-\end{tabular}
-\caption{A demonstration of the result of an attack with the detector not operating for a period of time during an attack. Subfigure (a) represents when the attack begins, (b) shows a few time intervals after the detector is turned on. The red colored region in (d) is the time frame the attack occurred without the detector operating. }
-
+\vspace{1pt}
+%\centering
+\includegraphics[width = 0.48\textwidth]{Figures/NoDetection_Vel.png}
+\caption{A demonstration of the result of an attack with the detector not operating for a period of time during an attack. The red shaded region is the time frame the attack occurred without the attack detector operating. }
+\label{fig:NoDet_Vel}
 \end{figure}
 
 
