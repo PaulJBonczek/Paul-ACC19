@@ -186,6 +186,51 @@ The error threshold bounds are reduced to find attacks that have the objective t
 
 After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set becomes $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
 
+\begin{lemma} 
+	\label{lemma_1}
+	Given $\bm{s}'$ from $\bm{y}$, the system is able to maintain tracking before, during, and after a sensor spoof while guaranteeing stability.
+
+\end{lemma}
+
+\begin{proof}
+Under the assumptions of (A1-A4) and the convergence properties of \eqref{eq:Modified_Proj_Algorithm}, it follows that:
+    \begin{equation}
+    \label{lemma_1_eq1}
+        \lim_{k\to\infty}e(k)=0
+    \end{equation}
+With this satisfied, the properties (T1-T3) also hold true. If $e(k)$ is a bounded value for all time instances $k$, then the signal vector $\lVert{\bm{\phi}}(k) \rVert$ is also bounded over time. 
+
+As an attacker hijacks a measurement, \eqref{eq:Psi2_nonideal} ensures a measurement signal never becomes unbounded over all time instances $k$ by removing the measurement from the system. $\lVert{\bm{\phi}}(k) \rVert$ remains bounded, guaranteeing tracking of the desired reference signal.
+    
+\end{proof}
+
+
+
+
+
+
+
+% 	If the following conditions are satisfied over the sequence in time:
+%     \begin{enumerate}[label=(\roman*),leftmargin=1\parindent]
+%     \item
+%     \begin{equation}
+%     \label{lemma_1_eq1}
+%         \lim_{k\to\infty}\frac{e(k)}{c+\bm{\phi}^T(k)\bm{\phi}(k)}=0
+%     \end{equation}
+%     where $c$ and $e(k)$ are real scalar values and $\bm{\phi} \in \R^{p \times 1}$ 
+%     \item Linear boundedness conditions 
+%     \begin{equation}
+%     \label{lemma_1_eq2}
+%         \lVert{\bm{\phi}} \rVert < C_1 + C_2 \max|s(t)|
+%     \end{equation}
+% where $0<C_1<\infty$ and $0<C_2<\infty$, the following is true,
+%     \begin{enumerate}[label=(\roman*),leftmargin=3\parindent]
+%         \item $\lim_{k\to\infty}e(k) = 0$ \\
+%         \item $\lVert{\bm{\phi}}(k) \rVert$ is bounded
+%     \end{enumerate}
+% \end{enumerate}
+
+
 % DO I NEED THIS?
 
 %Properties of the modified projection algorithm \eqref{eq:Modified_Proj_Algorithm} include:
@@ -201,10 +246,9 @@ After detecting and removing the compromised sensors, the updated measurement ma
 %	\end{enumerate}
 	
 
-\subsection{Estimation Confidence}
-\NB{here first discuss the problem, then show the basic technique, and then show that in our work we are interested in position estimate and thus (39) in multivariate case becomes...}
+\subsection{Estimation Confidence} 
 
-The vehicle has multiple sensors of various noise profiles that provide state data of the system. Some of these sensors are fused to obtain a better estimation. As compromised sensors are removed by the detector, the system uses a smaller set of sensors for state estimation obtaining a different uncertainty from the original set of measurements. Thus, to take into account this change in sensor measurement noises, we develop an approach to compute confidence around state estimation. In this work we develop a technique to assess confidence around state estimation that adapts to the changing sensor set to ensure vehicle safety. We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds which the true mean lies within of a chosen confidence percentage. Assuming the knowledge of the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval of a percentage of confidence can be calculated:
+The presence of measurement noise on the sensor set results in state estimation uncertainty. The vehicle has multiple sensors of various noise profiles that provide state data of the system, some of which are fused to obtain a better estimation. As compromised sensors are removed by the detector, the system uses a smaller set of sensors for state estimation obtaining a different uncertainty from the original set of measurements. Thus, to take into account this change in sensor measurement noises, we develop an approach to compute confidence around state estimation. In this work we develop a technique to assess confidence around state estimation that adapts to the changing sensor set to ensure vehicle safety. We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds which the true mean lies within of a chosen confidence percentage. Assuming the knowledge of the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval of a percentage of confidence can be calculated:
     \begin{equation}
      \label{Confidence_interval}
 		C_x = \bar{x} + c_p\frac{\sigma}{\sqrt{N}}
@@ -286,24 +330,27 @@ Translating the data coordinates into a pseudo-static form creates the updated s
 \end{figure}
 
 
-Hi
 Creating a static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee that the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to sensor noise over the furthest sample in time in $\bm{P}^*$ is calculated as:
     \begin{align}
     \begin{split}
-	C_{v,\theta_h|N_e}^{*}&=\Big( \big[(\bar{v}^* \cos(c_p\sigma_h) - \bar{v}) \big]^2 \\
-	&+ \big[ (\bar{v}^* \sin(c_p\sigma_h) - 0) \big]^2 \Big) ^{1/2} (N_e-1)
+	&\epsilon_{v,\theta}=\Big( \big[(\bar{v}^* \cos(N_{\sigma}\sigma_h) - \bar{v}) \big]^2 \\
+	+ & \big[ (\bar{v}^* \sin(N_{\sigma}\sigma_h) - 0) \big]^2 \Big) ^{1/2} (N_e-1)
 	\end{split}
 	\end{align}
-where,
     \begin{equation}
+    \label{eq:avg_vel}
     \bar{v}=\sum_{j=0}^{N_e-1} \frac{v(k-j)}{N_e}
 	%\bar{v}^{*}=\bar{v}(k-i_{C^{*}})+c_p\sigma_v \nonumber
 	\end{equation}
     \begin{equation}
-	\bar{v}^{*}=\bar{v}+c_p\sigma_v 
+    \label{eq:avg_vel_noise}
+	\bar{v}^{*}=\bar{v}+N_{\sigma}\sigma_v 
 	\end{equation}
-
-with $i_{C^{*}}=1,2,,\dots,N_e-1$ while average measured velocity and average measured heading angles over the past $N_e-1$ samples of range $i_{\varepsilon^{*}}$ are denoted by $\bar{v}$ and $\bar{\theta}_h$, respectively. Accounting for velocity and heading angle measurement error and ensure the vehicle's position is within our estimation region. \NB{simplify this last part. It's confusing.}
+The maximum angle error is denoted as $N_{\sigma}\sigma_h$ and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to:
+    \begin{equation}
+    \label{Confidence_region_updated2}
+		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
+	\end{equation}
 
 
 \subsection{Adaptive Motion Planning}
@@ -311,33 +358,39 @@ with $i_{C^{*}}=1,2,,\dots,N_e-1$ while average measured velocity and average me
 % Thus here we are interested to compute a confidence interval around our state estimation and adapt the vehicle's motion plan if safety constraints could be violated
 
 
-With uncertainty of sensor measurements, with or without a reconfigured set of sensors, there needs to be guarantees to navigate safely. As the vehicle approaches undesired regions or follows a trajectory through a passageway that's more narrow than the confidence region at the current time interval $k$, we need to be able to reduce the size of estimate region by gathering more data samples to guarantee safety. The only two options are to sample data faster or reduce speed to gather more samples within a certain distance. Since sampling at a faster rate can't be done due to physical limitations, we need to slow the vehicle down to gather more data samples in a shorter distance to reduce estimation uncertainties.
+With uncertainty of sensor measurements, with or without a reconfigured set of sensors, there needs to be guarantees to navigate safely. As the vehicle approaches an undesired region, we need to gather more data to reduce the size of the confidence region to guarantee safety. The two options to gather more data are sampling data faster or to reduce velocity. However, sampling at a faster rate can not be done due to physical limitations, we will reduce velocity to gather more data samples in a shorter distance to reduce estimation uncertainties. To ensure the confidence region never intersects with an undesired state, we update the number of data samples for better estimation while also adapting the velocity.
 
-To keep the vehicles estimated confidence region from intersecting with an undesired state, a change to the number of current and past data samples in the calculation as well as an adaptation of the velocity needs to occur. Without uncertainty of velocity and heading angle measurements, the equation to solve for the number of required $N$ samples to keep the confidence region within a specific radius is:
+Due to uncertainty of the measurements, the confidence region can quickly shift as new measurements are sampled. To counteract this shifting, we propose a boundary around the confidence region,
     \begin{equation}
-    \label{conf_region1}
+    \label{eq:Delta}
+	    \Delta(k) = 2\big(c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}\big)
+	\end{equation}
+which is the maximum distance the region can shift at any time.
+
+To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_x$. At the next predicted state $\bm{x}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by,
+    \begin{equation}
 	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert} -\Delta(k) } \right)^2
 	\end{equation}
-	\NB{NO $\Delta$}
-where $ \min \lVert {\bm{x}_o-\bar{\bm{p}}^*} \rVert$ is the distance from the closest undesired region to the estimated vehicle center point position $\bar{\bm{p}}^*$.
-With the assumption that there is sensor noise on the velocity and heading angle sensors, the above equation does not account for uncertainties while creating a static case. The uncertainty region $C_{v,\theta_h|N_e}^{*}$ from these sensors must be accounted for. The revision to equation (\ref{conf_region1}) for a value of $N_e$ is:
-    \begin{equation}
-	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert} -C_{v,\theta_h|N_e}^{*}-\Delta(k) } \right)^2
-	\end{equation}
-Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, $N_e$ needs to be an integer. We simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
+where $\min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert$ is the minimum distance from an undesired state to $\bar{\bm{p}}$. Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
 
-An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ C_{\bar{\bm{p}}^*|N_e} +C_{v,\theta_h|N_e}^{*}+\Delta(k)$ when $N_e=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by:
+An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ C_{\bar{\bm{p}}^*|N_e} +C_{v,\theta_h|N_e}^{*}+\Delta(k)$ when $N_e=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by,
     \begin{equation}
-	    r_v(k)=r_v(k-1) \left[ \frac{ \min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert - C_1}{C_2 - C_1} \right]
+        r_v(k) = \min\{\Tilde{r},\bar{r}\}
+	   % r_v(k)=r_v(k-1) \left[ \frac{ \min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert - C_1}{C_2 - C_1} \right]
 	\end{equation}
+where $r_v(k)$ is the minimum value between,
 	\begin{equation}
-	\begin{split}
-	    C_1&=C_{\bar{\bm{p}}^*|N_e} +C_{v,\theta_h|N_e}^{*},\\ &C_2=C_1+\Delta(k) \nonumber	    
+    \begin{split}
+	    \Tilde{r} = \frac{d_x}{N_et_s} \\
+	    \bar{r} = \frac{\delta_{\Delta}}{t_s}
 	\end{split}
 	\end{equation}
-	
-where $C_1$ and $C_2$ are both radii from the estimated center position $\bar{\bm{p}}^*$.
-	
+	\begin{equation}
+	    \delta_{\Delta} = \min \lVert \bm{x}_o \rVert - C_{\bar{\bm{p}}^*|N_e}
+	\end{equation}
+Doing this computes the reference signal to the lowest velocity, ensuring a velocity to safely navigate.
+
+	(LEMMA2)
 %	\begin{equation}
 %		\Delta(k)=[v(k)]^{\delta_v}\delta
 %	\end{equation}
