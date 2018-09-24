@@ -46,31 +46,31 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 \NB{description of other figures?}
 
 
-\begin{figure}
-\vspace{1pt}
-%\centering
-\begin{tabular}{cc}
+% \begin{figure}
+% \vspace{1pt}
+% %\centering
+% \begin{tabular}{cc}
 
-\subfigure[\label{fig:vel_G1and2} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals1and2.png}} &	
-\subfigure[\label{fig:input_G1and2} ]{\includegraphics[width = 0.22\textwidth]{Figures/Inputs_Goals1and2.png}}
+% \subfigure[\label{fig:vel_G1and2} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals1and2.png}} &	
+% \subfigure[\label{fig:input_G1and2} ]{\includegraphics[width = 0.22\textwidth]{Figures/Inputs_Goals1and2.png}}
 
-\end{tabular}
-\label{fig:Goals1and2}
-\caption{The vehicle is traveling between Goals B and C with all sensors uncompromised. System dynamics are changing between the goal points.}
-\end{figure}
+% \end{tabular}
+% \label{fig:Goals1and2}
+% \caption{The vehicle is traveling between Goals B and C with all sensors uncompromised. System dynamics are changing between the goal points.}
+% \end{figure}
 
 
 
-\begin{figure}
-\vspace{1pt}
-%\centering
-\begin{tabular}{cc}
-\subfigure[\label{fig:vel_G2and3} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals2and3.png}} & 
-\subfigure[\label{fig:input_G2and3} ]{\includegraphics[width =0.22\textwidth]{Figures/Inputs_Goals2and3.png}}
-\end{tabular}
-\label{fig:Goals2and3}
-\caption{The vehicle is traveling between Goals C and D where the vehicle encounters a sensor attack. Detection of this attack occurs, dropping the compromised sensor, allowing the vehicle to follow the desired velocity. With a higher uncertainty of the available sensor set, velocity is adapted to ensure vehicle safety . }
-\end{figure}
+% \begin{figure}
+% \vspace{1pt}
+% %\centering
+% \begin{tabular}{cc}
+% \subfigure[\label{fig:vel_G2and3} ]{\includegraphics[width = 0.22\textwidth]{Figures/vel_Goals2and3.png}} & 
+% \subfigure[\label{fig:input_G2and3} ]{\includegraphics[width =0.22\textwidth]{Figures/Inputs_Goals2and3.png}}
+% \end{tabular}
+% \label{fig:Goals2and3}
+% \caption{The vehicle is traveling between Goals C and D where the vehicle encounters a sensor attack. Detection of this attack occurs, dropping the compromised sensor, allowing the vehicle to follow the desired velocity. With a higher uncertainty of the available sensor set, velocity is adapted to ensure vehicle safety . }
+% \end{figure}
 
 % \begin{figure}
 % \vspace{1pt}
@@ -80,17 +80,15 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 % \label{fig:sensor error}
 % \end{figure}
 
-\begin{figure}
-\vspace{1pt}
-%\centering
+\begin{figure}[ht!]
+\centering
 \includegraphics[width=0.48\textwidth]{Figures/Velocities.png}
 \caption{Velocities are shown over the entire simulation. Sensor 3 measurements are no longer used by the system as soon as it diverges from the remaining sensors. }
 \label{fig:total_velocity}
 \end{figure}
 
 
-\begin{figure}
-\vspace{1pt}
+\begin{figure}[ht!]
 \centering
 \begin{tabular}{cc}
 \subfigure[\label{fig:MRAC_tracking} ]{\includegraphics[width = 0.22\textwidth]{Figures/VelocityTracking_MRAC.png}} & 
