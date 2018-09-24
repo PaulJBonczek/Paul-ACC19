@@ -11,7 +11,6 @@ In this section we describe the framework for detection of sensor attacks for sy
 \caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
 \label{fig:system_arch}
 \end{figure}
-\NB{fix this figure as discussed}
 % \NB{FIGURE: where is the adaptive controller? Group blocks together that represent the Resilient AC.}
 % \NB{FIGURE: we need to have multiple arrows going out from the controller}
 % \NB{FIGURE: name the motion planner differently like adaptive motion planner}
@@ -28,7 +27,6 @@ In order to detect and remove attacks we propose the architecture in Fig. \ref{f
 % The architecture followed in this work is shown in Fig. \ref{fig:det_arch}, which consists of a subsystem for each sensor measurement within the same controlled state. Each subsystem consists of a model reference adaptive controller to generate the next input $u^*_i$ where $i=1,2,\dots,s$ given its corresponding measurement signal $y_i$.
 
 \begin{figure}[ht!]
-\vspace{1pt}
 \centering
 \includegraphics[width=0.48\textwidth]{Figures/con_and_det.png}
 \caption{Architecture of the detection scheme within the adaptive controlled system. Representing  the $s$ number of available measurements, each of their adaptive subsystems generate a temporary input to be sent to the attack detector. From there, the detector removes measurement subsystems that are compromised.}
@@ -54,12 +52,12 @@ The objective of the adaptive control is to estimate the true parameters of $\bm
 	\end{equation}
 With our known input and measurement signals within a signal vector $\bm{\phi}(k)$,
     
-	\begin{align}
+	\begin{equation}
 	\begin{split}
 	\bm{\phi}(k)&=(y_i(k), \dots ,y_i(k-p+1),u^*_i(k), \dots , \\
 	& u^*_i(k-q-d+1))^T \in \R^{p+q+d}
 	\end{split}
-	\end{align}
+	\end{equation}
 we can estimate the true parameter vector $\bm{\theta}_0$ by updating the parameter estimate vector $\bm{\theta}(k)$ using a \textit{Modified Projection Algorithm} \cite{tao2003adaptive}:
 	\begin{equation}
 	\label{eq:Modified_Proj_Algorithm}
@@ -68,9 +66,9 @@ we can estimate the true parameter vector $\bm{\theta}_0$ by updating the parame
 	\begin{equation}
 	e(k)=E(z^{-1})y_i(k)-\theta^T(k-1)\bm{\phi}(k-d)
 	\end{equation}
-	\begin{align*}
-	\epsilon<a(k)<2-\epsilon, 0,\epsilon<1, c>0
-	\end{align*}
+	\begin{equation}
+	\epsilon<a(k)<2-\epsilon, 0,\epsilon<1, c>0 \nonumber
+	\end{equation}
 To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u^*_i(k)$ is then calculated from the equation:
     \begin{equation}
     \label{eq:tracking_model}
@@ -189,20 +187,18 @@ After detecting and removing the compromised sensors, the updated measurement ma
 
 \begin{lemma} 
 	\label{lemma_1}
-	Given $\bm{s}'$ from the measurement set $\bm{y}$, the system is able to maintain tracking before, during, and after a sensor spoof while guaranteeing stability.
+	Given the measurement set $\bm{y}$, the system is guaranteed to remain stable and maintain tracking with dynamical changes, disturbances, and sensor attacks. By using input technique \eqref{eq:End} while the attack detector \eqref{eq:Psi2_nonideal} is operating, the output converges to the tracking signal from one time instance $k$ to the next $k+1$.
 
 \end{lemma}
 
 \begin{proof}
-Under the assumptions of (A1-A4) and the convergence properties of \eqref{eq:Modified_Proj_Algorithm}, it follows that:
+Under the assumptions of (A1-A4) and the convergence property from \eqref{eq:Modified_Proj_Algorithm},
     \begin{equation}
     \label{lemma_1_eq1}
-        \lim_{k\to\infty}e(k)=0
+        \lim_{k\to\infty}\|\bm{\theta}(k)-\bm{\theta}_0\|=0 \nonumber
     \end{equation}
-With this satisfied, the properties (T1-T3) also hold true. If $e(k)$ is a bounded value for all time instances $k$, then the signal vector $\lVert{\bm{\phi}}(k) \rVert$ is also bounded over time. 
-
-As an attacker hijacks a measurement, \eqref{eq:Psi2_nonideal} ensures a measurement signal never becomes unbounded over all time instances $k$ by removing the measurement from the system. $\lVert{\bm{\phi}}(k) \rVert$ remains bounded, guaranteeing tracking of the desired reference signal.
-    
+the properties (T1-T3) also hold true. If $e(k)$ is a bounded value for all time instances $k$, then the signal vector $\lVert{\bm{\phi}}(k) \rVert$ is also bounded over time. As an attacker hijacks a measurement, \eqref{eq:Psi2_nonideal} ensures a measurement signal never becomes unbounded or diverges above the error threshold \eqref{eq:delta} for all time instances $k$. By removing compromised measurements, $\lVert{\bm{\phi}}(k) \rVert$ remains bounded, guaranteeing stability and tracking of the desired reference signal.
+  
 \end{proof}
 
 
@@ -269,7 +265,7 @@ The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the dat
 with $c_p$ defining the value for a specific confidence percentage, which can be found from tables in \cite{devore2011probability} and $\bar{\bm{p}}$ is the mean position estimate from the $N_e$ data samples. The radius of the multivariate confidence region \eqref{Confidence_region} from the center point $\bar{\bm{p}}$ is:
     \begin{equation}
     \label{Confidence_radius}
-		C = c_p\frac{\sigma_p}{\sqrt{N_e}}
+		C_r = c_p\frac{\sigma_p}{\sqrt{N_e}}
 	\end{equation}
 From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, the true mean is assumed static (i.e. is not changing over time). 
 %This cannot be assumed in the case of position estimation of a moving vehicle. 
@@ -292,7 +288,7 @@ From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ dat
 \label{fig:confidence_region}
 \end{figure}
 
-To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,2,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ position estimate samples are described in the set:
+To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ position estimate samples are described in the set:
 \begin{equation}
     \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
 \end{equation}
@@ -347,12 +343,16 @@ Creating a static case with these past position data samples introduces higher u
     \label{eq:avg_vel_noise}
 	\bar{v}^{*}=\bar{v}+N_{\sigma}\sigma_v 
 	\end{equation}
-The maximum angle error is denoted as $N_{\sigma}\sigma_h$ and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to:
+The maximum angle error is denoted as $N_{\sigma}\sigma_h$ and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to,
     \begin{equation}
     \label{Confidence_region_updated2}
 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
 	\end{equation}
-
+with a radius of:
+    \begin{equation}
+    \label{Confidence_radius2}
+		C_r = c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
+	\end{equation}
 
 \subsection{Adaptive Motion Planning}
 
@@ -368,7 +368,7 @@ Due to uncertainty of the measurements, the confidence region can quickly shift 
 	\end{equation}
 which is the maximum distance the region can shift for any time.
 
-To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}^*(k+1)}^* \rVert$. At the next predicted state $\bm{x}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
+To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1)^* \rVert$. At the next predicted state $\bm{x}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
     \begin{equation}
     \label{eq:N_e}
 	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
@@ -377,37 +377,36 @@ Due to the fact that $N_e$ represents the number of samples needed to reduce the
 
 An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$ when $N_e=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by,
     \begin{equation}
-        r_v(k) = \min\{\Tilde{r}_v,\bar{r}_v,r_{des}(k)\}
-	   % r_v(k)=r_v(k-1) \left[ \frac{ \min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert - C_1}{C_2 - C_1} \right]
+    \label{eq:ref_vel}
+        r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) ,r_{des}(k)\}
 	\end{equation}
 where $r_{des}(k)$ is the desired reference and,
 	\begin{equation}
-	    \Tilde{r} = \frac{d_x}{N_et_s}, \;\;\;\; \bar{r} = \frac{\delta_{\Delta}}{t_s}
+	    \Tilde{r}_v(k) = \frac{d_x}{N_et_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
 	\end{equation}
 	\begin{equation}
-	    \delta_{\Delta} = \min \lVert \bm{x}_o \rVert - C_{\bar{\bm{p}}^*|N_e}
+	    \delta_{\Delta} = \min \lVert \bm{x}_o - C_r \rVert 
 	\end{equation}
 are maximum allowable velocities according to the distance of an undesired state to the confidence region. As we compute the minimum velocity of $\min\{\Tilde{r}_v,\bar{r}_v,r_{des}(k)\}$, we ensure a velocity to safely navigate without entering an undesired state.
 
 \begin{lemma} 
 	\label{lemma_2}
-Given the present state of the vehicle $\bm{x}(k)$, the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$.
+Given the present state of the vehicle $\bm{x}(k)$, the vehicle's next state $\bm{x}(k+1)$ will never enter an undesired state $\bm{x}_o$.
 
 \end{lemma}
 
 \begin{proof}
-With the vehicle presently in a safe state $\bm{x}(k) \neq \bm{x}_o$, there exists a reference signal $r(k)$ such that the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region $C_{\bar{\bm{p}}(k+1)^*|N_e}$ of the next state $\bm{x}(k+1)$ will never intersect with an undesired state:
+With the vehicle at the state $\bm{x}(k) \neq \bm{x}_o$, there exists a reference velocity $r(k)$ such that the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated2} of the next state $\bm{x}(k+1)$ will never intersect with an undesired state:
 \begin{equation}
-    C_{\bar{\bm{p}}^*(k+1)|N_e} \cap \bm{x}_o = \emptyset
+    C_{\bar{\bm{p}}^*(k+1)|N_e} \cap \bm{x}_o = \emptyset \nonumber
 \end{equation}
-Assuming the knowledge of velocity $v(k)$ and distance to the closest obstacle, the reference velocity of the vehicle is calculated such that the vehicle will not travel a distance far enough into an undesired state:
+Assuming the knowledge of velocity $v(k)$ and distance to the closest obstacle $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k) \rVert$, the reference velocity \eqref{eq:ref_vel} is computed such that the vehicle will not travel more than a distance $d_p$ to avoid an undesired state:
 \begin{equation}
-    r(k) = \min\{\Tilde{r}_v,\bar{r}_v,r_{des}(k)\}t_s < \min \lVert \bm{x}_o - C_{\bar{\bm{p}}^*(k+1)|N_e} \rVert \nonumber
+    \min \lVert \bm{x}_o - C_r \rVert > d_p \geq r_v(k)t_s \nonumber
+  \nonumber
 \end{equation}
-Using a closed loop controller to always go towards the trajectory with the assumption the trajectory never crosses through an undesired state.
+The system uses a closed loop controller to always converge toward the trajectory with the assumption that the trajectory never crosses through an undesired state.
 
-
-    
 \end{proof}
 %	\begin{equation}
 %		\Delta(k)=[v(k)]^{\delta_v}\delta
