@@ -189,7 +189,7 @@ After detecting and removing the compromised sensors, the updated measurement ma
 
 \begin{lemma} 
 	\label{lemma_1}
-	Given $\bm{s}'$ from $\bm{y}$, the system is able to maintain tracking before, during, and after a sensor spoof while guaranteeing stability.
+	Given $\bm{s}'$ from the measurement set $\bm{y}$, the system is able to maintain tracking before, during, and after a sensor spoof while guaranteeing stability.
 
 \end{lemma}
 
@@ -364,34 +364,51 @@ With uncertainty of sensor measurements, with or without a reconfigured set of s
 Due to uncertainty of the measurements, the confidence region can quickly shift as new measurements are sampled. To counteract this shifting, we propose a boundary around the confidence region,
     \begin{equation}
     \label{eq:Delta}
-	    \Delta(k) = 2\big(c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}\big)
+	    \Delta(k) = 2\big(c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}\big) = 2C_{\bar{\bm{p}}^*|N_e}
 	\end{equation}
-which is the maximum distance the region can shift at any time.
+which is the maximum distance the region can shift for any time.
 
-To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_x$. At the next predicted state $\bm{x}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by,
+To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}^*(k+1)}^* \rVert$. At the next predicted state $\bm{x}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
     \begin{equation}
-	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert} -\Delta(k) } \right)^2
+    \label{eq:N_e}
+	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
 	\end{equation}
-where $\min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert$ is the minimum distance from an undesired state to $\bar{\bm{p}}$. Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
+Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
 
-An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ C_{\bar{\bm{p}}^*|N_e} +C_{v,\theta_h|N_e}^{*}+\Delta(k)$ when $N_e=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by,
+An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$ when $N_e=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by,
     \begin{equation}
-        r_v(k) = \min\{\Tilde{r},\bar{r}\}
+        r_v(k) = \min\{\Tilde{r}_v,\bar{r}_v,r_{des}(k)\}
 	   % r_v(k)=r_v(k-1) \left[ \frac{ \min \lVert \bm{x}_o - \bar{\bm{p}}^* \rVert - C_1}{C_2 - C_1} \right]
 	\end{equation}
-where $r_v(k)$ is the minimum value between,
+where $r_{des}(k)$ is the desired reference and,
 	\begin{equation}
-    \begin{split}
-	    \Tilde{r} = \frac{d_x}{N_et_s} \\
-	    \bar{r} = \frac{\delta_{\Delta}}{t_s}
-	\end{split}
+	    \Tilde{r} = \frac{d_x}{N_et_s}, \;\;\;\; \bar{r} = \frac{\delta_{\Delta}}{t_s}
 	\end{equation}
 	\begin{equation}
 	    \delta_{\Delta} = \min \lVert \bm{x}_o \rVert - C_{\bar{\bm{p}}^*|N_e}
 	\end{equation}
-Doing this computes the reference signal to the lowest velocity, ensuring a velocity to safely navigate.
+are maximum allowable velocities according to the distance of an undesired state to the confidence region. As we compute the minimum velocity of $\min\{\Tilde{r}_v,\bar{r}_v,r_{des}(k)\}$, we ensure a velocity to safely navigate without entering an undesired state.
 
-	(LEMMA2)
+\begin{lemma} 
+	\label{lemma_2}
+Given the present state of the vehicle $\bm{x}(k)$, the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$.
+
+\end{lemma}
+
+\begin{proof}
+With the vehicle presently in a safe state $\bm{x}(k) \neq \bm{x}_o$, there exists a reference signal $r(k)$ such that the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region $C_{\bar{\bm{p}}(k+1)^*|N_e}$ of the next state $\bm{x}(k+1)$ will never intersect with an undesired state:
+\begin{equation}
+    C_{\bar{\bm{p}}^*(k+1)|N_e} \cap \bm{x}_o = \emptyset
+\end{equation}
+Assuming the knowledge of velocity $v(k)$ and distance to the closest obstacle, the reference velocity of the vehicle is calculated such that the vehicle will not travel a distance far enough into an undesired state:
+\begin{equation}
+    r(k) = \min\{\Tilde{r}_v,\bar{r}_v,r_{des}(k)\}t_s < \min \lVert \bm{x}_o - C_{\bar{\bm{p}}^*(k+1)|N_e} \rVert \nonumber
+\end{equation}
+Using a closed loop controller to always go towards the trajectory with the assumption the trajectory never crosses through an undesired state.
+
+
+    
+\end{proof}
 %	\begin{equation}
 %		\Delta(k)=[v(k)]^{\delta_v}\delta
 %	\end{equation}
