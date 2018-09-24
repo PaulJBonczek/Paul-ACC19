@@ -12,11 +12,11 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 
 \begin{problem} 
 \label{problem1} {\textbf{Attack Detection and Sensor Reconfiguration:}} 
- Given the system dynamics as a function of its state $ \bm{x} $, its input $ \bm{u}$, and disturbances $ \bm{d} $,
+ Given the system dynamics as a function of its state $ \bm{x} $ and input $ \bm{u}$,
 	\begin{equation}
 	\begin{split}
-		\bm{x}(k+1) &= f(\bm{x}(k), \bm{u}(k), \bm{d}(k)) \\
-		\bm{y}(k)&=h(x)
+		\bm{x}(k+1) &= f(\bm{x}(k), \bm{u}(k)) \\
+		\bm{y}&(k)=h(x)
     \end{split}
 	\end{equation}
 find a policy $\mathcal{P}$ to:
@@ -25,11 +25,11 @@ find a policy $\mathcal{P}$ to:
 	\begin{equation}
 	\begin{split}
 	\label{eq:detect_attack}
-	    %\| y_i - y_j \| \leq \delta
+	    \bm{x}(k+1) = f(\bm{x}(k), \bm{u}(k), \bm{d}) \\
 	    \bm{y}(k)=h(x) + \bm{\xi}
 	\end{split}    
 	\end{equation}
-	where $y_i$ and $y_j$ are different measurements of the same state and $\delta$ is an error threshold.\NB{?}
+where $\bm{d}$ is any dynamical changes or disturbances to the system and $\bm{\xi}$ is an attack on a vector.
 	\item remove the compromised sensor measurements to restore system integrity.
 	\begin{equation}
 	\label{eq:remove_sensors}
@@ -44,11 +44,11 @@ where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial s
 Solving Problem 1 removes the compromised sensors, however leaving the system with fewer sensors as designed. Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}}
-Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} are satisfied, find a policy to adapt the motion planning strategy to guarantee safety, i.e. adapt velocity in such a way that the vehicle is guaranteed to never enter any undesired state $\bm{x}_r$:  \NB{change this. What are we manipulating exactly? Are finding an input, a reference to follow? State that....Find a policy to compute an adapted motion planning reference.}
+Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} are satisfied, find a policy to adapt the motion planning strategy to guarantee safety, i.e. adapt velocity in such a way that the vehicle is guaranteed to never enter any undesired state $\bm{x}_r$:  
 	\begin{equation}
-		\lVert {\bm{x}(k)-\bm{x}_r} \rVert > 0
+		\lVert {\bm{x}(k)-\bm{x}_o} \rVert > 0
 	\end{equation}
-where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the position of the vehicle and $\bm{x}_r$ is the position of any known undesired region.
+where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the state of the vehicle and $\bm{x}_o$ is the state of any known undesired region.
 	\end{problem}
 
 %Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
