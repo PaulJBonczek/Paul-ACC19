@@ -195,7 +195,7 @@ If a $i^{th}$ subsystem input breaks the error threshold, its corresponding $i^{
 \end{lemma}
 
 \begin{proof}
-The proof is intuitive and follow a similar argument as presented in \NB{add citation here}. Under the assumptions (A1-A4) and the convergence property from \eqref{eq:Modified_Proj_Algorithm},
+The proof is intuitive and follow a similar argument as presented in \cite{tao2003adaptive}. Under the assumptions (A1-A4) and the convergence property from \eqref{eq:Modified_Proj_Algorithm},
     \begin{equation}
     \label{lemma_1_eq1}
         \lim_{k\to\infty}\|\bm{\theta}(k)-\bm{\theta}_0\|=0 \nonumber
@@ -250,7 +250,7 @@ the properties (T1-T3) also hold true. If $e(k)$ is a bounded value for all time
 
 The presence of measurement noise on the sensor set results in state estimation uncertainty. The vehicle has multiple sensors of various noise profiles that provide state data of the system, some of which are fused to obtain a better estimation. As compromised sensors are removed by the detector, the system uses a smaller set of sensors for state estimation obtaining a different uncertainty from the original set of measurements. Thus, to take into account this change in sensor measurement noises, we propose here an approach to compute confidence around state estimation to ensure vehicle safety. 
 %In this work we develop a technique to assess confidence around state estimation that adapts to the changing sensor set to ensure vehicle safety. 
-We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds in which the true mean lies within of a user-defined confidence percentage. By knowing the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval of a percentage of confidence \NB{what does it mean "an interval of a percentage of confidence?} can be calculated:
+We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds in which the true mean lies within of a user-defined confidence percentage. By knowing the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval is computed:
     \begin{equation}
      \label{Confidence_interval}
 		C_x = \bar{x} + c_p\frac{\sigma}{\sqrt{N}}
