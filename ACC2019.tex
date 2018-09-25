@@ -1,45 +1,113 @@
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
 
-\documentclass[conference]{IEEEtran} 
-
-
-\IEEEoverridecommandlockouts                 
-                                                                                  
-
-
-\title{\LARGE \bf Resilient Adaptive Planning and Control of Autonomous \\ Vehicles Under Dynamical Uncertainties}
-%\author{\IEEEauthorblockN{Paul J Bonczek\affmark[1] and Nicola Bezzo\affmark[1,2]} 
-\author{\IEEEauthorblockN{Paul J Bonczek and Nicola Bezzo} 
-\IEEEauthorblockA{
-\small
-\affmark[1]Department of Electrical and Computer Engineering\\
-\small
-\affmark[2]Department of Systems and Information Engineering\\
-\small
-University of Virginia\\
-Email: \{pjb4xn, nbezzo\}@virginia.edu}}
-\hyphenation{u-sing}
-
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+%\usepackage{amsthm}
+\usepackage{amssymb}
+%\usepackage[style=ieee]{biblatex}
+%\addbibresource{references.bib}
+%
+%%\theoremstyle{definition}
+%%\newtheorem{definition}{Definition}[section]
 
 \usepackage{graphicx}
-\usepackage{cite}
 \usepackage{epstopdf}
 \usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amsthm}
 \usepackage{subfigure}
 \usepackage{multirow}
 \usepackage{pbox}
-\usepackage{enumitem}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{bm}
 \usepackage{url}
+\newcommand\NB[1]{$\spadesuit$\footnote{NB: #1}}
+\newcommand\PB[1]{$\clubsuit$\footnote{PB: #1}}
+
+%\usepackage{cite}
+
+
+%\usepackage{amsfonts}
+%\usepackage{amsthm}
+
+
+%\usepackage{enumitem}
+
 \usepackage{tabularx}
 \usepackage{stackengine}
 \setstackEOL{\\}
-\newcommand\NB[1]{$\spadesuit$\footnote{NB: #1}}
 
+
+
+
+\newtheorem{theorem}{Theorem}
 \newtheorem{problem}{Problem}
+%\newtheorem{lemma}{Lemma}
+
+\renewcommand{\baselinestretch}{0.96}
+
+
+\title{\LARGE \bf
+Attack Resilient Adaptive Planning and Control of \\ Autonomous Vehicles under Dynamical Uncertainties}
+
+%\author{Tony X. Lin$^{1}$, Esen Yel$^{2}$, and Nicola Bezzo$^{1}$%
+\author{Paul J Bonczek and Nicola Bezzo%
+\thanks{Paul J Bonczek and Nicola Bezzo are with Charles L. Brown Department of Electrical and Computer Engineering, University of Virginia, Charlottesville, VA 22904, USA. Email: {\tt \{pjb4xn, nb6be\}@virginia.edu}}
+%\thanks{$^{2}$Esen Yel is with the Department of Systems and Information Engineering, University of Virginia, Charlottesville, VA 22904, USA. Email: {\tt ey3un@virginia.edu}}
+}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+
+%\documentclass[conference]{IEEEtran} 
+%
+%
+%\IEEEoverridecommandlockouts                 
+%                                                                                  
+%
+%
+%\title{\LARGE \bf Resilient Adaptive Planning and Control of Autonomous \\ Vehicles Under Dynamical Uncertainties}
+%%\author{\IEEEauthorblockN{Paul J Bonczek\affmark[1] and Nicola Bezzo\affmark[1,2]} 
+%\author{\IEEEauthorblockN{Paul J Bonczek and Nicola Bezzo} 
+%\IEEEauthorblockA{
+%\small
+%\affmark[1]Department of Electrical and Computer Engineering\\
+%\small
+%\affmark[2]Department of Systems and Information Engineering\\
+%\small
+%University of Virginia\\
+%Email: \{pjb4xn, nbezzo\}@virginia.edu}}
+%\hyphenation{u-sing}
+
+
+%\usepackage{graphicx}
+%\usepackage{cite}
+%\usepackage{epstopdf}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+%\usepackage{amsthm}
+%\usepackage{subfigure}
+%\usepackage{multirow}
+%\usepackage{pbox}
+%\usepackage{enumitem}
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+%\usepackage{bm}
+%\usepackage{url}
+%\usepackage{tabularx}
+%\usepackage{stackengine}
+%\setstackEOL{\\}
+%\newcommand\NB[1]{$\spadesuit$\footnote{NB: #1}}
+
+%\newtheorem{problem}{Problem}
 \newtheorem{lemma}{Lemma}
 \newcommand*{\affaddr}[1]{#1} 
 \newcommand*{\affmark}[1][*]{\textsuperscript{#1}}
@@ -64,7 +132,8 @@ Email: \{pjb4xn, nbezzo\}@virginia.edu}}
 %\input{Experiment2}
 \input{Conclusion1}
 
-\bibliographystyle{IEEEtran2}
+%\bibliographystyle{IEEEtran2}
+\bibliographystyle{IEEEtran}
 \bibliography{References}
 
 \end{document}

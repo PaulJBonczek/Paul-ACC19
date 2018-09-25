@@ -35,7 +35,7 @@ In order to detect and remove attacks we propose the architecture in Fig. \ref{f
 %\eqref{eq:Start}$-$\eqref{eq:End}
 
 First, to design the resilient model reference adaptive controller, we assume that:
-	\begin{enumerate}[leftmargin=3\parindent]
+	\begin{enumerate}%[leftmargin=3\parindent]
 %	\item[$A1)$] all zeros of $B^{'}(z^{-1})z^q$ from \eqref{eq:B_prime} are within $|z|<1$. 
 	\item[$A1)$] all numerator zeros of \eqref{eq:transfer_function} are within $|z|<1$.
 	\item[$A2)$] $p$ and $q$ are known. 
@@ -87,7 +87,7 @@ By rearranging \eqref{eq:tracking_model} we isolate $u^*_i(k)$ to calculate our 
 	\end{equation}
 
 Once these subsystem inputs are computed, under the assumptions in (A1-A4), we leverage the following MRAC properties to detect sensor attacks when the system model is changing or unknown. In \cite{tao2003adaptive}, the following properties are found to be true when implementing an MRAC,
-	\begin{enumerate}[label=(\roman*),leftmargin=4\parindent]
+	\begin{enumerate}%[label=(\roman*),leftmargin=4\parindent]
 	\label{assumtions_ensure}
 	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
 	\item[$T2)$] $\lim_{k\to\infty}(y(k)-y^*(k))=0$
@@ -406,7 +406,6 @@ Assuming the knowledge of velocity $v(k)$ and distance to the closest obstacle $
   \nonumber
 \end{equation}
 The system uses a closed loop controller to always converge toward the trajectory with the assumption that the trajectory never crosses through an undesired state.
-
 \end{proof}
 %	\begin{equation}
 %		\Delta(k)=[v(k)]^{\delta_v}\delta
