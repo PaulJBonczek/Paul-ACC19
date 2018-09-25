@@ -311,7 +311,7 @@ The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimat
     \label{Confidence_region_updated}
 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}}
 	\end{equation}
- to account for all $N-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
+ to account for all $N_e-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
 
 % \begin{figure}[ht!]
 % \vspace{1pt}
@@ -348,7 +348,7 @@ Creating a static case with these past position data samples introduces higher u
     \label{eq:avg_vel_noise}
 	\bar{v}^{*}=\bar{v}+N_{\sigma}\sigma_v 
 	\end{equation}
-The maximum angle error is denoted as $N_{\sigma}\sigma_h$ \NB{what is N times sigma???} and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to,
+The maximum angle error is denoted as $N_{\sigma}\sigma_h$ (i.e., the maximum bound of the truncated Normal distribution) and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to,
     \begin{equation}
     \label{Confidence_region_updated2}
 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
