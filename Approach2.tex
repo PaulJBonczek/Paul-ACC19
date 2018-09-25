@@ -290,7 +290,7 @@ From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ dat
 \subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample1.png}} &	
 \subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample5.png}}
 \end{tabular}
-\caption{A comparison of the size of the estimated confidence region as the $N$ number of data samples grow. In \ref{fig:1sample}, the estimated confidence region with 1 data sample is not as accurate. In \ref{fig:5samples}, the $N_e$ number of samples used is five, which gives a much smaller size and more accurate confidence region.}
+\caption{A comparison of the size of the estimated confidence region as the $N_e$ number of data samples grow. In \ref{fig:1sample}, the estimated confidence region with 1 data sample is not as accurate. In \ref{fig:5samples}, the $N_e$ number of samples used is five, which gives a much smaller size and more accurate confidence region.}
 \label{fig:confidence_region}
 \end{figure}
 
@@ -298,13 +298,11 @@ To take vehicle mobility into account, we propose an adapted approach to compute
 \begin{equation}
     \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
 \end{equation}
-\NB{No, here you need to state first that we need to translate the element forward and the transformation is the following} Each element of these updated sets are calculated as,
+To compute the static case, we need to translate the elements forward with the following transformation:
 	\begin{equation}
 	\bm{p}^*(k-i) = \bm{p}(k-i)+\sum_{j=i}^1 v(k-j)\theta_h(k-j)t_s 
 	\end{equation}
-with $i=1,\dots,N_e-1$.
-% and the most recent position estimate at time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$
-Translating the data coordinates into a pseudo-static form creates the updated set,
+where $i=1,\dots,N_e-1$. Translating the data coordinates into a static form creates the updated set,
 \begin{equation}
     \bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N_e+1) \end{bmatrix} \nonumber
 \end{equation}
@@ -329,7 +327,7 @@ The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimat
 \subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_left.png}} &	
 \subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_right.png}}
 \end{tabular}
-\caption{Translation of the original position estimates $\bm{p}$ to a pseudo-static case $\bm{p}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
+\caption{Translation of the original position estimates $\bm{p}$ to a static case $\bm{p}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
 \label{fig:pseudo_static}
 \end{figure}
 
