@@ -363,25 +363,27 @@ with a radius of:
 
 % Thus here we are interested to compute a confidence interval around our state estimation and adapt the vehicle's motion plan if safety constraints could be violated
 
-Using the approach just  described, we can increase confidence in the state estimation by gathering more data when necessary and guarantee safety. For example a vehicle in an open space far from obstacles, doesn't need a very accurate state estimation to guarantee safety, while the same vehicle in a cluttered environment may need more precision and thus more samples to precisely estimate its position.
+Using the approach just  described, we can increase confidence in the state estimation by gathering more data when necessary and guarantee safety. For example a vehicle in an open space far from obstacles, doesn't need a very accurate state estimation to guarantee safety, while the same vehicle in a cluttered environment may need more accuracy and thus more samples to precisely estimate its position.
 
 %With uncertainty of sensor measurements, with or without a reconfigured set of sensors, there needs to be guarantees to navigate safely. As the vehicle approaches an undesired region, we need to gather more data to reduce the size of the confidence region to guarantee safety. 
 
-To gather more data are sampling data faster or to reduce velocity. However, sampling at a faster rate can not be done due to physical limitations, we will reduce velocity to gather more data samples in a shorter distance to reduce estimation uncertainties. To ensure the confidence region never intersects with an undesired state, we update the number of data samples for better estimation while also adapting the velocity.
+To gather more data there are two options: i) to sample data faster or ii) to reduce velocity. However, sampling at a faster rate cannot be done due to physical limitations, hence adapting the velocity of the vehicle is the only way to gather more data in a shorter distance to reduce estimation uncertainties. 
+%To ensure the confidence region never intersects with an undesired state (e.g., an obstacle), we update the number of data samples for better estimation while also adapting the velocity.
 
-Due to uncertainty of the measurements, the confidence region can quickly shift as new measurements are sampled. To counteract this shifting, we propose a boundary around the confidence region,
+Due to uncertainty of the measurements, the confidence region can quickly shift as new measurements are sampled. To counteract this shifting, a boundary around the confidence region is computed as:
     \begin{equation}
     \label{eq:Delta}
 	    \Delta(k) = 2\big(c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}\big) = 2C_{\bar{\bm{p}}^*|N_e}
 	\end{equation}
-which is the maximum distance the region can shift for any time.
+which is the maximum distance the region can shift for any time.\NB{this previous part is not necessary and too detailed. We will probably remove it. let's talk later about this}
 
 To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1)^* \rVert$. At the next predicted state $\bm{x}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
     \begin{equation}
     \label{eq:N_e}
 	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
 	\end{equation}
-Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
+where $round$, rounds $N_e$ up to the nearest integer.
+%Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
 
 An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$ when $N_e=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by,
     \begin{equation}
