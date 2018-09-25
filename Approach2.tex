@@ -258,7 +258,8 @@ We leverage the statistical technique of confidence intervals \cite{devore2011pr
 	
 % . As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean \NB{you are giving the results before showing how!}	
 	
-For state estimation with sensor uncertainties, we need to guarantee that the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is a position estimate $\bm{p}=[x,y]^T$ of a certain variance $\sigma_p^2$, which depends on the known sensor variances from specifications. For our case, a multivariate confidence interval is computed to create a confidence region for state estimation. 
+For state estimation with sensor uncertainties, we need to guarantee that the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is an estimate with variance $\sigma_p^2$, which depends on each sensor variance. For our case, a multivariate confidence interval is computed to create a confidence region for state estimation. 
+% position estimate $\bm{p}=[x,y]^T$ of a certain 
 %This states the vehicle is within the computed region of a specific confidence percentage. 
 
 
