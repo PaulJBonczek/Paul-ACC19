@@ -156,19 +156,19 @@ Under non-ideal conditions where noises exist, the elements of the error vector 
 	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}(k)
 	\end{split}
 	\end{align}
-with the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar value $\delta(k)$, which is computed from the measurement with the highest noise profile $\sigma_{max}$. The value of $\delta(k)$ is computed from the system parameter estimates and the maximum error due to measurement uncertainty. The maximum error due to the least precise sensor is computed by:
+in which the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar value $\delta(k)$, which is computed from the measurement with the highest noise profile $\sigma_{max}$. The value of $\delta(k)$ is computed from the system parameter estimates and the maximum error due to measurement uncertainty. The maximum error due to the least precise sensor is computed as:
 	\begin{equation}
 	    \label{eq:max_error}
 	    e_{max} = 2N_{\sigma}\sigma_{max}
 	\end{equation}
-From \eqref{eq:End} and \eqref{eq:max_error}, we are able to compute the bounds for maximum uncertainty of the input:
+From \eqref{eq:End} and \eqref{eq:max_error}, we can compute the bounds for the maximum uncertainty of the input:
 \begin{align}
 	\label{eq:delta}
 	\delta(k)=& \lVert{ \frac{1}{\theta_{p+1}(k)}(-\theta_1(k)e_{max}-\theta_2(k)e_{max} }-\dots \nonumber \\
     -\theta_p(k)&e_{max}-\theta_{p+2}(k)u(k-1)-\theta_{p+3}(k)u(k-2)  \\
 	&- \dots - \theta_{p+q+d}(k)u(k-q-d+1) \rVert  \nonumber
 	\end{align}
-However, using the aforementioned approach, an attack that is hiding within the noise profile may be undetectable. To deal with stealthy attacks within the noise, the mean of $N_p$ number of inputs is computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. \eqref{eq:input_diff} is reformulated to,
+However, using the aforementioned approach, an attack that is hiding within the noise profile may be undetectable. To deal with stealthy attacks within the noise, the mean of $N_p$ number of inputs is computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. \eqref{eq:input_diff} is reformulated as:
     \begin{equation}
         \label{eq:input_diff2}
         \psi_{i,j}(k)=|\bar{u}^*_i(k)-\bar{u}^*_j(k)|
@@ -178,14 +178,14 @@ where,
         \label{eq:Average_input}
         \bar{u}^*_i(k) = \sum_{j=0}^{N_p-1} \frac{u^*_i(k-j)}{N_p}
     \end{equation}
-is the mean of the past $N_p$ subsystem inputs. The other alteration is the computation of \eqref{eq:max_error} for a smaller error threshold. A standard maximum error is computed when $N_p>1$ by,
+is the mean of the past $N_p$ subsystem inputs. The other alteration is the computation of \eqref{eq:max_error} for a smaller error threshold. A standard maximum error is computed when $N_p>1$ as:
     \begin{equation}
 	    \label{eq:max_error2}
 	    e_{max} = \frac{2N_s\sigma_{max}}{\sqrt{N_p}}
 	\end{equation}
-The error threshold bounds are reduced to find attacks that have the objective to slowly push the measurement signal away while remaining within the noise profile. A trade-off is made when determining the size of $N_p$: A larger number allows for a higher reduction of the error threshold, but allows for attacks to remain undetected if they are shorter in time than the detection window $N_pt_s$. 
+The error threshold bounds\NB{what error threshold bounds?} are reduced to find attacks that have the objective to slowly push the measurement signal away while remaining within the noise profile. A trade-off is made when determining the size of $N_p$: A larger number allows for a higher reduction of the error threshold, but allows for attacks to remain undetected if they are shorter in time \NB{what do you mean here?}than the detection window $N_pt_s$. 
 
-After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C} \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set becomes $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
+After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C}' \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set becomes $\bm{y}' =\bm{y}\setminus\bm{y}_a$. \NB{we need to explicitly say how we get $y_a$} Finally, once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the remaining uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
 
 \begin{lemma} 
 	\label{lemma_1}
