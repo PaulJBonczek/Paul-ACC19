@@ -248,6 +248,8 @@ the properties (T1-T3) also hold true. If $e(k)$ is a bounded value for all time
 
 \subsection{Estimation Confidence} 
 
+\label{sec:estimation_confidence}
+
 The presence of measurement noise on the sensor set results in state estimation uncertainty. The vehicle has multiple sensors of various noise profiles that provide state data of the system, some of which are fused to obtain a better estimation. As compromised sensors are removed by the detector, the system uses a smaller set of sensors for state estimation obtaining a different uncertainty from the original set of measurements. Thus, to take into account this change in sensor measurement noises, we propose here an approach to compute confidence around state estimation to ensure vehicle safety. 
 %In this work we develop a technique to assess confidence around state estimation that adapts to the changing sensor set to ensure vehicle safety. 
 We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds in which the true mean lies within of a user-defined confidence percentage. By knowing the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval is computed:
@@ -348,7 +350,7 @@ Creating a static case with these past position data samples introduces higher u
     \label{eq:avg_vel_noise}
 	\bar{v}^{*}=\bar{v}+N_{\sigma}\sigma_v 
 	\end{equation}
-\NB{this previous part is too specific.We should probably remove it. Let's talk about this later}The maximum angle error is denoted as $N_{\sigma}\sigma_h$ \NB{what is N times sigma???} and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to,
+\NB{this previous part is too specific.We should probably remove it. Let's talk about this later}The maximum angle error is denoted as $N_{\sigma}\sigma_h$ (i.e., the maximum uncertainty of the truncated Normal distribution) and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to,
     \begin{equation}
     \label{Confidence_region_updated2}
 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
@@ -377,7 +379,7 @@ Due to uncertainty of the measurements, the confidence region can quickly shift 
 	\end{equation}
 which is the maximum distance the region can shift for any time.\NB{this previous part is not necessary and too detailed. We will probably remove it. let's talk later about this}
 
-To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1)^* \rVert$. At the next predicted state $\bm{x}^*(k+1)$, \NB{what is x and what is p???}if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
+To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1)^* \rVert$. At the next predicted state $\bm{p}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
     \begin{equation}
     \label{eq:N_e}
 	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
@@ -385,13 +387,13 @@ To update the confidence region, we compute the distance the vehicle can travel 
 where $round$, rounds $N_e$ up to the nearest integer.
 %Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
 
-An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated as: \NB{as: not by,...be consistent with punctuations}
+An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated as:
 \NB{no, next part needs more work..let's talk later}
     \begin{equation}
     \label{eq:ref_vel}
         r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) ,r_{des}(k)\}
 	\end{equation}
-where $r_{des}(k)$ is the desired reference and,
+where $r_{des}(k)$ is the desired reference and
 	\begin{equation}
 	    \Tilde{r}_v(k) = \frac{d_x}{N_et_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
 	\end{equation}

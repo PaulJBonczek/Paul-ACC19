@@ -34,12 +34,11 @@ In Figure \ref{fig:low_noise}, the vehicle is moving along the trajectory with n
 
 While all sensors are uncompromised, Figure \ref{fig:low_noise2} shows a region where the vehicle is undergoing dynamical changes. The confidence region remains unchanged due to the full uncompromised set of sensors. The adaptive controller is maintaining a reference velocity, even while system dynamics are changing.
 
-Figure \ref{fig:at_attack} shows vehicle position at the starting time of the ramped sensor attack. The amplitude of the attack is still well within the sensor noise bounds, detection does not occur.\NB{???}
-
+Figure \ref{fig:at_attack} shows vehicle position at the starting time of a ramped sensor attack. Detection has not occurred due to the attack remains within the error threshold $\delta(k)$.
 
 In Figure \ref{fig:after_detection} the spoofed sensor is detected and removed leaving a smaller set of available sensors with higher uncertainty. As demonstrated in the figure, the confidence region grows in size due to the changes in uncertainty. Because obstacles are still well outside of the bounds, the vehicle can continue navigating at its desired velocity.
 
-Figure \ref{fig:adapt_region} shows the confidence region shrinking in size when the vehicle navigates near obstacles of closer distances. More data points are used to improve this estimation, while the velocity is reduced to lessen state estimation uncertainty as discussed in Section \NB{complete here}.
+Figure \ref{fig:adapt_region} shows the confidence region shrinking in size when the vehicle navigates near obstacles of closer distances. More data points are used to improve this estimation, while the velocity is reduced to lessen state estimation uncertainty as discussed in Section \ref{sec:estimation_confidence}.
 
 Once the vehicle is past the obstacles that are at close distances, shown in Figure \ref{fig:continue_motion}, the vehicle is able to move freely again at its desired reference velocity. The confidence region remains at a much larger radius due to the smaller set of available sensors.
 
@@ -80,11 +79,11 @@ A comparison of control performance in Figure \ref{fig:ControllerComparisons} sh
 \vspace{1pt}
 %\centering
 \includegraphics[width = 0.48\textwidth]{Figures/NoDetection_Vel.png}
-\caption{A demonstration of an attack with the detector not operating for a period of time during an attack. }
+\caption{A demonstration of an attack with the detector not operating for a period of time during an attack. As the right shaded region ends, the detector is turned on and the sensor is removed.}
 \label{fig:NoDet_Vel}
 \end{figure}
 
-Figure \ref{fig:NoDet_Vel} shows a time frame of the detector turned off, where an attacker is free to compromise the system. A ramp attack is performed, slowly pushing a sensor away from the true value. The red shaded region is the time frame the attack occurred without the attack detector operating. As the right shaded region ends, the detector is turned on and the sensor is removed.\NB{put this in the figure not in the text}
+Figure \ref{fig:NoDet_Vel} shows a time frame of the detector turned off, where an attacker is free to compromise the system. A ramp attack is performed, slowly pushing a sensor away from the true value. The red shaded region is the time frame the attack occurred without the attack detector operating. 
 
 
 \begin{figure}
@@ -104,7 +103,7 @@ Figure \ref{fig:NoDet_Vel} shows a time frame of the detector turned off, where 
 \label{fig:Stealthy_Attack}
 \end{figure}
 
-Stealthy attacks within the sensor noise profile can be detected by using more input values to reduce the noise threshold $\delta$. The case in Figure \ref{fig:Stealthy_Attack} demonstrates \NB{Refer back to the part of the paper in which you are showing this} the attack on Sensor 1 is detected when using $N_p=16$ input values, but would have never been detected when $N_p=1$ as the error stayed below the error threshold $\delta$.
+Stealthy attacks within the sensor noise profile can be detected by using more input values to reduce the noise threshold $\delta$. The case in Figure \ref{fig:Stealthy_Attack}, leveraging the discussion in Section \ref{sec:Res_adapt_control}, demonstrates the attack on Sensor 1 is detected when using $N_p=16$ input values, but would have never been detected when $N_p=1$ as the error stayed below the error threshold $\delta$.
 
 
 \end{section}
