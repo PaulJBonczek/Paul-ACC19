@@ -100,7 +100,7 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
     \begin{equation}
     \begin{split}
     \label{eq:discrete_SS}
-	\bm{x}(k+1)&=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k) \\
+	\bm{x}(k+1)&=\bm{A}_d(k)\bm{x}(k)+\bm{B}_d(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k) \\
 	\bm{y}(k)&=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
 	\end{split}
 	\end{equation}
@@ -109,8 +109,7 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 
 
 \subsection{Adaptive Control Model}
-The model in \eqref{eq:discrete_SS} can be transformed in a discrete-time transfer function form which is a more usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the CMBAC adaptive control approach presented in \cite{4106038}, in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model in \eqref{eq:discrete_SS} transformed in discrete-time transfer function in the $z$-domain becomes:
-\NB{states are either bold or not bold, the same goes fro the inputs. Otherwise you need to explain}
+The model in \eqref{eq:discrete_SS} can be transformed in a discrete-time transfer function form which is a more usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the CMBAC adaptive control approach presented in \cite{4106038}, in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model in a \eqref{eq:discrete_SS} transformed in discrete-time transfer function, in single-input single-output (SISO) form, within the $z$-domain becomes:
 	\begin{align}
 	\begin{split}
 	\label{eq:transfer_function}
