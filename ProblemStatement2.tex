@@ -16,7 +16,7 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 	\begin{equation}
 	\begin{split}
 		\bm{x}(k+1) &= f(\bm{x}(k), \bm{u}(k)) \\
-		\bm{y}(k)&=h(x)
+		\bm{y}(k)&=h(\bm{x})
     \end{split}
 	\end{equation}
 find a policy $\mathcal{P}$ to:
@@ -25,11 +25,10 @@ find a policy $\mathcal{P}$ to:
 	\begin{equation}
 	\begin{split}
 	\label{eq:detect_attack}
-	    \bm{x}(k+1) &= f(\bm{x}(k), \bm{u}(k), \bm{d}) \\
-	    \bm{y}(k)&=h(x) + \bm{\xi}
+	    \bm{x}(k+1) &= f(\bm{x}(k), \bm{u}(k), \bm{d}(k)) \\
+	    \bm{y}(k)&=h(\bm{x}, \bm{\xi})
 	\end{split}    
 	\end{equation}
-			  \NB{why + ??? it should be h(x,$\xi$)!}
 where $\bm{d}$ is any dynamical changes or disturbances to the system and $\bm{\xi}$ is an attack on a vector.
 	\item remove the compromised sensor measurements to restore system integrity.
 	\begin{equation}
