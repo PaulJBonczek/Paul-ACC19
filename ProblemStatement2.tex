@@ -15,8 +15,8 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
  Given the system dynamics as a function of its state $ \bm{x} $ and input $ \bm{u}$,
 	\begin{equation}
 	\begin{split}
-		\bm{x}(k+1) &= f(\bm{x}(k), \bm{u}(k)) \\
-		\bm{y}(k)&=h(\bm{x})
+		\dot{\bm{x}}(t) &= f(\bm{x}(t), \bm{u}(t)) \\
+		\bm{y}(t)&=h(\bm{x}(t))
     \end{split}
 	\end{equation}
 	\NB{why discrete here? Be general and use t...later we will discuss the transition}
@@ -26,8 +26,8 @@ find a policy $\mathcal{P}$ to:
 	\begin{equation}
 	\begin{split}
 	\label{eq:detect_attack}
-	    \bm{x}(k+1) &= f(\bm{x}(k), \bm{u}(k), \bm{d}(k)) \\
-	    \bm{y}(k)&=h(\bm{x}, \bm{\xi})
+	    \dot{\bm{x}}(t) &= f(\bm{x}(t), \bm{u}(t), \bm{d}(t)) \\
+	    \bm{y}(t)&=h(\bm{x}(t), \bm{\xi}(t))
 	\end{split}    
 	\end{equation}
 where $\bm{d}$ is any dynamical changes or disturbances to the system and $\bm{\xi}$ is an attack on a vector.
@@ -47,9 +47,9 @@ Solving Problem 1 removes the compromised sensors, however leaving the system wi
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}}
 Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} are satisfied, find a policy to adapt the motion planning strategy to guarantee safety, i.e. adapt velocity in such a way that the vehicle is guaranteed to never enter any undesired state $\bm{x}_o$:  
 	\begin{equation}
-		\lVert {\bm{x}(k)-\bm{x}_o} \rVert > 0
+		\lVert {\bm{x}(t)-\bm{x}_o} \rVert > 0
 	\end{equation}
-where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the state of the vehicle and $\bm{x}_o$ is the state of any known undesired region.\NB{do we need this? just say that x is the state of the vehicle}
+where $\bm{x}(t)$ is the state of the vehicle and $\bm{x}_o$ is the state of any known undesired region.
 	\end{problem}
 
 %Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
