@@ -100,8 +100,8 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
     \begin{equation}
     \begin{split}
     \label{eq:discrete_SS}
-	\bm{x}(k+1)=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k) \\
-	\bm{y}(k)=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
+	\bm{x}(k+1)&=\bm{A}(k)\bm{x}(k)+\bm{B}(k)\bm{u}(k)+\bm{\eta}_a(k)+\bm{d}(k) \\
+	\bm{y}(k)&=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
 	\end{split}
 	\end{equation}
 
@@ -109,7 +109,7 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 
 
 \subsection{Adaptive Control Model}
-Now that we have a model of the system, we represent it in a discrete-time transfer function that is a usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the \textit{Characteristic Model Based All-coefficient Adaptive Control} approach presented in \cite{4106038} in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model in \eqref{eq:discrete_SS} transformed in discrete-time transfer function in the $z$-domain becomes:
+Now that we have a model of the system, we represent it in a discrete-time transfer function that is a usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the CMBAC adaptive control approach presented in \cite{4106038}, in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model in \eqref{eq:discrete_SS} transformed in discrete-time transfer function in the $z$-domain becomes:
 
 	\begin{align}
 	\begin{split}
