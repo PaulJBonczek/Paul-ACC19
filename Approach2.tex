@@ -258,12 +258,12 @@ We leverage the statistical technique of confidence intervals \cite{devore2011pr
 	
 % . As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean \NB{you are giving the results before showing how!}	
 	
-For state estimation with sensor uncertainties, we need to guarantee that the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is an estimate with variance $\sigma_p^2$, which depends on each sensor variance. For our case, a multivariate confidence interval is computed to create a confidence region for state estimation. 
+For state estimation with sensor uncertainties, we need to guarantee that the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is an estimate with variance $\sigma_p^2$, which depends on each sensor variance. In our specific case, a multivariate confidence interval is computed to create a confidence region for position $\bm{p}=[x,y]^T$ estimation. 
 % position estimate $\bm{p}=[x,y]^T$ of a certain 
 %This states the vehicle is within the computed region of a specific confidence percentage. 
 
 
-The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the data's population standard deviation $\sigma_p$ is known for any sensor combination. In our work we are interested in position estimate and thus \eqref{Confidence_interval} in a multivariate case becomes,
+The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the data's population standard deviation $\sigma_p$ changes depending on the combination of sensors (i.e., when the system is uncompromised and we are using all sensors, $\sigma_p$ is lower than the case with fewer sensors, after an attack is removed from the system). In our work we are interested in position estimate and thus \eqref{Confidence_interval} in a multivariate case becomes,
     \begin{equation}
     \label{Confidence_region}
 		C_{\bar{\bm{p}}|N_e} = \bar{\bm{p}} + c_p\frac{\sigma_p}{\sqrt{N_e}}
@@ -294,20 +294,21 @@ From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ dat
 \label{fig:confidence_region}
 \end{figure}
 
-To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ position estimate samples are described in the set:
+To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ \NB{$N$ or $N_e$?} position estimate samples are described in the set:
 \begin{equation}
     \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
 \end{equation}
-Each element of these updated sets are calculated as,
+\NB{No, here you need to state first that we need to translate the element forward and the transformation is the following} Each element of these updated sets are calculated as,
 	\begin{equation}
 	\bm{p}^*(k-i) = \bm{p}(k-i)+\sum_{j=i}^1 v(k-j)\theta_h(k-j)t_s 
 	\end{equation}
-where $i=1,2,\dots,N_e-1$ and the most recent position estimate at time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$
+with $i=1,\dots,N_e-1$.
+% and the most recent position estimate at time instant $k$ is unchanged from $\hat{\bm{p}}(k)$ to $\hat{\bm{p}}^*(k)$
 Translating the data coordinates into a pseudo-static form creates the updated set,
 \begin{equation}
     \bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N_e+1) \end{bmatrix} \nonumber
 \end{equation}
-. The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. To demonstrate how this works, Fig. \ref{fig:pseudo_static} gives a visualization of position estimates translated into a pseudo-static case. Updating \eqref{Confidence_region}, we get
+The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. To demonstrate how this works, Fig. \ref{fig:pseudo_static} gives a visualization of position estimates translated into a pseudo-static case. Updating \eqref{Confidence_region}, we get
     \begin{equation}
     \label{Confidence_region_updated}
 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}}
