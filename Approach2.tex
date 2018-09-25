@@ -294,7 +294,7 @@ From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ dat
 \label{fig:confidence_region}
 \end{figure}
 
-To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ \NB{$N$ or $N_e$?} position estimate samples are described in the set:
+To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N_e$ position estimate samples are described in the set:
 \begin{equation}
     \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
 \end{equation}
