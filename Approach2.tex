@@ -377,7 +377,7 @@ Due to uncertainty of the measurements, the confidence region can quickly shift 
 	\end{equation}
 which is the maximum distance the region can shift for any time.\NB{this previous part is not necessary and too detailed. We will probably remove it. let's talk later about this}
 
-To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1)^* \rVert$. At the next predicted state $\bm{x}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
+To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1)^* \rVert$. At the next predicted state $\bm{x}^*(k+1)$, \NB{what is x and what is p???}if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
     \begin{equation}
     \label{eq:N_e}
 	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
@@ -385,7 +385,8 @@ To update the confidence region, we compute the distance the vehicle can travel 
 where $round$, rounds $N_e$ up to the nearest integer.
 %Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
 
-An update of the reference velocity needs to occur when these undesired regions are within the entire confidence estimation region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$ when $N_e=1$ to ensure the vehicle slows to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated by,
+An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated as: \NB{as: not by,...be consistent with punctuations}
+\NB{no, next part needs more work..let's talk later}
     \begin{equation}
     \label{eq:ref_vel}
         r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) ,r_{des}(k)\}
@@ -401,7 +402,9 @@ are maximum allowable velocities according to the distance of an undesired state
 
 \begin{lemma} 
 	\label{lemma_2}
-Given the present state of the vehicle $\bm{x}(k)$, the vehicle's next state $\bm{x}(k+1)$ will never enter an undesired state $\bm{x}_o$.
+Using ...a vehicle is guaranteed to never enter an undesired state $\bm{x}_o$ between two consecutive states $\bm{x}(k)$ and $\bm{x}(k+1)$
+
+%Given two consect $\bm{x}(k)$, the vehicle's next state $\bm{x}(k+1)$ will never enter an undesired state $\bm{x}_o$.
 
 \end{lemma}
 
