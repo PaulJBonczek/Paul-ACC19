@@ -42,7 +42,7 @@ First, to design the resilient model reference adaptive controller, we assume th
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted here, but can be found in \cite{tao2003adaptive,Goodwin1643720}. However, in what follows, we provide the main equations to compute the desired input when dealing with changing systems. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
+The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted here, but can be found in \cite{tao2003adaptive,Goodwin1643720}. In what follows, we provide the main equations to compute the desired input when dealing with changing systems. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
     \begin{equation}
 	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
 	\end{equation}
@@ -130,14 +130,16 @@ The $l_1$ vector norm for each row in \eqref{eq:difference_matrix} is computed g
     \label{eq:difference_vector}
 	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}
 	\end{equation}
-The minimum valued element of \eqref{eq:difference_vector} is used to form another vector $\bm{\Psi}^{'}_{min}(k) \in \R^s$, with every element equal to $\min \bm{\Psi}^{'}(k)$:
+The minimum value element of \eqref{eq:difference_vector} is used to form another vector $\bm{\Psi}^{'}_{min}(k) \in \R^s$, with every element equal to $\min \bm{\Psi}^{'}(k)$:
 %     \begin{equation}
 % 	\bm{\Psi}^{'}_{min}(k)=\begin{bmatrix} \min \bm{\Psi}^{'}(k),& \dots \text{ },&\min \bm{\Psi}^{'}(k) \end{bmatrix}^T
 % 	\end{equation}
     \begin{equation}
-	\bm{\Psi}^{'}_{min}(k)=\min \bm{\Psi}^{'}(k) \vec{1}_s
+	\bm{\Psi}^{'}_{min}(k)=\min \bm{\Psi}^{'}(k){\bm{1}}_s
 	\end{equation}
-We now define the updated error vector as:
+	where ${\bm{1}}_s$ is a $s\times1$ vectors of 1s.
+
+We can now define the updated error vector as:
     \begin{align}
     \label{eq:Psi2}
 	\bm{\Psi}^{''}(k)&=\bm{\Psi}^{'}(k)-\bm{\Psi}^{'}_{min}(k) \\
