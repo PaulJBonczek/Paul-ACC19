@@ -19,6 +19,7 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
 		\bm{y}(k)&=h(x)
     \end{split}
 	\end{equation}
+	\NB{why discrete here? Be general and use t...later we will discuss the transition}
 find a policy $\mathcal{P}$ to:
 \begin{enumerate}
 	\item differentiate between malicious sensor attacks and changing dynamics or failures; 
@@ -45,11 +46,11 @@ where $\bm{y}$ is the set of available measurements, $\bm{y}_0$ is the initial s
 Solving Problem 1 removes the compromised sensors, however leaving the system with fewer sensors as designed. Therefore, during replanning it is necessary to consider these changes in system's configuration. Formally:
 	
 \begin{problem} \label{problem2} {\textbf{Adaptive Motion Planning:}}
-Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} are satisfied, find a policy to adapt the motion planning strategy to guarantee safety, i.e. adapt velocity in such a way that the vehicle is guaranteed to never enter any undesired state $\bm{x}_r$:  
+Given \eqref{eq:detect_attack} and \eqref{eq:remove_sensors} are satisfied, find a policy to adapt the motion planning strategy to guarantee safety, i.e. adapt velocity in such a way that the vehicle is guaranteed to never enter any undesired state $\bm{x}_o$:  
 	\begin{equation}
 		\lVert {\bm{x}(k)-\bm{x}_o} \rVert > 0
 	\end{equation}
-where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the state of the vehicle and $\bm{x}_o$ is the state of any known undesired region.
+where $\bm{x}(k)={\begin{bmatrix} x,y \end{bmatrix}}^T$ is the state of the vehicle and $\bm{x}_o$ is the state of any known undesired region.\NB{do we need this? just say that x is the state of the vehicle}
 	\end{problem}
 
 %Solving this problem will allow the autonomous vehicle to safely navigate during dynamical changes while preventing an attacker from having an undesirable effect on the system. In this work we assume that multiple sensors are available to performance a certain operation. 
