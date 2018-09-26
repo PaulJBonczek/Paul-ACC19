@@ -394,16 +394,19 @@ Using Adaptive Motion Planning, a vehicle is guaranteed to never enter an undesi
 \end{lemma}
 
 \begin{proof}
-With the vehicle at the state $\bm{p}(k) \neq \bm{p}_o$, there exists a reference velocity $r_v(k)$ such that the vehicle's next state $\bm{p}(k+1)$ will never overlap into an undesired state $\bm{p}_o$. Using \eqref{eq:N}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{p}(k+1)$ will never intersect with an undesired state:
+With the vehicle at a state $\bm{p}(k) \neq \bm{p}_o$, there exists a reference velocity $r_v(k)$ such that the vehicle's next state $\bm{p}(k+1)$ will never enter an undesired state $\bm{p}_o$. Using \eqref{eq:N}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{p}(k+1)$ will never intersect with an undesired state:
 \begin{equation}
+\label{lemma_2_eq1}
     C_{\bar{\bm{p}}^*(k+1)|N} \cap \bm{p}_o = \emptyset \nonumber
 \end{equation}
-Assuming the knowledge of velocity $v(k)$ and distance to the closest obstacle $\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k) \rVert$, the reference velocity \eqref{eq:ref_vel} is computed such that the vehicle will not travel more than a distance $d_p$ to avoid an undesired state:
+With the knowledge of the closest distance between an undesired state $p_o$ and confidence region \eqref{Confidence_region_updated} at time interval $k$, the reference velocity \eqref{eq:ref_vel} is computed such that the vehicle will not travel more than a distance $d_p$ to avoid an undesired state,
 \begin{equation}
-    \min \lVert \bm{p}_o - C_r \rVert > d_p \geq r_v(k)t_s \nonumber
+\label{lemma_2_eq2}
+    \min \lVert \bm{p}_o - C_{\bar{\bm{p}}^*(k)|N} \rVert > \frac{d_p}{N} \geq r_v(k)t_s
   \nonumber
 \end{equation}
-The system uses a closed loop controller to always converge toward the trajectory with the assumption that the trajectory never crosses through an undesired state.
+proving that the reference velocity will not send the vehicle into an undesired state. 
+%The system uses a closed loop controller to always converge toward the trajectory with the assumption that the trajectory never crosses through an undesired state.
 \end{proof}
 %	\begin{equation}
 %		\Delta(k)=[v(k)]^{\delta_v}\delta
