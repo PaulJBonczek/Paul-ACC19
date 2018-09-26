@@ -378,17 +378,13 @@ An update of the reference velocity needs to occur when these undesired states a
 The maximum allowable velocities are related to the distance of an undesired state to the confidence region and next estimated position in time $k+1$ are computed as:
 	\begin{equation}
 	\label{eq:ref_vel_options}
-	    \Tilde{r}_v(k) = \frac{d_p}{N_et_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
+	    \Tilde{r}_v(k) = \frac{d_p}{Nt_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
 	\end{equation}
-	\begin{equation}
-	    \delta_{\Delta} = \min \lVert \bm{p}_o - C_r \rVert 
-	\end{equation}
-Considering a worst case scenario, the minimum reference velocity is chosen to ensure a velocity to safely navigate without entering an undesired state from,
+where $d_p$ is the distance the vehicle can travel at the desired velocity and $\delta_{\Delta}$ is the minimum distance between an undesired position and the confidence region. Considering a worst case scenario, the minimum reference velocity is chosen to ensure a velocity to safely navigate without entering an undesired state from,
     \begin{equation}
     \label{eq:ref_vel}
-        r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) ,r_{des}(k)\}
+        r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) \}
 	\end{equation}
-where $r_{des}(k)$ is the desired reference velocity of the vehicle.
 
 \begin{lemma} 
 	\label{lemma_2}
