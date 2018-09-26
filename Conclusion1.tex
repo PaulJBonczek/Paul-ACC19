@@ -1,17 +1,20 @@
+%!TEX root = ACC2019.tex
 
 \begin{section}{Conclusion and Future Work} \label{sec:conclusion}
-In this paper we have presented a Resilient Adaptive Controller for detection of sensor spoofs on a system of unknown or changing dynamics while still maintaining control performance, along with an Adaptive Motion Planning to guarantee vehicle safety once attacks are removed. Our framework for the resilient adaptive control uses CMBAC adaptive control to maintain performance while being resilient to attacks. The proposed approach was validated through simulation on a autonomous ground vehicle case. The proposed framework could be extended to other types of cyber-physical systems like aerial and under-water vehicles. The proposed Adaptive Motion Planning leverages confidence intervals for improved safety by adapting the vehicle's velocity as it approaches obstacles in the environment.
+In this paper we have presented a Resilient Adaptive Controller for detection of sensor spoofs on a system of unknown or changing dynamics while still maintaining control performance, along with an Adaptive Motion Planning to guarantee vehicle safety once attacks are removed. Our framework uses CMBAC adaptive control to maintain performance while being resilient to attacks. The proposed approach was validated through simulation on a autonomous ground vehicle case. 
+%The proposed framework could be extended to other types of cyber-physical systems like aerial and under-water vehicles. The proposed Adaptive Motion Planning leverages confidence intervals for improved safety by adapting the vehicle's velocity as it approaches obstacles in the environment.
 
 In our future work we plan to improve our current approach and extend it to MIMO systems. We also plan to consider reachability analysis to further refine the motion planning adaptation technique to consider the direction of motion of the vehicle when computing the confidence region. Finally, we plan to validate experimentally the proposed technique using our testbed of ground and aerial vehicles. A final objective in our horizon is to also consider trajectory adaptation.
 
-To conclude we believe that the proposed approach could be running in the background of any applications involving autonomous vehicle monitoring and adapting to guarantee safety at all the times.
+To conclude we believe that the proposed approach could be running in the background of any applications involving autonomous CPS monitoring and adapting their behavior to guarantee safety at all the times.
 %A current limitation of the Resilient Adaptive Controller is that it is restricted to SISO systems. A limitation of the Adaptive Motion Planner is neglecting the direction of motion while adapting the velocity. The current assumption is a worst case scenario at all times, even while there are no undesired states in the trajectory ahead.
 
 %In our future work we plan to use live experiments to test both frameworks on grounds and aerial vehicles. Further, we plan to longer use a worst case scenario at all times, which would reduce the amount of time and energy.
 
 \end{section}
- \vspace{-10pt}
+ \vspace{-5pt}
 \section*{Acknowledgments} 
+ \vspace{-5pt}
 This material is based upon work supported by ONR under agreement number N000141712012 and 
 the Air Force Research Laboratory and the Defense Advanced Research Projects Agency under Contract No. FA8750-18-C-0090. 
  \vspace{-5pt}
