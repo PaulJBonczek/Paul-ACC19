@@ -109,7 +109,7 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
 
 
 \subsection{Adaptive Control Model}
-The model in \eqref{eq:discrete_SS} can be transformed in a discrete-time transfer function form which is a more usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the CMBAC adaptive control approach presented in \cite{4106038}, in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model in a \eqref{eq:discrete_SS} transformed in discrete-time transfer function, in single-input single-output (SISO) form, within the $z$-domain becomes:
+The model in \eqref{eq:discrete_SS} can be transformed in a discrete-time transfer function form which is a more usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the CMBAC adaptive control approach presented in \cite{4106038}, in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. The state space model in a \eqref{eq:discritzed_SS_model} transformed in discrete-time transfer function, in single-input single-output (SISO) form, within the $z$-domain becomes:
 	\begin{align}
 	\begin{split}
 	\label{eq:transfer_function}
@@ -118,6 +118,11 @@ The model in \eqref{eq:discrete_SS} can be transformed in a discrete-time transf
 	\end{split}
 	\end{align}
 with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the denominator and numerator, and $d$ is the system delay. A reference model of desired characteristics is chosen for the system in \eqref{eq:transfer_function} to follow, which can be expressed as:
+	\begin{equation}
+	\label{eq:reference model_z}
+	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
+	\end{equation}
+	where $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. 
 
 % The difference equation describing the system is:
 %     \begin{align}
@@ -159,10 +164,6 @@ with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the denominat
 
 
 
-	\begin{equation}
-	\label{eq:reference model_z}
-	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
-	\end{equation}
 % where,
 %     \begin{equation}
 %     \label{eq:E_q}
@@ -171,7 +172,7 @@ with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the denominat
 % 	\begin{equation}
 % 	H(z^{-1})=1+h_1z^{-1}+ \dots +h_{w-1}z^{-w+1}
 % 	\end{equation}
-where $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. 
+
 
 
 
