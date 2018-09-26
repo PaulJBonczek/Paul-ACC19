@@ -42,7 +42,7 @@ First, to design the resilient model reference adaptive controller, we assume th
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the Characteristic Model Based all-coefficient Model Reference Adaptive Controller are omitted here, but can be found in \cite{tao2003adaptive,Goodwin1643720}. In what follows, we provide the main equations to compute the desired input when dealing with changing systems. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
+The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the CMBAC Model Reference Adaptive Controller are omitted here, but can be found in \cite{tao2003adaptive,Goodwin1643720}. In what follows, we provide the main equations to compute the desired input when dealing with changing systems. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
     \begin{equation}
 	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
 	\end{equation}
@@ -326,7 +326,7 @@ Creating a static case with these past position data samples introduces an error
     \label{Confidence_region_updated}
 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
 	\end{equation}
-with a radius,
+with a radius around the center point $\bar{\bm{p}}^*$,
     \begin{equation}
     \label{Confidence_radius2}
 		C_r = c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
