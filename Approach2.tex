@@ -149,13 +149,10 @@ We can now define the updated error vector as:
 From \eqref{eq:u_to_0} while under ideal conditions (i.e., with no noise), the error vector \eqref{eq:Psi2} has all elements equal to zero. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
 
 Under non-ideal conditions where noises exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
-    \begin{align}
-    \begin{split}
+    \begin{equation}
     \label{eq:Psi2_nonideal}
-	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \\
-	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}(k)
-	\end{split}
-	\end{align}
+	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k)= \leq \bm{\delta}(k)
+	\end{equation}
 in which the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar value $\delta(k)$, which is computed from the measurement with the highest noise profile $\sigma_{max}$. The value of $\delta(k)$ is computed from the system parameter estimates and the maximum error due to measurement uncertainty. The maximum error due to the least precise sensor is computed as:
 	\begin{equation}
 	    \label{eq:max_error}
