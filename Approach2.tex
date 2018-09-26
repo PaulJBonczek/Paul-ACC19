@@ -43,7 +43,7 @@ First, to design the resilient model reference adaptive controller, we assume th
 	\item[$A3)$] the system delay $d$ is known.
 	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
 	\end{enumerate}
-The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the CMBAC Model Reference Adaptive Controller are omitted here, but can be found in \cite{tao2003adaptive,Goodwin1643720}. In what follows, we provide the main equations to compute the desired input when dealing with changing systems. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
+The zeros $z$ of the system are within the discrete $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the CMBAC Model Reference Adaptive Controller are omitted here, but can be found in \cite{tao2003adaptive}. In what follows, we provide the main equations to compute the desired input when dealing with changing systems. A parameter vector of unknown coefficients describing the system's transfer function \eqref{eq:transfer_function} to follow the desired reference model is described as:
     \begin{equation}
 	\bm{\theta}_0=(\alpha_0, \dots ,\alpha_{p-1},\beta_0, \dots ,\beta_{q+d-1})^T \in \R^{p+q+d}
 	\end{equation}
@@ -52,14 +52,13 @@ The objective of the adaptive control is to estimate the true parameters of $\bm
     \bm{\theta}(k)=(\theta_1(k), \dots ,\theta_p(k),\theta_{p+1}(k), \dots ,\theta_{p+q+d}(k))^T
 	\end{equation}
 With our known input and measurement signals within a signal vector $\bm{\phi}(k)$,
-    
 	\begin{equation}
 	\begin{split}
 	\bm{\phi}(k)&=(y_i(k), \dots ,y_i(k-p+1),u^*_i(k), \dots , \\
 	& u^*_i(k-q-d+1))^T \in \R^{p+q+d}
 	\end{split}
 	\end{equation}
-we can estimate the true parameter vector $\bm{\theta}_0$ by updating the parameter estimate vector $\bm{\theta}(k)$ using a \textit{Modified Projection Algorithm} \cite{tao2003adaptive}:
+we can estimate the true parameter vector $\bm{\theta}_0$ by updating $\bm{\theta}(k)$ using a \textit{Modified Projection Algorithm} \cite{tao2003adaptive}:
 	\begin{equation}
 	\label{eq:Modified_Proj_Algorithm}
 	\bm{\theta}(k)=\bm{\theta}(k-1)+\frac{a(k)\bm{\phi}(k-d)e(k)}{c+\bm{\phi}^T(k-d)\bm{\phi}(k-d)}
@@ -67,10 +66,7 @@ we can estimate the true parameter vector $\bm{\theta}_0$ by updating the parame
 	\begin{equation}
 	e(k)=E(z^{-1})y_i(k)-\theta^T(k-1)\bm{\phi}(k-d)
 	\end{equation}
-	\begin{equation}
-	\epsilon<a(k)<2-\epsilon, 0,\epsilon<1, c>0 \nonumber
-	\end{equation}
-To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u^*_i(k)$ is then calculated from the equation:
+where $\epsilon<a(k)<2-\epsilon$, $\epsilon<1$ and $c>0$. To follow the desired tracking output $y^*(k)$ from the reference model, the adaptive control input $u^*_i(k)$ is then calculated from the equation:
     \begin{equation}
     \label{eq:tracking_model}
 	\bm{\theta}^T(k)\bm{\phi}(k)=E(z^{-1})y^*(k+d)
@@ -116,9 +112,14 @@ where $\bm{\Psi}(k) \in \R^{s\times s}$. Each element $\psi_{i,j}\in\bm{\Psi}$ i
         \psi_{i,j}(k)=|u^*_i(k)-u^*_j(k)|
     \end{equation}
 The $l_1$ vector norm for each row in \eqref{eq:difference_matrix} is computed giving the following vector:
+%     \begin{equation}
+%     \label{eq:difference_vector}
+% 	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}
+% 	\end{equation}
+
     \begin{equation}
     \label{eq:difference_vector}
-	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 \\ \lVert{\bm{\Psi}_2(k)}\rVert_1 \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}
+	\bm{\Psi^{'}}(k)=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 & \dots & \lVert{\bm{\Psi}_s(k)}\rVert_1 \end{bmatrix}^T
 	\end{equation}
 The minimum value element of \eqref{eq:difference_vector} is used to form another vector $\bm{\Psi}^{'}_{min}(k) \in \R^s$, with every element equal to $\min \bm{\Psi}^{'}(k)$:
 %     \begin{equation}
@@ -127,21 +128,24 @@ The minimum value element of \eqref{eq:difference_vector} is used to form anothe
     \begin{equation}
 	\bm{\Psi}^{'}_{min}(k)=\min \bm{\Psi}^{'}(k){\bm{1}}_s
 	\end{equation}
-	where ${\bm{1}}_s$ is a $s\times1$ vector of 1's.
-
-We can now define the updated error vector as:
-    \begin{align}
+where ${\bm{1}}_s$ is a $s\times1$ vector of 1's. We can now define the updated error vector as:
+%     \begin{equation}
+%     \begin{split}
+%     \label{eq:Psi2}
+% 	\bm{\Psi}^{''}(k)&=\bm{\Psi}^{'}(k)-\bm{\Psi}^{'}_{min}(k) \\
+% 	&=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
+% 	\end{split}
+% 	\end{equation}
+    \begin{equation}
     \label{eq:Psi2}
-	\bm{\Psi}^{''}(k)&=\bm{\Psi}^{'}(k)-\bm{\Psi}^{'}_{min}(k) \\
-	& =\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
-	\end{align}
-	
+	\bm{\Psi}^{''}(k)=\bm{\Psi}^{'}(k)-\bm{\Psi}^{'}_{min}(k)
+	\end{equation}
 From \eqref{eq:u_to_0} while under ideal conditions (i.e., with no noise), the error vector \eqref{eq:Psi2} has all elements equal to zero. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
 
 Under non-ideal conditions where noises exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
     \begin{equation}
     \label{eq:Psi2_nonideal}
-	\bm{\Psi^{''}}(k)=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k)= \leq \bm{\delta}(k)
+	\bm{\Psi^{''}}(k)=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \leq \bm{\delta}(k)
 	\end{equation}
 in which the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar value $\delta(k)$, which is computed from the measurement with the highest noise profile $\sigma_{max}$. The value of $\delta(k)$ is computed from the system parameter estimates and the maximum error due to measurement uncertainty. The maximum error due to the least precise sensor is computed as:
 	\begin{equation}
@@ -151,9 +155,9 @@ in which the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scal
 From \eqref{eq:End} and \eqref{eq:max_error}, we can compute the bound for the maximum uncertainty of the input:
 \begin{align}
 	\label{eq:delta}
-	\delta(k)=& \lVert{ \frac{1}{\theta_{p+1}(k)}(-\theta_1(k)e_{max}-\theta_2(k)e_{max} }-\dots \nonumber \\
-    -\theta_p(k)&e_{max}-\theta_{p+2}(k)u(k-1)-\theta_{p+3}(k)u(k-2)  \\
-	&- \dots - \theta_{p+q+d}(k)u(k-q-d+1) \rVert  \nonumber
+	\delta(k) &= \lVert{ \frac{1}{\theta_{p+1}(k)}(-\theta_1(k)e_{max}-\theta_2(k)e_{max} } \nonumber \\
+    -& \dots-\theta_p(k)e_{max}-\theta_{p+2}(k)u(k-1)  \\
+	& - \dots- \theta_{p+q+d}(k)u(k-q-d+1) \rVert  \nonumber
 	\end{align}
 However, using the aforementioned approach, an attack that is hiding within the noise profile may be undetectable. To deal with stealthy attacks within the noise, the mean of $N_p$ number of inputs is computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. The inputs within \eqref{eq:input_diff} is reformulated by:
     % \begin{equation}
@@ -169,9 +173,7 @@ where $\bar{u}^*_i(k)$ is the mean of the past $N_p$ subsystem inputs. The other
 	    \label{eq:max_error2}
 	    e_{max} = \frac{2N_s\sigma_{max}}{\sqrt{N_p}}
 	\end{equation}
-The error threshold bound in \eqref{eq:delta} is reduced to find attacks that have the objective to slowly push the measurement signal away while remaining within the noise profile. A trade-off is made when determining the size of $N_p$: A larger number allows for a higher reduction of the error threshold, but may allow for attacks to remain undetected if the attack occurs for a smaller time frame than the detection window $N_pt_s$.
-
-If a $i^{th}$ subsystem input breaks the error threshold, its corresponding $i^{th}$ sensor is removed from the system and placed into the set $\bm{y}_a$. After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C}' \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set becomes $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Finally, once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the remaining uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
+The error threshold in \eqref{eq:delta} is reduced to find attacks that have the objective to push the measurement signal away while remaining within the noise profile. A trade-off is made when determining the size of $N_p$: A larger number allows for a higher reduction of the error threshold, but may allow for attacks to remain undetected if the attack occurs for a smaller time frame than the detection window $N_pt_s$. If an $i^{th}$ subsystem input breaks the error threshold, its corresponding sensor is removed and placed into the set $\bm{y}_a$. After detecting and removing the compromised sensors, the updated measurement matrix reduces in size to $\bm{C}' \in \R^{s' \times n}$ with $s'=s-s_a$ and the measurement set becomes $\bm{y}' =\bm{y}\setminus\bm{y}_a$. Finally, once the subsystem inputs $u_i^*(k)$ have been checked by the detector, the remaining uncompromised measurements are fused and then directed to an adaptive controller to compute an input $u(k)$ for the system.
 
 \begin{lemma} 
 	\label{lemma_1}
