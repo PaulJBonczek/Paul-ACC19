@@ -368,23 +368,23 @@ To gather more data there are two options: i) to sample data faster or ii) to re
 %To ensure the confidence region never intersects with an undesired state (e.g., an obstacle), we update the number of data samples for better estimation while also adapting the velocity.
 
 
-To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N_e$ is computed as:
+To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N$ is computed as:
     \begin{equation}
     \label{eq:N_e}
-	    N = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
+	    N = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
 	\end{equation}
 where $round$, rounds $N$ up to the nearest integer and $\Delta(k)$ is a boundary which represents the maximum distance the confidence region may shift as it is not always centered over the position of the vehicle.
 
-An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. 
+An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. 
 
 
 The maximum allowable velocities are related to the distance of an undesired state to the confidence region and next estimated position in time $k+1$ are computed as:
 	\begin{equation}
 	\label{eq:ref_vel_options}
-	    \Tilde{r}_v(k) = \frac{d_x}{N_et_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
+	    \Tilde{r}_v(k) = \frac{d_p}{N_et_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
 	\end{equation}
 	\begin{equation}
-	    \delta_{\Delta} = \min \lVert \bm{x}_o - C_r \rVert 
+	    \delta_{\Delta} = \min \lVert \bm{p}_o - C_r \rVert 
 	\end{equation}
 Considering a worst case scenario, the minimum reference velocity is chosen to ensure a velocity to safely navigate without entering an undesired state from,
     \begin{equation}
@@ -395,18 +395,18 @@ where $r_{des}(k)$ is the desired reference velocity of the vehicle.
 
 \begin{lemma} 
 	\label{lemma_2}
-Using Adaptive Motion Planning, a vehicle is guaranteed to never enter an undesired state $\bm{x}_o$ between two consecutive states $\bm{x}(k)$ and $\bm{x}(k+1)$
+Using Adaptive Motion Planning, a vehicle is guaranteed to never enter an undesired state $\bm{p}_o$ between two consecutive states $\bm{p}(k)$ and $\bm{p}(k+1)$
 
 \end{lemma}
 
 \begin{proof}
-With the vehicle at the state $\bm{x}(k) \neq \bm{x}_o$, there exists a reference velocity $r(k)$ such that the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{x}(k+1)$ will never intersect with an undesired state:
+With the vehicle at the state $\bm{p}(k) \neq \bm{p}_o$, there exists a reference velocity $r(k)$ such that the vehicle's next state $\bm{p}(k+1)$ will never overlap into an undesired region $\bm{p}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{p}(k+1)$ will never intersect with an undesired state:
 \begin{equation}
-    C_{\bar{\bm{p}}^*(k+1)|N_e} \cap \bm{x}_o = \emptyset \nonumber
+    C_{\bar{\bm{p}}^*(k+1)|N} \cap \bm{p}_o = \emptyset \nonumber
 \end{equation}
-Assuming the knowledge of velocity $v(k)$ and distance to the closest obstacle $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k) \rVert$, the reference velocity \eqref{eq:ref_vel} is computed such that the vehicle will not travel more than a distance $d_p$ to avoid an undesired state:
+Assuming the knowledge of velocity $v(k)$ and distance to the closest obstacle $\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k) \rVert$, the reference velocity \eqref{eq:ref_vel} is computed such that the vehicle will not travel more than a distance $d_p$ to avoid an undesired state:
 \begin{equation}
-    \min \lVert \bm{x}_o - C_r \rVert > d_p \geq r_v(k)t_s \nonumber
+    \min \lVert \bm{p}_o - C_r \rVert > d_p \geq r_v(k)t_s \nonumber
   \nonumber
 \end{equation}
 The system uses a closed loop controller to always converge toward the trajectory with the assumption that the trajectory never crosses through an undesired state.
