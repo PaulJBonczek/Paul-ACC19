@@ -252,7 +252,7 @@ the properties (T1-T3) also hold true. If $e(k)$ is a bounded value for all time
 
 The presence of measurement noise on the sensor set results in state estimation uncertainty. The vehicle has multiple sensors of various noise profiles that provide state data of the system, some of which are fused to obtain a better estimation. As compromised sensors are removed by the detector, the system uses a smaller set of sensors for state estimation obtaining a different uncertainty from the original set of measurements. Thus, to take into account this change in sensor measurement noises, we propose here an approach to compute confidence around state estimation to ensure vehicle safety. 
 %In this work we develop a technique to assess confidence around state estimation that adapts to the changing sensor set to ensure vehicle safety. 
-We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds in which the true mean lies within of a user-defined confidence percentage. By knowing the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval is computed:
+We leverage the statistical technique of confidence intervals \cite{devore2011probability} to obtain a specific confidence of an estimate. Confidence intervals are used to calculate bounds in which the true mean lies within of a user-defined confidence percentage. By knowing the confidence percentage $c_p$, population standard deviation $\sigma$, the number of sensor data samples $N$, and the mean of the $N$ sensor data samples $\bar{x}$, an interval is computed as:
     \begin{equation}
      \label{Confidence_interval}
 		C_x = \bar{x} + c_p\frac{\sigma}{\sqrt{N}}
@@ -260,20 +260,28 @@ We leverage the statistical technique of confidence intervals \cite{devore2011pr
 	
 % . As the number of data samples increases, the confidence interval shrinks in size to give a better estimation of the true mean \NB{you are giving the results before showing how!}	
 	
-For state estimation with sensor uncertainties, we need to guarantee that the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is an estimate with variance $\sigma_p^2$, which depends on each sensor variance. In our specific case, a multivariate confidence interval is computed to create a confidence region for position $\bm{p}=[x,y]^T$ estimation. 
+For state estimation with sensor uncertainties, we need to guarantee that the vehicle is within a region of confidence to prevent entering into an undesired state. Uncompromised sensor measurements from the set $\bm{y}$ are fused using filtering techniques (e.g. Kalman Filtering) and the result is an estimate with variance $\sigma_p^2$, which depends on each sensor variance. 
+
+In our specific case, a multivariate confidence interval is computed to create a confidence region for position $\bm{p}=[x,y]^T$ estimation as follows: 
+ \begin{equation}
+    \label{Confidence_region}
+		C_{\bar{\bm{p}}|N} = \bar{\bm{p}} + c_p\frac{\sigma_p}{\sqrt{N}}
+	\end{equation}
+	in which  $c_p$ is the value for a specific confidence percentage, which can be found from tables in \cite{devore2011probability} and $\bar{\bm{p}}$ is the mean position estimate from the $N$ data samples.
 % position estimate $\bm{p}=[x,y]^T$ of a certain 
 %This states the vehicle is within the computed region of a specific confidence percentage. 
+The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the data's population standard deviation $\sigma_p$ changes depending on the combination of sensors (i.e., when the system is uncompromised and we are using all sensors, $\sigma_p$ is lower than the case with fewer sensors, after an attack is removed from the system). 
+%In our work we are interested in position estimate and thus \eqref{Confidence_interval} in a multivariate case becomes,
+%    \begin{equation}
+%    \label{Confidence_region}
+%		C_{\bar{\bm{p}}|N_e} = \bar{\bm{p}} + c_p\frac{\sigma_p}{\sqrt{N_e}}
+%	\end{equation}
 
-
-The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the data's population standard deviation $\sigma_p$ changes depending on the combination of sensors (i.e., when the system is uncompromised and we are using all sensors, $\sigma_p$ is lower than the case with fewer sensors, after an attack is removed from the system). In our work we are interested in position estimate and thus \eqref{Confidence_interval} in a multivariate case becomes,
-    \begin{equation}
-    \label{Confidence_region}
-		C_{\bar{\bm{p}}|N_e} = \bar{\bm{p}} + c_p\frac{\sigma_p}{\sqrt{N_e}}
-	\end{equation}
-with $c_p$ defining the value for a specific confidence percentage, which can be found from tables in \cite{devore2011probability} and $\bar{\bm{p}}$ is the mean position estimate from the $N_e$ data samples. The radius of the multivariate confidence region \eqref{Confidence_region} from the center point $\bar{\bm{p}}$ is:
+%with $c_p$ defining the value for a specific confidence percentage, which can be found from tables in \cite{devore2011probability} and $\bar{\bm{p}}$ is the mean position estimate from the $N_e$ data samples. 
+The radius of the multivariate confidence region \eqref{Confidence_region} from the center point $\bar{\bm{p}}$ is:
     \begin{equation}
     \label{Confidence_radius}
-		C_r = c_p\frac{\sigma_p}{\sqrt{N_e}}
+		C_r = c_p\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
 From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, the true mean is assumed static (i.e. is not changing over time). 
 %This cannot be assumed in the case of position estimation of a moving vehicle. 
@@ -288,19 +296,20 @@ From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ dat
 % \label{fig:confidence_region}
 % \end{figure}
 
-To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. Using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N_e$ position estimate samples are described in the set:
-\begin{equation}
-    \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
-\end{equation}
-To compute the static case, we need to translate the elements forward with the following transformation:
+To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N-1$. These $N-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. Using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ position estimate samples are described in the set $\bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} $.
+%\begin{equation}
+%    \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
+%\end{equation}
+To compute the pseudo-static case, we need to translate each historic element forward with the following transformation:
 	\begin{equation}
 	\bm{p}^*(k-i) = \bm{p}(k-i)+\sum_{j=i}^1 v(k-j)\theta_h(k-j)t_s 
 	\end{equation}
-where $i=1,\dots,N_e-1$. Translating the data coordinates into a static form creates the updated set,
+%where $i=1,\dots,N-1$. 
+Translating the data coordinates into a static form creates the updated set,
 \begin{equation}
-    \bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N_e+1) \end{bmatrix} \nonumber
+    \bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N+1) \end{bmatrix} \nonumber
 \end{equation}
-The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain pseudo-static case.
+The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain a pseudo-static case during two steps.
 
 \begin{figure}[ht!]
 \begin{tabular}{cc}
@@ -312,17 +321,17 @@ The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimat
 \end{figure}
 
 
-Creating a static case with these past position data samples introduces an error while translating. Measurement uncertainty from the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for to guarantee that the true position of the vehicle is within the estimation radial bounds. The calculation for the translation error $\epsilon_{v,\theta}$ is omitted, but its result is included in the final calculation of the confidence region, computed as:
+Creating a static case with these past position data samples introduces an error while translating. Measurement uncertainty from the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for to guarantee that the true position of the vehicle is within the estimation radial bounds. The calculation for the translation error $\epsilon_{v,\theta}$ is omitted here, but its result is included in the final calculation of the confidence region, which becomes:
     \begin{equation}
     \label{Confidence_region_updated}
-		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
+		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
 	\end{equation}
 with a radius,
     \begin{equation}
     \label{Confidence_radius2}
-		C_r = c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
+		C_r = c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
 	\end{equation}
-that accounts for all $N_e-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
+that accounts for all $N-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
 
 %     \begin{align}
 %     \begin{split}
@@ -362,9 +371,9 @@ To gather more data there are two options: i) to sample data faster or ii) to re
 To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N_e$ is computed as:
     \begin{equation}
     \label{eq:N_e}
-	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
+	    N = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
 	\end{equation}
-where $round$, rounds $N_e$ up to the nearest integer and $\Delta(k)$ is a boundary which represents the maximum distance the confidence region may shift as it is not always centered over the position of the vehicle.
+where $round$, rounds $N$ up to the nearest integer and $\Delta(k)$ is a boundary which represents the maximum distance the confidence region may shift as it is not always centered over the position of the vehicle.
 
 An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. 
 
