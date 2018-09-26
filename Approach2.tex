@@ -186,18 +186,18 @@ If a $i^{th}$ subsystem input breaks the error threshold, its corresponding $i^{
 
 \begin{lemma} 
 	\label{lemma_1}
-	Using \eqref{eq:Psi2_nonideal} and \eqref{eq:End}, a system \eqref{eq:discrete_SS} is guaranteed to remain stable and maintain tracking with dynamical changes, disturbances, and sensor attacks. 
+	Using \eqref{eq:Psi2_nonideal} and \eqref{eq:End}, a system described by \eqref{eq:discrete_SS} is guaranteed to remain stable and maintain tracking with dynamical changes, disturbances, and sensor attacks. 
 %	By using input technique \eqref{eq:End} while the attack detector \eqref{eq:Psi2_nonideal} is operating, the output converges to the tracking signal from one time instance $k$ to the next $k+1$.
 
 \end{lemma}
 
 \begin{proof}
-The proof is intuitive and follow a similar argument as presented in \cite{tao2003adaptive}. Under the assumptions (A1-A4) and the convergence property from \eqref{eq:Modified_Proj_Algorithm},
+The proof is intuitive and follows a similar argument as presented in \cite{tao2003adaptive}. Under the assumptions (A1-A4) and the convergence property from \eqref{eq:Modified_Proj_Algorithm},
     \begin{equation}
     \label{lemma_1_eq1}
         \lim_{k\to\infty}\|\bm{\theta}(k)-\bm{\theta}_0\|=0 \nonumber
     \end{equation}
-the properties (T1-T3) also hold true. If $e(k)$ is a bounded value for all time instances $k$, then the signal vector $\lVert{\bm{\phi}}(k) \rVert$ is also bounded over time. As an attacker hijacks a measurement, \eqref{eq:Psi2_nonideal} ensures a measurement signal never becomes unbounded or diverges above the error threshold \eqref{eq:delta} for all time instances $k$. By removing compromised measurements, $\lVert{\bm{\phi}}(k) \rVert$ remains bounded, guaranteeing stability and tracking of the desired reference signal.
+the properties (T1-T3) also must hold true when using a MRAC approach. If $e(k)$ is a bounded value for all time instances $k$, then the signal vector $\lVert{\bm{\phi}}(k) \rVert$ is also bounded over time. As an attacker hijacks a measurement, \eqref{eq:Psi2_nonideal} ensures that a measurement signal never becomes unbounded or diverges above the error threshold \eqref{eq:delta} for all time instances $k$. By removing compromised measurements, $\lVert{\bm{\phi}}(k) \rVert$ remains bounded, guaranteeing stability and tracking of the desired reference signal.
   
 \end{proof}
 
@@ -324,7 +324,7 @@ The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimat
 Creating a static case with these past position data samples introduces an error while translating. Measurement uncertainty from the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for to guarantee that the true position of the vehicle is within the estimation radial bounds. The calculation for the translation error $\epsilon_{v,\theta}$ is omitted here, but its result is included in the final calculation of the confidence region, which becomes:
     \begin{equation}
     \label{Confidence_region_updated}
-		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
+		C_{\bar{\bm{p}}^*|N} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
 	\end{equation}
 with a radius around the center point $\bar{\bm{p}}^*$,
     \begin{equation}
@@ -381,9 +381,10 @@ An update of the reference velocity needs to occur when these undesired states a
 The maximum allowable velocities are related to the distance of an undesired state to the confidence region and next estimated position in time $k+1$ are computed as:
 	\begin{equation}
 	\label{eq:ref_vel_options}
-	    \Tilde{r}_v(k) = \frac{d_p}{Nt_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
+%	    \Tilde{r}_v(k) = \frac{d_p}{Nt_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
+	    {r}_v^d(k) = \frac{d_p}{Nt_s}, \;\;\;\; {r}_v^{\delta}(k) = \frac{\delta_{\Delta}}{t_s}
 	\end{equation}
-where $d_p$ is the distance the vehicle can travel at the desired velocity and $\delta_{\Delta}$ is the minimum distance between an undesired position and the confidence region. Considering a worst case scenario, the minimum reference velocity is chosen to ensure a velocity to safely navigate without entering an undesired state from,
+where $d_p$ is the distance the vehicle can travel at the desired reference velocity and $\delta_{\Delta}$ is the minimum distance between an undesired state and the confidence region. Considering a worst case scenario, the minimum reference velocity is chosen to ensure a velocity to safely navigate without entering an undesired state as:
     \begin{equation}
     \label{eq:ref_vel}
         r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) \}
@@ -391,23 +392,26 @@ where $d_p$ is the distance the vehicle can travel at the desired velocity and $
 
 \begin{lemma} 
 	\label{lemma_2}
-Using Adaptive Motion Planning, a vehicle is guaranteed to never enter an undesired state $\bm{p}_o$ between two consecutive states $\bm{p}(k)$ and $\bm{p}(k+1)$
+Using the adaptive motion planning approach in \eqref{eq:N}, \eqref{eq:ref_vel_options}, and \eqref{eq:ref_vel}, a vehicle is guaranteed to never enter an undesired state $\bm{p}_o$ between two consecutive states $\bm{p}(k)$ and $\bm{p}(k+1)$.
 
 \end{lemma}
 
 \begin{proof}
-With the vehicle at a state $\bm{p}(k) \neq \bm{p}_o$, there exists a reference velocity $r_v(k)$ such that the vehicle's next state $\bm{p}(k+1)$ will never enter an undesired state $\bm{p}_o$. Using \eqref{eq:N}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{p}(k+1)$ will never intersect with an undesired state:
-\begin{equation}
-\label{lemma_2_eq1}
-    C_{\bar{\bm{p}}^*(k+1)|N} \cap \bm{p}_o = \emptyset \nonumber
-\end{equation}
-With the knowledge of the closest distance between an undesired state $p_o$ and confidence region \eqref{Confidence_region_updated} at time interval $k$, the reference velocity \eqref{eq:ref_vel} is computed such that the vehicle will not travel more than a distance $d_p$ to avoid an undesired state,
-\begin{equation}
-\label{lemma_2_eq2}
-    \min \lVert \bm{p}_o - C_{\bar{\bm{p}}^*(k)|N} \rVert > \frac{d_p}{N} \geq r_v(k)t_s
-  \nonumber
-\end{equation}
-proving that the reference velocity will not send the vehicle into an undesired state. 
+With the vehicle at a state $\bm{p}(k) \neq \bm{p}_o$, there exists a reference velocity $r_v(k)\geq0$ such that next state $\bm{p}(k+1)$ will never enter an undesired state $\bm{p}_o$. Using \eqref{eq:N}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} at $\bm{p}(k+1)$ will never intersect with an undesired state $C_{\bar{\bm{p}}^*(k+1)|N} \cap \bm{p}_o = \emptyset$. ${r}_v^{\delta}$ in \eqref{eq:ref_vel} selects always the minimum velocity between $r_v^{d}$ and $r_v^{\delta}$. The worst case scenario happens when $r_v^{d}>r_v^{\delta}$, thus we need to guarantee that $r_v^{\delta}t_s-\bm{p}_o\geq0$ assuming that $\bm{p}\in C_{\bar{\bm{p}}}^*$ is in the closest point to $\bm{p}_o$. This constraint is true by definition since from \eqref{eq:ref_vel_options} $ {r}_v^{\delta}$ is computed considering the minimum distance $\delta_{\Delta}$ between the vehicle and the undesired state, hence proving that the reference velocity will not send the vehicle into an undesired state. 
+%\begin{equation}
+%\label{lemma_2_eq1}
+%    C_{\bar{\bm{p}}^*(k+1)|N} \cap \bm{p}_o = \emptyset \nonumber
+%\end{equation}
+
+%By knowing $d_p$ and the confidence region \eqref{Confidence_region_updated} at time interval $k$
+%
+%With the knowledge of the closest distance between an undesired state $\bm{p}_o$ and confidence region \eqref{Confidence_region_updated} at time interval $k$, the reference velocity \eqref{eq:ref_vel} is computed such that the vehicle will not travel more than a distance $d_p$ to avoid the undesired state,
+%\begin{equation}
+%\label{lemma_2_eq2}
+%    \min \lVert \bm{p}_o - C_{\bar{\bm{p}}^*(k)|N} \rVert > \frac{d_p}{N} \geq r_v(k)t_s
+%  \nonumber
+%\end{equation}
+%proving that the reference velocity will not send the vehicle into an undesired state. 
 %The system uses a closed loop controller to always converge toward the trajectory with the assumption that the trajectory never crosses through an undesired state.
 \end{proof}
 %	\begin{equation}
