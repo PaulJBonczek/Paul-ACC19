@@ -4,12 +4,13 @@
 \label{sec:approach}
 In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors multiple input measurements for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the state estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety. 
 
-\begin{figure}[ht!]
+\begin{figure}[h]
 \vspace{-3pt}
 \centering
 \includegraphics[width=0.46\textwidth]{Figures/sys_arch.png}
 \caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
 \label{fig:system_arch}
+\vspace{-6pt}
 \end{figure}
 % \NB{FIGURE: where is the adaptive controller? Group blocks together that represent the Resilient AC.}
 % \NB{FIGURE: we need to have multiple arrows going out from the controller}
@@ -25,7 +26,7 @@ In order to detect and remove attacks we propose the architecture in Fig. \ref{f
 
 % The architecture followed in this work is shown in Fig. \ref{fig:det_arch}, which consists of a subsystem for each sensor measurement within the same controlled state. Each subsystem consists of a model reference adaptive controller to generate the next input $u^*_i$ where $i=1,2,\dots,s$ given its corresponding measurement signal $y_i$.
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
 \vspace{-3pt}
 \centering
 \includegraphics[width=0.48\textwidth]{Figures/con_and_det.png}
@@ -148,7 +149,7 @@ where ${\bm{1}}_s$ is a $s\times1$ vector of 1's. We can now define the updated 
     \begin{split}
     \label{eq:Psi2}
 	\bm{\Psi}^{''}(k)&=\bm{\Psi}^{'}(k)-\bm{\Psi}^{'}_{min}(k) \\
-	&=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
+	&=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix}
 	\end{split}
 	\end{equation}
 %     \begin{equation}
