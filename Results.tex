@@ -2,7 +2,7 @@
 \begin{section}{Simulation Results}
 \label{sec:simulation}
 
-\begin{figure*}[ht!]
+\begin{figure*}[t]
 \vspace{-8pt}
 \begin{tabular}{ccc}
 
@@ -23,7 +23,8 @@
 The case study investigated in this paper is an autonomous unmanned ground vehicle (UGV) navigation under the effects of sensor noise, dynamical changes, and sensor attacks. The vehicle is tasked to travel along a pre-planned trajectory through an obstacle populated environment. 
 %We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 0,0 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. 
 The objective for the UGV is to reach multiple goal points while following a desired trajectory with obstacles of varying distances from the path. The maximum velocity of the vehicle is 3.5m/s and the desired reference velocity is set to 2.5m/s. Three sensors are available to obtain velocity measurements, each with a different level of noise. Throughout the simulation, dynamics are changing affecting the velocity before, during, and after an attack. 
-In Figure \ref{fig:low_noise}, the vehicle is moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is small in this case because all sensors are available and fused together. While all sensors are uncompromised, Figure \ref{fig:low_noise2} shows a region where the vehicle is undergoing dynamical changes. The confidence region remains unchanged due to the full uncompromised set of sensors. The adaptive controller is maintaining a reference velocity, even while system dynamics are changing. Figure \ref{fig:at_attack} shows vehicle position at the starting time of a ramped sensor attack. Detection has not occurred due to the attack remains within the error threshold $\delta(k)$. In Figure \ref{fig:after_detection} the spoofed sensor is detected and removed leaving a smaller set of available sensors with higher uncertainty. As demonstrated in the figure, the confidence region grows in size due to the changes in uncertainty. Because obstacles are still well outside of the bounds, the vehicle can continue navigating at its desired velocity. Figure \ref{fig:adapt_region} shows the confidence region shrinking in size when the vehicle navigates near obstacles of closer distances. More data points are used to improve this estimation, while the velocity is reduced to lessen state estimation uncertainty as discussed in Section \ref{sec:estimation_confidence}. Once the vehicle is past the obstacles that are at close distances, shown in Figure \ref{fig:continue_motion}, the vehicle is able to move freely again at its desired reference velocity. The confidence region remains at a much larger radius due to the smaller set of available sensors.
+
+In Fig. \ref{fig:low_noise}, the vehicle is moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is small in this case because all sensors are available and fused together. While all sensors are uncompromised, Fig. \ref{fig:low_noise2} shows a region where the vehicle is undergoing dynamical changes. The confidence region remains unchanged due to the full uncompromised set of sensors. The adaptive controller is maintaining a reference velocity, even while system dynamics are changing. Fig. \ref{fig:at_attack} shows vehicle position at the starting time of a ramped sensor attack. Detection has not occurred due to the attack is within the error threshold $\delta(k)$. In Fig. \ref{fig:after_detection} the spoofed sensor is detected and removed leaving a smaller set of available sensors with higher uncertainty. As demonstrated in the figure, the confidence region grows in size due to the changes in uncertainty. Because obstacles are still well outside of the bounds, the vehicle can continue navigating at its desired velocity. Fig. \ref{fig:adapt_region} shows the confidence region shrinking in size when the vehicle navigates near obstacles of closer distances. More data points are used to improve this estimation, while the velocity is reduced to lessen state estimation uncertainty as discussed in Section \ref{sec:estimation_confidence}. Once the vehicle is past the obstacles that are at close distances, shown in Fig. \ref{fig:continue_motion}, the vehicle is able to move freely again at its desired reference velocity. The confidence region remains at a much larger radius due to the smaller set of available sensors.
 
 % \begin{figure}
 % \vspace{1pt}
@@ -48,7 +49,7 @@ In Figure \ref{fig:low_noise}, the vehicle is moving along the trajectory with n
 \label{fig:Total_vel_input}
 \end{figure}
 
-In Figure \ref{fig:Total_vel_input}, the velocity measurements and their inputs over the entire simulation are displayed. During the time frame between Goals A and C, dynamical changes occur temporarily affecting the velocity tracking. After Goal C, a spoof on Sensor 1 causing it diverge from the other sensors. The detector removes the compromised sensor, allowing the system to maintain reference tracking. As explained above, the velocity is automatically reduced when the vehicle passes near closer obstacles to allow more data samples and more precise state estimation.
+In Fig. \ref{fig:Total_vel_input}, the velocity measurements and their inputs over the entire simulation are displayed. During the time frame between Goals A and C, dynamical changes occur temporarily affecting the velocity tracking. After Goal C, a spoof on Sensor 1 causing it diverge from the other sensors. The detector removes the compromised sensor, allowing the system to maintain reference tracking. As explained above, the velocity is automatically reduced when the vehicle passes near closer obstacles to allow more data samples and more precise state estimation.
 
 
 
@@ -92,7 +93,7 @@ In Figure \ref{fig:Total_vel_input}, the velocity measurements and their inputs 
 \label{fig:Stealthy_Attack}
 \end{figure}
 
-Stealthy attacks within the sensor noise profile can be detected by using more input values to reduce the noise threshold $\delta$. The case in Figure \ref{fig:Stealthy_Attack}, leveraging the discussion in Section \ref{sec:Res_adapt_control}, demonstrates the attack on Sensor 1 is detected when using $N_p=16$ input values, but would have never been detected when $N_p=1$ as the error stayed below the error threshold $\delta$.
+Stealthy attacks within the sensor noise profile can be detected by using more input values to reduce the noise threshold $\delta$. The case in Fig. \ref{fig:Stealthy_Attack}, leveraging the discussion in Section \ref{sec:Res_adapt_control}, demonstrates the attack on Sensor 1 is detected when using $N_p=16$ input values, but would have never been detected when $N_p=1$ as the error stayed below the error threshold $\delta$.
 
 
 \end{section}

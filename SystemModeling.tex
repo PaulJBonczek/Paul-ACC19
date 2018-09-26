@@ -117,17 +117,16 @@ The model in \eqref{eq:discrete_SS} can be transformed in a discrete-time transf
 	& = \frac{b_0z^{p-d}+b_1z^{p-d-1} +...+b_qz^{p-d-q}}{z^{p}+a_1z^{p-1}+...+a_{p-1}z+a_p} 
 	\end{split}
 	\end{align}
-with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the denominator and numerator, and $d$ is the system delay. The difference equation describing the system is:
-    \begin{align}
-    \begin{split}
-	\label{eq:difference_equation}
-	&y(k+1)=a_1y(k)+\dots+a_py(k-p) \\
-	+b_0&u(k-d+1)+\dots+b_qu(k-q-d+1)
-	\end{split}
-	\end{align}
-	
-A reference model of desired characteristics is chosen for the system in \eqref{eq:transfer_function} to follow. The reference model is expressed as:
+with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the denominator and numerator, and $d$ is the system delay. A reference model of desired characteristics is chosen for the system in \eqref{eq:transfer_function} to follow, which can be expressed as:
 
+% The difference equation describing the system is:
+%     \begin{align}
+%     \begin{split}
+% 	\label{eq:difference_equation}
+% 	&y(k+1)=a_1y(k)+\dots+a_py(k-p) \\
+% 	+b_0&u(k-d+1)+\dots+b_qu(k-q-d+1)
+% 	\end{split}
+% 	\end{align}
 
 % From \eqref{eq:transfer_function}, the system can be expressed as:
 %     \begin{align}
