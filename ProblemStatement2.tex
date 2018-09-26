@@ -15,7 +15,7 @@ Our first objective is to detect sensor attacks within a dynamically unknown sys
  Given the system dynamics as a function of its state $ \bm{x} $ and input $ \bm{u}$,
 	\begin{equation}
 	\begin{split}
-		\dot{\bm{x}}(t) &= f(\bm{x}(t), \bm{u}(t)) \\
+		\dot{\bm{x}}(t) =& f(\bm{x}(t), \bm{u}(t)) \\
 		\bm{y}(t)&=h(\bm{x}(t))
     \end{split}
 	\end{equation}
@@ -25,7 +25,7 @@ find a policy $\mathcal{P}$ to:
 	\begin{equation}
 	\begin{split}
 	\label{eq:detect_attack}
-	    \dot{\bm{x}}(t) &= f(\bm{x}(t), \bm{u}(t), \bm{d}(t)) \\
+	    \dot{\bm{x}}(t) = &f(\bm{x}(t), \bm{u}(t), \bm{d}(t)) \\
 	    \bm{y}(t)&=h(\bm{x}(t), \bm{\xi}(t))
 	\end{split}    
 	\end{equation}

@@ -5,7 +5,7 @@
 In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors multiple input measurements for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the state estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety. 
 
 \begin{figure}[ht!]
-\vspace{1pt}
+\vspace{-3pt}
 \centering
 \includegraphics[width=0.46\textwidth]{Figures/sys_arch.png}
 \caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
@@ -27,6 +27,7 @@ In order to detect and remove attacks we propose the architecture in Fig. \ref{f
 % The architecture followed in this work is shown in Fig. \ref{fig:det_arch}, which consists of a subsystem for each sensor measurement within the same controlled state. Each subsystem consists of a model reference adaptive controller to generate the next input $u^*_i$ where $i=1,2,\dots,s$ given its corresponding measurement signal $y_i$.
 
 \begin{figure}[ht!]
+\vspace{-3pt}
 \centering
 \includegraphics[width=0.48\textwidth]{Figures/con_and_det.png}
 \caption{Architecture of the detection scheme within the adaptive controlled system. Representing  the $s$ number of available measurements, each of their adaptive subsystems generate a temporary input to be sent to the attack detector. From there, the detector removes measurement subsystems that are compromised.}
@@ -75,18 +76,15 @@ To follow the desired tracking output $y^*(k)$ from the reference model, the ada
 	\bm{\theta}^T(k)\bm{\phi}(k)=E(z^{-1})y^*(k+d)
 	\end{equation}
 By rearranging \eqref{eq:tracking_model} we isolate $u^*_i(k)$ to calculate our next input signal for each $i^{th}$ subsystem for $i=1,\dots,s$:
-	\begin{align}
+	\begin{equation}
+	\begin{split}
 	\label{eq:End}
-	u^*_i(k)=\frac{1}{\theta_{p+1}(k)}&(-\theta_1(k)y_i(k)-\theta_2(k)y_i(k-1)  \nonumber \\
-    -\dots-\theta_p(k)y_i(k&-p-1)-\theta_{p+2}(k)u^*_i(k-1)  \\
-	-\theta_{p+3}(k)u^*_i(k-2)-& \dots - \theta_{p+q+d}(k)u^*_i(k-q-d+1) \nonumber \\
-	+g&H(z^{-1})r(k))^T \nonumber
-	\end{align}
-    \begin{equation}
-	\theta_{p+1}(k)\neq0 \nonumber
+	u^*_i(k)&=\frac{1}{\theta_{p+1}(k)}\big(-\theta_1(k)y_i(k)-\theta_2(k)y_i(k-1)  \\
+    -\dots &-\theta_p(k)y_i(k-p-1)-\theta_{p+2}(k)u^*_i(k-1)  \\
+	- \dots &- \theta_{p+q+d}(k)u^*_i(k-q-d+1) + y^*(k)) \big)^T
+	\end{split}
 	\end{equation}
-
-Once these subsystem inputs are computed, under the assumptions in (A1-A4), we leverage the following MRAC properties to detect sensor attacks when the system model is changing or unknown. In \cite{tao2003adaptive}, the following properties are found to be true when implementing an MRAC,
+where $\theta_{p+1}(k)\neq0 $. Once these subsystem inputs are computed, under the assumptions in (A1-A4), we leverage the following MRAC properties to detect sensor attacks when the system model has changed. In \cite{tao2003adaptive}, the following properties are found to be true when implementing an MRAC,
 	\begin{enumerate}%[label=(\roman*),leftmargin=4\parindent]
 	\label{assumtions_ensure}
 	\item[$T1)$] $y(k)$ and $u(k)$ are bounded 
@@ -102,20 +100,12 @@ The resilient adaptive controller employs the architecture of redundant subsyste
     \label{multiple_output_tracking}
     \lim_{k\to\infty}(y_i(k)-y^*_i(k))=0, \;\;\; i=1,\dots,s
     \end{equation}
-
-\eqref{multiple_output_tracking} remains true with a changing reference signal $r(k)$, changing dynamics, or bounded disturbances. 
-
-% Each MRAC subsystem calculates an input $u^*_i(k)$ that is fed into the detector, which analyses each to check for attacks. 
-
-Since \eqref{multiple_output_tracking} should hold during any operation, the following equation is also true:
+Since \eqref{multiple_output_tracking} should hold during any operation (e.g., changing dynamics, disturbances) the following equation is also true:
 \begin{equation}
     \label{eq:u_to_0}
     \lim_{k\to\infty}(u^*_i(k)-u^*_j(k))=0, \text{ }i\neq j
 \end{equation}
-\begin{equation}
-    i,j = 1,\dots,s \nonumber
-\end{equation}
-where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y_i^*(k)$. Each subsystem input while under ideal conditions (i.e., considering perfect measurements with no noise), should converge to the same value as all other inputs. For each subsystem to compute the next input $u^*_i(k)$, its sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs. Mathematically, to detect attacks, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
+where $u^*_i$ and $u^*_j$ refer to inputs calculated from their respected subsystems to track the same signal $y^*(k)$ and $i,j = 1,\dots,s$. Each subsystem input while under ideal conditions (i.e., considering perfect measurements with no noise), should converge to the same value as all other inputs. For each subsystem to compute the next input $u^*_i(k)$, its sensor measurement $y_i$ needs to be uncompromised. As a measurement is corrupted due to a non-zero element from the sensor attack vector, the corresponding subsystem's computed input diverges from the remaining inputs. Mathematically, to detect attacks, a difference matrix $\bm{\Psi}(k)$ is designed for every time interval $k$ of each controlled state. The structure of this matrix is,
     \begin{equation}
     \label{eq:difference_matrix}
 	\bm{\Psi}(k)=\begin{bmatrix} \psi_{1,1}(k) & \psi_{1,2}(k) & \dots & \psi_{1,s}(k) \\ \psi_{2,1}(k) & \psi_{2,2}(k) &  &  \\ \vdots &  & \ddots &  \\ \psi_{s,1}(k) &  &  & \psi_{s,s}(k) \end{bmatrix}
@@ -137,7 +127,7 @@ The minimum value element of \eqref{eq:difference_vector} is used to form anothe
     \begin{equation}
 	\bm{\Psi}^{'}_{min}(k)=\min \bm{\Psi}^{'}(k){\bm{1}}_s
 	\end{equation}
-	where ${\bm{1}}_s$ is a $s\times1$ vectors of 1s.
+	where ${\bm{1}}_s$ is a $s\times1$ vector of 1's.
 
 We can now define the updated error vector as:
     \begin{align}
@@ -321,16 +311,16 @@ The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimat
 \end{figure}
 
 
-Creating a static case with these past position data samples introduces an error while translating. Measurement uncertainty from the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for to guarantee that the true position of the vehicle is within the estimation radial bounds. The calculation for the translation error $\epsilon_{v,\theta}$ is omitted here, but its result is included in the final calculation of the confidence region, which becomes:
+Creating a static case with these past position data samples introduces an error while translating. Measurement uncertainty from the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for to guarantee that the true position of the vehicle is within the estimation radial bounds. The calculation for the translation error $\epsilon_{v,\theta}$ is omitted here, but its result is included in the final calculation of the confidence region, \eqref{Confidence_region} becomes,
     \begin{equation}
     \label{Confidence_region_updated}
 		C_{\bar{\bm{p}}^*|N} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
 	\end{equation}
-with a radius around the center point $\bar{\bm{p}}^*$,
-    \begin{equation}
-    \label{Confidence_radius2}
-		C_r = c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
-	\end{equation}
+% with a radius around the center point $\bar{\bm{p}}^*$,
+%     \begin{equation}
+%     \label{Confidence_radius2}
+% 		C_r = c_p\frac{\sigma_p}{\sqrt{N}} + \epsilon_{v,\theta}
+% 	\end{equation}
 that accounts for all $N-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
 
 %     \begin{align}

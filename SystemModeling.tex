@@ -49,10 +49,10 @@ in which $x$ and $y$ coordinates represent position, $\theta_h$ represents the v
 % If the assumption is that the wheels do not slip.
 \eqref{eqn:plant} and \eqref{eq:plant2} present a high-level model of the vehicle, describing only the motion equations. Both forces, $F_l$ and $F_r$, are considered as inputs to the system, are derived from the motors, gearbox, and wheels. All of the resistive parameters, mass, and moment of inertia $I_z$ can to change to unknown future values as damage, system degradation, and environmental changes occur. The above system model may be rewritten in a time-varying continuous-time state space form,
     \begin{equation}
-	\dot{\bm{x}}(t) = \bm{A}(t)\bm{x}(t) + \bm{B}(t)\bm{u}(t)
-	\end{equation}
-    \begin{equation}
-	\bm{y}(t) = \bm{C}\bm{x}(t)
+    \begin{split}
+	\dot{\bm{x}}(t) = \bm{A}(t)&\bm{x}(t) + \bm{B}(t)\bm{u}(t) \\
+	\bm{y}(t) &= \bm{C}\bm{x}(t)
+	\end{split}
 	\end{equation}
 with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t) \in \R^{n\times m}$, output matrix $\bm{C} \in \R^{s\times n}$, state vector $\bm{x}(t) \in \R^{n}$, system input $\bm{u}(t) \in \R^{m}$, and output vector $\bm{y}(t) \in \R^{s}$. $\bm{A}(t)$, $\bm{B}(t)$, $\bm{x}(t)$, and $\bm{u}(t)$ are given by: 
 
@@ -86,11 +86,11 @@ with the state matrix $\bm{A}(t) \in \R^{n\times n}$, the input matrix $\bm{B}(t
 
 The model is initially defined by known parameters within the $\bm{A}$ and $\bm{B}$ matrices. Since the adaptive control algorithm is based on a discrete-time state space model, the continuous-time model needs to be discretized. With a suitable sampling time $t_s$, the linearized discrete-time model is written as,
     \begin{equation}
+    \begin{split}
     \label{eq:discritzed_SS_model}
-	\bm{x}(k+1) = \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k)
-	\end{equation}
-	\begin{equation}
-	\bm{y}(k)=\bm{C}\bm{x}(k)
+	\bm{x}(k+1) &= \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k) \\
+	\bm{y}&(k)=\bm{C}\bm{x}(k)
+	\end{split}
 	\end{equation}
 with $\bm{y}(k) \in \R^{s}$ described as the output measurement vector, $\bm{C} \in \R^{s\times n}$ is defined as the output matrix, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$.
 
@@ -100,7 +100,7 @@ When a ground vehicle is in motion, there are many factors that may cause it to 
     \begin{equation}
     \begin{split}
     \label{eq:discrete_SS}
-	\bm{x}(k+1)&=\bm{A}_d(k)\bm{x}(k)+\bm{B}_d(k)\bm{u}(k)+\bm{d}(k) \\
+	\bm{x}(k+1)=&\bm{A}_d(k)\bm{x}(k)+\bm{B}_d(k)\bm{u}(k)+\bm{d}(k) \\
 	\bm{y}(k)&=\bm{C}\bm{x}(k)+\bm{\eta}_s(k)+\bm{\xi}(k)
 	\end{split}
 	\end{equation}
