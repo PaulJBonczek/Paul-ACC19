@@ -2,16 +2,7 @@
 \begin{section}{Simulation Results}
 \label{sec:simulation}
 
-% Need to label states of the state vector in the modeling section [x y v \theta]
-
-The case study investigated in this paper is an autonomous unmanned ground vehicle (UGV) navigation under the effects of sensor noise, dynamical changes, and sensor attacks. The vehicle is tasked to travel along a pre-planned trajectory through an obstacle populated environment. 
-%We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 0,0 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. 
-The objective for the UGV is to reach multiple goal points while following a desired trajectory with obstacles of varying distances from the path. The maximum velocity of the vehicle is 3.5m/s and the desired reference velocity is set to 2.5m/s. Three sensors are available to obtain velocity measurements, each with a different level of noise. Throughout the simulation, dynamics are changing affecting the velocity before, during, and after an attack. 
-
-
-
-
-\begin{figure*}[b!th]
+\begin{figure*}[ht!]
 %\begin{figure*}[th!]
 \begin{tabular}{ccc}
 
@@ -29,18 +20,15 @@ The objective for the UGV is to reach multiple goal points while following a des
 
 \end{figure*}
 
-In Figure \ref{fig:low_noise}, the vehicle is moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is small in this case because all sensors are available and fused together. 
-%Velocity is unaltered due to the obstacles being well outside the uncertainty boundaries.
+The case study investigated in this paper is an autonomous unmanned ground vehicle (UGV) navigation under the effects of sensor noise, dynamical changes, and sensor attacks. The vehicle is tasked to travel along a pre-planned trajectory through an obstacle populated environment. 
+%We consider a ground vehicle starting at an initial position $\bm{p}(0)=\begin{bmatrix} 0,0 \end{bmatrix}^T$ facing the positive $x$ direction with zero velocity. 
+The objective for the UGV is to reach multiple goal points while following a desired trajectory with obstacles of varying distances from the path. The maximum velocity of the vehicle is 3.5m/s and the desired reference velocity is set to 2.5m/s. Three sensors are available to obtain velocity measurements, each with a different level of noise. Throughout the simulation, dynamics are changing affecting the velocity before, during, and after an attack. 
 
-While all sensors are uncompromised, Figure \ref{fig:low_noise2} shows a region where the vehicle is undergoing dynamical changes. The confidence region remains unchanged due to the full uncompromised set of sensors. The adaptive controller is maintaining a reference velocity, even while system dynamics are changing.
 
-Figure \ref{fig:at_attack} shows vehicle position at the starting time of a ramped sensor attack. Detection has not occurred due to the attack remains within the error threshold $\delta(k)$.
 
-In Figure \ref{fig:after_detection} the spoofed sensor is detected and removed leaving a smaller set of available sensors with higher uncertainty. As demonstrated in the figure, the confidence region grows in size due to the changes in uncertainty. Because obstacles are still well outside of the bounds, the vehicle can continue navigating at its desired velocity.
 
-Figure \ref{fig:adapt_region} shows the confidence region shrinking in size when the vehicle navigates near obstacles of closer distances. More data points are used to improve this estimation, while the velocity is reduced to lessen state estimation uncertainty as discussed in Section \ref{sec:estimation_confidence}.
 
-Once the vehicle is past the obstacles that are at close distances, shown in Figure \ref{fig:continue_motion}, the vehicle is able to move freely again at its desired reference velocity. The confidence region remains at a much larger radius due to the smaller set of available sensors.
+In Figure \ref{fig:low_noise}, the vehicle is moving along the trajectory with no compromised sensors and far from obstacles. The confidence region is small in this case because all sensors are available and fused together. While all sensors are uncompromised, Figure \ref{fig:low_noise2} shows a region where the vehicle is undergoing dynamical changes. The confidence region remains unchanged due to the full uncompromised set of sensors. The adaptive controller is maintaining a reference velocity, even while system dynamics are changing. Figure \ref{fig:at_attack} shows vehicle position at the starting time of a ramped sensor attack. Detection has not occurred due to the attack remains within the error threshold $\delta(k)$. In Figure \ref{fig:after_detection} the spoofed sensor is detected and removed leaving a smaller set of available sensors with higher uncertainty. As demonstrated in the figure, the confidence region grows in size due to the changes in uncertainty. Because obstacles are still well outside of the bounds, the vehicle can continue navigating at its desired velocity. Figure \ref{fig:adapt_region} shows the confidence region shrinking in size when the vehicle navigates near obstacles of closer distances. More data points are used to improve this estimation, while the velocity is reduced to lessen state estimation uncertainty as discussed in Section \ref{sec:estimation_confidence}. Once the vehicle is past the obstacles that are at close distances, shown in Figure \ref{fig:continue_motion}, the vehicle is able to move freely again at its desired reference velocity. The confidence region remains at a much larger radius due to the smaller set of available sensors.
 
 % \begin{figure}
 % \vspace{1pt}
@@ -50,27 +38,37 @@ Once the vehicle is past the obstacles that are at close distances, shown in Fig
 % \label{fig:sensor error}
 % \end{figure}
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=0.48\textwidth]{Figures/Velocities.png}
-\caption{Velocities are shown over the entire simulation. Sensor 3 measurements are no longer used by the system as soon as it diverges from the remaining sensors. }
-\label{fig:total_velocity}
-\end{figure}
+\begin{figure}[ht]
+%\begin{figure*}[th!]
+\begin{tabular}{c}
 
-In Figure \ref{fig:total_velocity}, the velocity sensors over the entire simulation are displayed. During the time frame between Goals A and C, dynamical changes occur temporarily affecting the velocity tracking. After Goal C, a spoof on Sensor 1 causing it diverge from the other sensors. The detector removes the compromised sensor, allowing the system to maintain reference tracking. As explained above, the velocity is automatically reduced when the vehicle passes near closer obstacles to allow more data samples and more precise state estimation.
+\subfigure[\label{fig:total_velocity} ]{\includegraphics[width = 0.48\textwidth]{Figures/Velocities.png}} 
+\end{tabular} \\
+\begin{tabular}{c}
+\subfigure[\label{fig:total_input} ]{\includegraphics[width = 0.48\textwidth]{Figures/Total_Inputs.png}} 
 
-
-\begin{figure}[ht!]
-\centering
-\begin{tabular}{cc}
-\subfigure[\label{fig:MRAC_tracking} ]{\includegraphics[width = 0.22\textwidth]{Figures/VelocityTracking_MRAC.png}} & 
-\subfigure[\label{fig:PID_tracking} ]{\includegraphics[width =0.22\textwidth]{Figures/VelocityTracking_PID.png}}
 \end{tabular}
-\label{fig:ControllerComparisons}
-\caption{A performance comparison between the model reference adaptive controller (MRAC) vs Proportional-Integral-Derivative (PID) controller tuned for the initial model.}
+\caption{In \ref{fig:total_velocity} and \ref{fig:total_input}, velocity measurements and their corresponding subsystem inputs are shown over the entire simulation experiencing dynamical changes and sensor attacks.}
+
+\label{fig:Total_vel_input}
 \end{figure}
 
-A comparison of control performance in Figure \ref{fig:ControllerComparisons} shows the benefits of the adaptive controller. As dynamics change away from the initial model, the PID controller loses control performance in which the tracking convergence is degraded.
+In Figure \ref{fig:Total_vel_input}, the velocity measurements and their inputs over the entire simulation are displayed. During the time frame between Goals A and C, dynamical changes occur temporarily affecting the velocity tracking. After Goal C, a spoof on Sensor 1 causing it diverge from the other sensors. The detector removes the compromised sensor, allowing the system to maintain reference tracking. As explained above, the velocity is automatically reduced when the vehicle passes near closer obstacles to allow more data samples and more precise state estimation.
+
+
+
+
+% \begin{figure}[h!]
+% \centering
+% \begin{tabular}{cc}
+% \subfigure[\label{fig:MRAC_tracking} ]{\includegraphics[width = 0.22\textwidth]{Figures/VelocityTracking_MRAC.png}} & 
+% \subfigure[\label{fig:PID_tracking} ]{\includegraphics[width =0.22\textwidth]{Figures/VelocityTracking_PID.png}}
+% \end{tabular}
+% \label{fig:ControllerComparisons}
+% \caption{A performance comparison between the model reference adaptive controller (MRAC) vs Proportional-Integral-Derivative (PID) controller tuned for the initial model.}
+% \end{figure}
+
+% A comparison of control performance in Figure \ref{fig:ControllerComparisons} shows the benefits of the adaptive controller. As dynamics change away from the initial model, the PID controller loses control performance in which the tracking convergence is degraded.
 
 
 

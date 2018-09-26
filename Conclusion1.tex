@@ -1,8 +1,10 @@
 
 \begin{section}{Conclusion and Future Work} \label{sec:conclusion}
-Write the conclusion as soon as rest of paper is done and experimental results begin coming in. Give a quick paragraph or 2 summary of what happened, what I learned, and what didn't go as expected.
+We have presented a Resilient Adaptive Controller for detection of sensor spoofs on a system of unknown or changing dynamics while still maintaining control performance, along with an Adaptive Motion Planning to guarantee vehicle safety. Our framework for the resilient adaptive control uses CMBAC adaptive control to maintain performance while being resilient to attacks. The proposed approach was validated through simulation on a autonomous ground vehicle case. The proposed framework could be used on other types of SISO cyber-physcial systems. Our framework of Adaptive Motion Planning leverages confidence intervals for improved safety by adapting velocity as the vehicle approaches obstacles in an environment.
 
-List any future work that may be included next. Off the top of my head right now we could include adaptive motion planning using optimization with a cost function, unknown obstacles, non-static obstacles, an alternate adaptive control scheme, UAV system dynamics, and an adaptive motion planner that's able to venture away from the desired trajectory to maximize performance.
+A current limitation of the Resilient Adaptive Controller is that it is restricted to SISO systems. A limitation of the Adaptive Motion Planner is neglecting the direction of motion while adapting the velocity. The current assumption is a worst case scenario at all times, even while there are no undesired states in the trajectory ahead.
+
+In our future work we plan to use live experiments to test both frameworks on grounds and aerial vehicles. Further, we plan to longer use a worst case scenario at all times, which would reduce the amount of time and energy.
 
 \end{section}
 

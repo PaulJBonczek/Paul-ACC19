@@ -278,25 +278,17 @@ with $c_p$ defining the value for a specific confidence percentage, which can be
 From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, the true mean is assumed static (i.e. is not changing over time). 
 %This cannot be assumed in the case of position estimation of a moving vehicle. 
 
+
 % \begin{figure}[ht!]
-% \vspace{1pt}
-% \centering
-% \includegraphics[width=0.48\textwidth]{Gaussian2D.png}
-% \caption{Distribution of vehicle's estimated position over 100 samples in an $X-Y$ plane with equal noise variance on the $X$ and $Y$ axis. Creating a psuedo-static case allows for the calculation of a confidence region for vehicle position.}
-% \label{fig:gauss_pdf}
+% \begin{tabular}{cc}
+% \subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample1.png}} &	
+% \subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample5.png}}
+% \end{tabular}
+% \caption{A comparison of the size of the estimated confidence region as the $N_e$ number of data samples grow. In \ref{fig:1sample}, the estimated confidence region with 1 data sample is not as accurate. In \ref{fig:5samples}, the $N_e$ number of samples used is five, which gives a much smaller size and more accurate confidence region.}
+% \label{fig:confidence_region}
 % \end{figure}
 
-
-\begin{figure}[ht!]
-\begin{tabular}{cc}
-\subfigure[\label{fig:1sample} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample1.png}} &	
-\subfigure[\label{fig:5samples} ]{\includegraphics[width = 0.22\textwidth]{Figures/sample5.png}}
-\end{tabular}
-\caption{A comparison of the size of the estimated confidence region as the $N_e$ number of data samples grow. In \ref{fig:1sample}, the estimated confidence region with 1 data sample is not as accurate. In \ref{fig:5samples}, the $N_e$ number of samples used is five, which gives a much smaller size and more accurate confidence region.}
-\label{fig:confidence_region}
-\end{figure}
-
-To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. As shown in Fig. \ref{fig:confidence_region}, using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N_e$ position estimate samples are described in the set:
+To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N_e-1$. These $N_e-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. Using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N_e$ position estimate samples are described in the set:
 \begin{equation}
     \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
 \end{equation}
@@ -308,21 +300,7 @@ where $i=1,\dots,N_e-1$. Translating the data coordinates into a static form cre
 \begin{equation}
     \bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N_e+1) \end{bmatrix} \nonumber
 \end{equation}
-The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain pseudo-static case. Updating \eqref{Confidence_region}, we get
-    \begin{equation}
-    \label{Confidence_region_updated}
-		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}}
-	\end{equation}
- to account for all $N-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
-
-% \begin{figure}[ht!]
-% \vspace{1pt}
-% \centering
-% \includegraphics[width=0.48\textwidth]{pseudo_static.png}
-% \caption{Translation of the original position estimates $\hat{\bm{p}}$ to a pseudo-static case $\hat{\bm{p}}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
-% \label{fig:pseudo_static}
-% \end{figure}
-
+The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain pseudo-static case.
 
 \begin{figure}[ht!]
 \begin{tabular}{cc}
@@ -334,32 +312,40 @@ The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimat
 \end{figure}
 
 
-Creating a static case with these past position data samples introduces higher uncertainty. Uncertainties regarding the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for. To guarantee that the true position of the vehicle is within the estimation radial bounds, the maximum error in position due to sensor noise over the furthest sample in time in $\bm{P}^*$ is calculated as:
-    \begin{align}
-    \begin{split}
-	&\epsilon_{v,\theta}=\Big( \big[(\bar{v}^* \cos(N_{\sigma}\sigma_h) - \bar{v}) \big]^2 \\
-	+ & \big[ (\bar{v}^* \sin(N_{\sigma}\sigma_h) - 0) \big]^2 \Big) ^{1/2} (N_e-1)
-	\end{split}
-	\end{align}
+Creating a static case with these past position data samples introduces an error while translating. Measurement uncertainty from the velocity sensor $\sigma_v$ and heading angle sensor $\sigma_h$ need to be accounted for to guarantee that the true position of the vehicle is within the estimation radial bounds. The calculation for the translation error $\epsilon_{v,\theta}$ is omitted, but its result is included in the final calculation of the confidence region, computed as:
     \begin{equation}
-    \label{eq:avg_vel}
-    \bar{v}=\sum_{j=0}^{N_e-1} \frac{v(k-j)}{N_e}
-	%\bar{v}^{*}=\bar{v}(k-i_{C^{*}})+c_p\sigma_v \nonumber
-	\end{equation}
-    \begin{equation}
-    \label{eq:avg_vel_noise}
-	\bar{v}^{*}=\bar{v}+N_{\sigma}\sigma_v 
-	\end{equation}
-\NB{this previous part is too specific.We should probably remove it. Let's talk about this later}The maximum angle error is denoted as $N_{\sigma}\sigma_h$ (i.e., the maximum uncertainty of the truncated Normal distribution) and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to,
-    \begin{equation}
-    \label{Confidence_region_updated2}
+    \label{Confidence_region_updated}
 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
 	\end{equation}
-with a radius of:
+with a radius,
     \begin{equation}
     \label{Confidence_radius2}
 		C_r = c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
 	\end{equation}
+that accounts for all $N_e-1$ translated previous data points to appear as if they all were sampled at time interval $k$.
+
+%     \begin{align}
+%     \begin{split}
+% 	&\epsilon_{v,\theta}=\Big( \big[(\bar{v}^* \cos(N_{\sigma}\sigma_h) - \bar{v}) \big]^2 \\
+% 	+ & \big[ (\bar{v}^* \sin(N_{\sigma}\sigma_h) - 0) \big]^2 \Big) ^{1/2} (N_e-1)
+% 	\end{split}
+% 	\end{align}
+%     \begin{equation}
+%     \label{eq:avg_vel}
+%     \bar{v}=\sum_{j=0}^{N_e-1} \frac{v(k-j)}{N_e}
+% 	%\bar{v}^{*}=\bar{v}(k-i_{C^{*}})+c_p\sigma_v \nonumber
+% 	\end{equation}
+%     \begin{equation}
+%     \label{eq:avg_vel_noise}
+% 	\bar{v}^{*}=\bar{v}+N_{\sigma}\sigma_v 
+% 	\end{equation}
+% The maximum angle error is denoted as $N_{\sigma}\sigma_h$ (i.e., the maximum uncertainty of the truncated Normal distribution) and the average velocity with and without sensor error are computed in \eqref{eq:avg_vel} and \eqref{eq:avg_vel_noise}. 
+
+%The worst case scenario is assumed in the both the velocity and angle measurement error. Including the uncertainty due to velocity and angle measurements, the confidence region from \eqref{Confidence_region_updated} is updated to,
+%     \begin{equation}
+%     \label{Confidence_region_updated2}
+% 		C_{\bar{\bm{p}}^*|N_e} = \bar{\bm{p}}^* + c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}
+% 	\end{equation}
 
 \subsection{Adaptive Motion Planning}
 
@@ -372,46 +358,40 @@ Using the approach just  described, we can increase confidence in the state esti
 To gather more data there are two options: i) to sample data faster or ii) to reduce velocity. However, sampling at a faster rate cannot be done due to physical limitations, hence adapting the velocity of the vehicle is the only way to gather more data in a shorter distance to reduce estimation uncertainties. 
 %To ensure the confidence region never intersects with an undesired state (e.g., an obstacle), we update the number of data samples for better estimation while also adapting the velocity.
 
-Due to uncertainty of the measurements, the confidence region can quickly shift as new measurements are sampled. To counteract this shifting, a boundary around the confidence region is computed as:
-    \begin{equation}
-    \label{eq:Delta}
-	    \Delta(k) = 2\big(c_p\frac{\sigma_p}{\sqrt{N_e}} + \epsilon_{v,\theta}\big) = 2C_{\bar{\bm{p}}^*|N_e}
-	\end{equation}
-which is the maximum distance the region can shift for any time.\NB{this previous part is not necessary and too detailed. We will probably remove it. let's talk later about this}
 
-To update the confidence region, we compute the distance the vehicle can travel to the next time interval $d_p$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1)^* \rVert$. At the next predicted state $\bm{p}^*(k+1)$, if an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$, the next value of $N_e$ is computed by:
+To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N_e$ is computed as:
     \begin{equation}
     \label{eq:N_e}
 	    N_e = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{x}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
 	\end{equation}
-where $round$, rounds $N_e$ up to the nearest integer.
-%Due to the fact that $N_e$ represents the number of samples needed to reduce the estimation region to a desired size, we simply round $N_e$ up to the nearest integer to give us $N_e \in \N$.
+where $round$, rounds $N_e$ up to the nearest integer and $\Delta(k)$ is a boundary which represents the maximum distance the confidence region may shift as it is not always centered over the position of the vehicle.
 
-An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. This reference velocity $r_v(k)$ update is calculated as:
-\NB{no, next part needs more work..let's talk later}
-    \begin{equation}
-    \label{eq:ref_vel}
-        r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) ,r_{des}(k)\}
-	\end{equation}
-where $r_{des}(k)$ is the desired reference and
+An update of the reference velocity needs to occur when these undesired states are within the confidence region $ C_{\bar{\bm{p}}^*|N_e}+\Delta(k)$. Slowing down allows us to capture more previous data samples with less estimation error. 
+
+
+The maximum allowable velocities are related to the distance of an undesired state to the confidence region and next estimated position in time $k+1$ are computed as:
 	\begin{equation}
+	\label{eq:ref_vel_options}
 	    \Tilde{r}_v(k) = \frac{d_x}{N_et_s}, \;\;\;\; \bar{r}_v(k) = \frac{\delta_{\Delta}}{t_s}
 	\end{equation}
 	\begin{equation}
 	    \delta_{\Delta} = \min \lVert \bm{x}_o - C_r \rVert 
 	\end{equation}
-are maximum allowable velocities according to the distance of an undesired state to the confidence region. As we compute the minimum velocity of $\min\{\Tilde{r}_v,\bar{r}_v,r_{des}(k)\}$, we ensure a velocity to safely navigate without entering an undesired state.
+Considering a worst case scenario, the minimum reference velocity is chosen to ensure a velocity to safely navigate without entering an undesired state from,
+    \begin{equation}
+    \label{eq:ref_vel}
+        r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) ,r_{des}(k)\}
+	\end{equation}
+where $r_{des}(k)$ is the desired reference velocity of the vehicle.
 
 \begin{lemma} 
 	\label{lemma_2}
-Using ...a vehicle is guaranteed to never enter an undesired state $\bm{x}_o$ between two consecutive states $\bm{x}(k)$ and $\bm{x}(k+1)$
-
-%Given two consect $\bm{x}(k)$, the vehicle's next state $\bm{x}(k+1)$ will never enter an undesired state $\bm{x}_o$.
+Using Adaptive Motion Planning, a vehicle is guaranteed to never enter an undesired state $\bm{x}_o$ between two consecutive states $\bm{x}(k)$ and $\bm{x}(k+1)$
 
 \end{lemma}
 
 \begin{proof}
-With the vehicle at the state $\bm{x}(k) \neq \bm{x}_o$, there exists a reference velocity $r(k)$ such that the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated2} of the next state $\bm{x}(k+1)$ will never intersect with an undesired state:
+With the vehicle at the state $\bm{x}(k) \neq \bm{x}_o$, there exists a reference velocity $r(k)$ such that the vehicle's next state $\bm{x}(k+1)$ will never overlap into an undesired region $\bm{x}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{x}(k+1)$ will never intersect with an undesired state:
 \begin{equation}
     C_{\bar{\bm{p}}^*(k+1)|N_e} \cap \bm{x}_o = \emptyset \nonumber
 \end{equation}
