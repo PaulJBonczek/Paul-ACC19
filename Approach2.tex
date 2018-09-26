@@ -4,13 +4,14 @@
 \label{sec:approach}
 In this section we describe the framework for detection of sensor attacks for systems with unknown or changing dynamics and adaptive motion planning to solve Problems \ref{problem1} and \ref{problem2} and ensure vehicle's safety. We follow the architecture in the block diagram of Fig. \ref{fig:system_arch} to solve these problems. A detector monitors multiple input measurements for sensor attacks, which allows an uncompromised input $u(k)$ to control the system. At the same time, the state estimator along with the high level motion planner update the reference $r(k)$ of the controller to ensure safety. 
 
-\begin{figure}[h]
-\vspace{-3pt}
+\begin{figure}[th!]
+\vspace{5pt}
 \centering
 \includegraphics[width=0.46\textwidth]{Figures/sys_arch.png}
+\vspace{-2pt}
 \caption{Overall system architecture showing the relationship between the reference model adaptive controller and the adaptive motion planner.}
 \label{fig:system_arch}
-\vspace{-6pt}
+\vspace{-12pt}
 \end{figure}
 % \NB{FIGURE: where is the adaptive controller? Group blocks together that represent the Resilient AC.}
 % \NB{FIGURE: we need to have multiple arrows going out from the controller}
@@ -318,7 +319,7 @@ Translating the data coordinates into a static form creates the updated set $\bm
 The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain a pseudo-static case during two steps.
 
 \begin{figure}[ht!]
-\vspace{-3pt}
+\vspace{1pt}
 \begin{tabular}{cc}
 \subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_left.png}} &	
 \subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_right.png}}
