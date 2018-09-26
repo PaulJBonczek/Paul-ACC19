@@ -1,3 +1,4 @@
+%!TEX root = ACC2019.tex
 
 \begin{section}{Simulation Results}
 \label{sec:simulation}
@@ -16,7 +17,9 @@
 \subfigure[\label{fig:continue_motion} ]{\includegraphics[width = 0.3\textwidth]{Figures/Motion6.png}}
 
 \end{tabular}
-\caption{A comparison in time of a vehicle navigating through an obstacle filled environment. In (a),(b), and (c) the measurement set is uncompromised and the system is only experiencing dynamical changes. Subfigures (d),(e), and (f) are post detection of a sensor attack where the sensor has been removed from the measurement set. Uncertainty is increased with the smaller sensor set, now the vehicle adapts the velocity as it approaches obstacles.}
+\caption{ Sequence of snapshot for a vehicle autonomous navigation in a cluttered environment. (b) the vehicle undergoes changes in dynamics. In (c) one of the sensors is spoofed and detected in (d). In (e) the motion planning adaptation technique proposed in Section V.C is deployed slowing down the vehicle when near an obstacle. Finally in (f) the vehicle is able to use its original reference toward the goal.} 
+
+%A comparison in time of a vehicle navigating through an obstacle filled environment. In (a),(b), and (c) the measurement set is uncompromised and the system is only experiencing dynamical changes. Subfigures (d),(e), and (f) are post detection of a sensor attack where the sensor has been removed from the measurement set. Uncertainty is increased with the smaller sensor set, now the vehicle adapts the velocity as it approaches obstacles.}
 
 \end{figure*}
 
@@ -44,9 +47,11 @@ In Fig. \ref{fig:low_noise}, the vehicle is moving along the trajectory with no 
 \subfigure[\label{fig:total_input} ]{\includegraphics[width = 0.45\textwidth]{Figures/Total_Inputs.png}} 
 
 \end{tabular}
-\caption{The velocity measurements in \ref{fig:total_velocity} show the system experiencing dynamical changes and a sensor attack. Subsystem inputs in \ref{fig:total_input} reflect the dynamical changes between Goal points A and C, and the subsystem input of the corresponding spoofed sensor diverges from the other inputs.}
+\caption{(a) Comparison between velocitiy measurements and reference during dynamical changes and sensor attacks for the case depicted in Fig.~\ref{sec:simulation}; (b) the three inputs associated to each sensor subsystems with the atatcked sensor input different from the other non-spoofed sensors}
+%The velocity measurements in \ref{fig:total_velocity} show the system experiencing dynamical changes and a sensor attack. Subsystem inputs in \ref{fig:total_input} reflect the dynamical changes between Goal points A and C, and the subsystem input of the corresponding spoofed sensor diverges from the other inputs.}
 
 \label{fig:Total_vel_input}
+ \vspace{-5pt}
 \end{figure}
 
 In Fig. \ref{fig:Total_vel_input}, the velocity measurements and their inputs over the entire simulation are displayed. During the time frame between Goals A and C, dynamical changes occur temporarily affecting the velocity tracking. After Goal C, a spoof on Sensor 1 causing it diverge from the other sensors. The detector removes the compromised sensor, allowing the system to maintain reference tracking. As explained above, the velocity is automatically reduced when the vehicle passes near closer obstacles to allow more data samples and more precise state estimation.
@@ -83,14 +88,13 @@ In Fig. \ref{fig:Total_vel_input}, the velocity measurements and their inputs ov
 \begin{figure}
 \vspace{-8pt}
 \begin{tabular}{cc}
-
 \subfigure[\label{fig:error_comp1} ]{\includegraphics[width = 0.21\textwidth]{Figures/ErrorComparison1.png}} &	
 \subfigure[\label{fig:error_comp2} ]{\includegraphics[width = 0.21\textwidth]{Figures/ErrorComparison2.png}}
 \end{tabular} 
-
-\caption{In the case of an adversary performing a stealthy attack within the noise profile, using a value of $N_p>1$ from \eqref{eq:max_error2} reduces the detection error threshold \eqref{eq:delta} for better visibility. }
-
+\caption{Stealthy attack case study. (a) sensor 1 is compromised and not detectable in one time step (green line) but becomes visible considering $N_p=16$ steps (red line) using the approach in\eqref{eq:max_error2}. (b) shows the error associated with sensor 2 which was uncompromised.}
+%In the case of an adversary performing a stealthy attack within the noise profile, using a value of $N_p>1$ from \eqref{eq:max_error2} reduces the detection error threshold \eqref{eq:delta} for better visibility. }
 \label{fig:Stealthy_Attack}
+\vspace{-15pt}
 \end{figure}
 
 Stealthy attacks within the sensor noise profile can be detected by using more input values to reduce the noise threshold $\delta$. The case in Fig. \ref{fig:Stealthy_Attack}, leveraging the discussion in Section \ref{sec:Res_adapt_control}, demonstrates the attack on Sensor 1 is detected when using $N_p=16$ input values, but would have never been detected when $N_p=1$ as the error stayed below the error threshold $\delta$.

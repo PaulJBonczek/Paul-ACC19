@@ -294,10 +294,10 @@ To compute the static case, we need to translate each historic element forward w
 	\bm{p}^*(k-i) = \bm{p}(k-i)+\sum_{j=i}^1 v(k-j)\theta_h(k-j)t_s 
 	\end{equation}
 %where $i=1,\dots,N-1$. 
-Translating the data coordinates into a static form creates the updated set,
-\begin{equation}
-    \bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N+1) \end{bmatrix} \nonumber
-\end{equation}
+Translating the data coordinates into a static form creates the updated set $\bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N+1) \end{bmatrix} $.
+%\begin{equation}
+%    \bm{P}^*=\begin{bmatrix} \bm{p}^*(k) ,\bm{p}^*(k-1),\dots,\bm{p}^*(k-N+1) \end{bmatrix} \nonumber
+%\end{equation}
 The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain a pseudo-static case during two steps.
 
 \begin{figure}[ht!]
@@ -308,6 +308,7 @@ The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimat
 \end{tabular}
 \caption{Translation of the original position estimates $\bm{p}$ to a static case $\bm{p}^*$ as if all the position estimates were sampled from the vehicle at the current time interval $k$.}
 \label{fig:pseudo_static}
+\vspace{-10pt}
 \end{figure}
 
 
