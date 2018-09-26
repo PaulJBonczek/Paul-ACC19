@@ -122,10 +122,11 @@ with $b_0\ne{0}$, $d>0$, $p-d-q\geq{0}$, $p$ and $q$ are orders of the denominat
     \begin{split}
 	\label{eq:difference_equation}
 	&y(k+1)=a_1y(k)+\dots+a_py(k-p) \\
-	+b_0&u(k-d+1)+\dots+b_qy(k-q-d+1)
+	+b_0&u(k-d+1)+\dots+b_qu(k-q-d+1)
 	\end{split}
 	\end{align}
-To achieve desired performance, a reference model is chosen for the system in \eqref{eq:transfer_function} to have the same characteristics. The reference model is expressed as:
+	
+A reference model of desired characteristics is chosen for the system in \eqref{eq:transfer_function} to follow. The reference model is expressed as:
 
 
 % From \eqref{eq:transfer_function}, the system can be expressed as:
@@ -163,15 +164,15 @@ To achieve desired performance, a reference model is chosen for the system in \e
 	\label{eq:reference model_z}
 	\frac{y^*(z)}{r(z)}=\frac{z^{-d}gH(z^{-1})}{E(z^{-1})}
 	\end{equation}
-where,
-    \begin{equation}
-    \label{eq:E_q}
-	E(z^{-1})=1+e_1z^{-1}+ \dots +e_wz^{-w}
-	\end{equation}
-	\begin{equation}
-	H(z^{-1})=1+h_1z^{-1}+ \dots +h_{w-1}z^{-w+1}
-	\end{equation}
-and the variable $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. 
+% where,
+%     \begin{equation}
+%     \label{eq:E_q}
+% 	E(z^{-1})=1+e_1z^{-1}+ \dots +e_wz^{-w}
+% 	\end{equation}
+% 	\begin{equation}
+% 	H(z^{-1})=1+h_1z^{-1}+ \dots +h_{w-1}z^{-w+1}
+% 	\end{equation}
+where $g$ is a constant to ensure a 1:1 steady state ratio of the reference $r$ and tracking signal $y^*$. 
 
 
 
