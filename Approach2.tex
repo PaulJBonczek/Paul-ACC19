@@ -151,7 +151,7 @@ From \eqref{eq:u_to_0} while under ideal conditions (i.e., with no noise), the e
 Under non-ideal conditions where noises exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
     \begin{equation}
     \label{eq:Psi2_nonideal}
-	\bm{\Psi^{''}}(k)&=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k)= \leq \bm{\delta}(k)
+	\bm{\Psi^{''}}(k)=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k)= \leq \bm{\delta}(k)
 	\end{equation}
 in which the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar value $\delta(k)$, which is computed from the measurement with the highest noise profile $\sigma_{max}$. The value of $\delta(k)$ is computed from the system parameter estimates and the maximum error due to measurement uncertainty. The maximum error due to the least precise sensor is computed as:
 	\begin{equation}
@@ -309,6 +309,7 @@ Translating the data coordinates into a static form creates the updated set,
 The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain a pseudo-static case during two steps.
 
 \begin{figure}[ht!]
+
 \begin{tabular}{cc}
 \subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_left.png}} &	
 \subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_right.png}}
@@ -367,7 +368,7 @@ To gather more data there are two options: i) to sample data faster or ii) to re
 
 To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N$ is computed as:
     \begin{equation}
-    \label{eq:N_e}
+    \label{eq:N}
 	    N = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
 	\end{equation}
 where $round$, rounds $N$ up to the nearest integer and $\Delta(k)$ is a boundary which represents the maximum distance the confidence region may shift as it is not always centered over the position of the vehicle.
@@ -393,7 +394,7 @@ Using Adaptive Motion Planning, a vehicle is guaranteed to never enter an undesi
 \end{lemma}
 
 \begin{proof}
-With the vehicle at the state $\bm{p}(k) \neq \bm{p}_o$, there exists a reference velocity $r(k)$ such that the vehicle's next state $\bm{p}(k+1)$ will never overlap into an undesired region $\bm{p}_o$. Using \eqref{eq:N_e}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{p}(k+1)$ will never intersect with an undesired state:
+With the vehicle at the state $\bm{p}(k) \neq \bm{p}_o$, there exists a reference velocity $r_v(k)$ such that the vehicle's next state $\bm{p}(k+1)$ will never overlap into an undesired state $\bm{p}_o$. Using \eqref{eq:N}, the required number of data samples are computed to guarantee the confidence region \eqref{Confidence_region_updated} of the next state $\bm{p}(k+1)$ will never intersect with an undesired state:
 \begin{equation}
     C_{\bar{\bm{p}}^*(k+1)|N} \cap \bm{p}_o = \emptyset \nonumber
 \end{equation}
