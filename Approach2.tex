@@ -262,9 +262,9 @@ For state estimation with sensor uncertainties, we need to guarantee that the ve
 In our specific case, a multivariate confidence interval is computed to create a confidence region for position $\bm{p}=[x,y]^T$ estimation as follows: 
  \begin{equation}
     \label{Confidence_region}
-		C_{\bar{\bm{p}}|N} = \bar{\bm{p}} + c_p\frac{\sigma_p}{\sqrt{N}}
+		C_{\bar{\bm{p}}|N} = \bar{\bm{p}} + c_p\frac{\sigma_p}{\sqrt{N}}, \;\;\;\;C_r = c_p\frac{\sigma_p}{\sqrt{N}}
 	\end{equation}
-	in which  $c_p$ is the value for a specific confidence percentage, which can be found from tables in \cite{devore2011probability} and $\bar{\bm{p}}$ is the mean position estimate from the $N$ data samples.
+in which  $c_p$ is the value for a specific confidence percentage, found from tables in \cite{devore2011probability}, $\bar{\bm{p}}$ is the mean position estimate from the $N$ data samples and $C_r$ is the radius of the confidence region.
 % position estimate $\bm{p}=[x,y]^T$ of a certain 
 %This states the vehicle is within the computed region of a specific confidence percentage. 
 The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the data's population standard deviation $\sigma_p$ changes depending on the combination of sensors (i.e., when the system is uncompromised and we are using all sensors, $\sigma_p$ is lower than the case with fewer sensors, after an attack is removed from the system). 
@@ -275,12 +275,14 @@ The estimated position data has the form $\mathcal{N}(0,\sigma_p)$ where the dat
 %	\end{equation}
 
 %with $c_p$ defining the value for a specific confidence percentage, which can be found from tables in \cite{devore2011probability} and $\bar{\bm{p}}$ is the mean position estimate from the $N_e$ data samples. 
-The radius of the multivariate confidence region \eqref{Confidence_region} from the center point $\bar{\bm{p}}$ is:
-    \begin{equation}
-    \label{Confidence_radius}
-		C_r = c_p\frac{\sigma_p}{\sqrt{N}}
-	\end{equation}
-From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. Similar to the calculation of confidence intervals \eqref{Confidence_interval}, the true mean is assumed static (i.e. is not changing over time). 
+
+% The radius of the multivariate confidence region \eqref{Confidence_region} from the center point $\bar{\bm{p}}$ is:
+%     \begin{equation}
+%     \label{Confidence_radius}
+% 		C_r = c_p\frac{\sigma_p}{\sqrt{N}}
+% 	\end{equation}
+% From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ data samples, the radius of the confidence region becomes smaller. 
+
 %This cannot be assumed in the case of position estimation of a moving vehicle. 
 
 
@@ -293,11 +295,11 @@ From \eqref{Confidence_radius}, it is clear that with a larger number of $N$ dat
 % \label{fig:confidence_region}
 % \end{figure}
 
-To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N-1$. These $N-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a pseudo-static set of data. Using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ position estimate samples are described in the set $\bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} $.
+Similar to the calculation of confidence intervals \eqref{Confidence_interval}, the true mean is assumed static (i.e. is not changing over time). To take vehicle mobility into account, we propose an adapted approach to compute the confidence region using previous estimated position measurements $\bm{p}(k-i)$, where $i=1,\dots,N-1$. These $N-1$ number of previous measurements need to be represented as if they were all sampled for the current position in time $k$, creating a static set of data. Using a static set of measurements, we are able to calculate a confidence region using more than one sample to improve estimation accuracy. The $N$ position estimate samples are described in the set $\bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} $.
 %\begin{equation}
 %    \bm{P}=\begin{bmatrix} \bm{p}(k) ,\bm{p}(k-1),\dots,\bm{p}(k-N+1) \end{bmatrix} 
 %\end{equation}
-To compute the pseudo-static case, we need to translate each historic element forward with the following transformation:
+To compute the static case, we need to translate each historic element forward with the following transformation:
 	\begin{equation}
 	\bm{p}^*(k-i) = \bm{p}(k-i)+\sum_{j=i}^1 v(k-j)\theta_h(k-j)t_s 
 	\end{equation}
