@@ -155,17 +155,16 @@ From \eqref{eq:End} and \eqref{eq:max_error}, we can compute the bound for the m
     -\theta_p(k)&e_{max}-\theta_{p+2}(k)u(k-1)-\theta_{p+3}(k)u(k-2)  \\
 	&- \dots - \theta_{p+q+d}(k)u(k-q-d+1) \rVert  \nonumber
 	\end{align}
-However, using the aforementioned approach, an attack that is hiding within the noise profile may be undetectable. To deal with stealthy attacks within the noise, the mean of $N_p$ number of inputs is computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. \eqref{eq:input_diff} is reformulated as:
-    \begin{equation}
-        \label{eq:input_diff2}
-        \psi_{i,j}(k)=|\bar{u}^*_i(k)-\bar{u}^*_j(k)|
-    \end{equation}
-where,
+However, using the aforementioned approach, an attack that is hiding within the noise profile may be undetectable. To deal with stealthy attacks within the noise, the mean of $N_p$ number of inputs is computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. The inputs within \eqref{eq:input_diff} is reformulated by:
+    % \begin{equation}
+    %     \label{eq:input_diff2}
+    %     \psi_{i,j}(k)=|\bar{u}^*_i(k)-\bar{u}^*_j(k)|
+    % \end{equation}
     \begin{equation}
         \label{eq:Average_input}
         \bar{u}^*_i(k) = \sum_{j=0}^{N_p-1} \frac{u^*_i(k-j)}{N_p}
     \end{equation}
-is the mean of the past $N_p$ subsystem inputs. The other alteration is the computation of \eqref{eq:max_error} for a smaller error threshold. A standard maximum error is computed when $N_p>1$ as:
+where $\bar{u}^*_i(k)$ is the mean of the past $N_p$ subsystem inputs. The other alteration is the computation of \eqref{eq:max_error} for a smaller error threshold. A standard maximum error is computed when $N_p>1$ as:
     \begin{equation}
 	    \label{eq:max_error2}
 	    e_{max} = \frac{2N_s\sigma_{max}}{\sqrt{N_p}}
@@ -301,7 +300,7 @@ Translating the data coordinates into a static form creates the updated set,
 The mean of the updated set is written as $\bar{\bm{p}}^*$, which is the estimated center point used in the calculation of the confidence region. Fig. \ref{fig:pseudo_static} gives a visualization of the procedure used to translate forward position estimates and obtain a pseudo-static case during two steps.
 
 \begin{figure}[ht!]
-
+\vspace{-3pt}
 \begin{tabular}{cc}
 \subfigure[\label{fig:step_one} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_left.png}} &	
 \subfigure[\label{fig:step_two} ]{\includegraphics[width = 0.21\textwidth]{Figures/pseudo_static_right.png}}
