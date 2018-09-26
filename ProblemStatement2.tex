@@ -1,3 +1,5 @@
+%!TEX root = ACC2019.tex
+
 \begin{section}{Problem Statement}
 	
 \label{sec:problem}
@@ -5,10 +7,7 @@
 In this work we consider autonomous vehicle operations in cluttered environments under different uncertainties including noise, failures, and cyber-attacks on its sensors. 
 We are interested in finding a strategy to detect sensor attacks in an unknown, dynamically changing system and guarantee that the vehicle is always able to navigate safely in the environment. 
 %Specifically, a ground vehicle has an objective to navigate to one or more goals $g_i$ with $ i = 1, 2, \dots, N_g$, $N_g \in \N$ positioned at $\bm{p}_{g_i}={\begin{bmatrix} x,y \end{bmatrix}}^T$, while guaranteeing safety among uncertainties within an environment, failures, system aging, noise, and possible cyber-attacks.
-
-
 % True state of system and estimate is within the noise of the system x-x_hat < some norm
-
 %Our first objective is to detect sensor attacks within a dynamically unknown system and then remove any compromised sensor to maintain stable and safe control of the vehicle through the remaining of its mission. 
 Formally the first problem that we are interested in solving is:
 \begin{problem} 
@@ -20,6 +19,7 @@ Formally the first problem that we are interested in solving is:
 		\dot{\bm{x}}(t) =& f(\bm{x}(t), \bm{u}(t)) \\
 		\bm{y}(t)&=h(\bm{x}(t))
     \end{split}
+    	 \vspace{-10pt}
 	\end{equation}
 find a policy $\mathcal{P}$ to:
 \begin{enumerate}
