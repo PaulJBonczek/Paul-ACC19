@@ -377,7 +377,7 @@ To gather more data there are two options: i) to sample data faster or ii) to re
 %To ensure the confidence region never intersects with an undesired state (e.g., an obstacle), we update the number of data samples for better estimation while also adapting the velocity.
 
 
-To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N_e} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N$ is computed as:
+To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N$ is computed as:
     \begin{equation}
     \label{eq:N}
 	    N = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
@@ -396,7 +396,7 @@ The maximum allowable velocities are related to the distance of an undesired sta
 where $d_p$ is the distance the vehicle can travel at the desired reference velocity and $\delta_{\Delta}$ is the minimum distance between an undesired state and the confidence region. Considering a worst case scenario, the minimum reference velocity is chosen to ensure a velocity to safely navigate without entering an undesired state as:
     \begin{equation}
     \label{eq:ref_vel}
-        r_v(k) = \min\{\Tilde{r}_v(k), \bar{r}_v(k) \}
+        r_v(k) = \min\{{r}_v^d(k), {r}_v^{\delta}(k) \}
 	\end{equation}
 
 \begin{lemma} 
