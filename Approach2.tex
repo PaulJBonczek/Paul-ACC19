@@ -42,7 +42,7 @@ First, to design the resilient model reference adaptive controller, we assume th
 	\item[$A1)$] all numerator zeros of \eqref{eq:transfer_function} are within $|z|<1$.
 	\item[$A2)$] $p$ and $q$ are known. 
 	\item[$A3)$] the system delay $d$ is known.
-	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$.
+	\item[$A4)$] all poles of $E(z^{-1})z^w$ from \eqref{eq:reference model_z} are within $|z|<1$, where $w$ is the order of $E(z^{-1})$.
 	\end{enumerate}
 The zeros $z$ of the system are within the $z-plane$ while $p$, $q$, and $d$ are the dimensions of \eqref{eq:transfer_function}. With these assumptions satisfied, every $i^{th}$ subsystem can generate an input signal $u^*_i(k)$ to have its measurement signal $y_i$ track a given tracking signal $y^*$ from the reference model \eqref{eq:reference model_z}. Many of the steps to design the CMBAC Model Reference Adaptive Controller (MRAC) are omitted here, but can be found in \cite{tao2003adaptive}. In what follows, we provide the main equations to compute the desired input when dealing with changing systems. 
 % The model in \eqref{eq:discrete_SS} can be transformed in a discrete-time transfer function form which is a usable form for the resilient adaptive control approach later in \ref{sec:Res_adapt_control}. To solve Problem 1 and detect cyber-attacks while adapting the system, we leverage the CMBAC adaptive control approach presented in \cite{4106038}, in which the objective is to compute an input to have the system follow a reference model given changing dynamics (i.e. dynamic $\bm{A_d}$ and  $\bm{B_d}$). Here we summarize the model which will be used later in Section \ref{sec:Res_adapt_control} to adapt the system under uncertainties and to detect attacks. 
@@ -160,9 +160,16 @@ where ${\bm{1}}_s$ is a $s\times1$ vector of 1's. We can now define the updated 
 From \eqref{eq:u_to_0} while under ideal conditions (i.e., with no noise), the error vector \eqref{eq:Psi2} has all elements equal to zero. When an $i^{th}$ sensor is under attack, the $i^{th}$ input diverges from the remaining uncompromised inputs. The $i^{th}$ element of $\bm{\Psi}^{''}(k)$ becomes non-zero due to the compromised sensor, while the rest of the elements remain zero. 
 
 Under non-ideal conditions where noises exist, the elements of the error vector will not remain zero while sensors are uncompromised. By setting a threshold value $\delta$, all elements of the error vector need to stay below this level. By refining \eqref{eq:Psi2} for non-ideal conditions we get,
+%     \begin{equation}
+%     \label{eq:Psi2_nonideal}
+% 	\bm{\Psi^{''}}(k)=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \leq \bm{\delta}(k)
+% 	\end{equation}
     \begin{equation}
+    \begin{split}
     \label{eq:Psi2_nonideal}
-	\bm{\Psi^{''}}(k)=\bm{\Psi^{'}}(k)-\bm{\Psi}^{'}_{min}(k) \leq \bm{\delta}(k)
+	\bm{\Psi}^{''}(k)&=\bm{\Psi}^{'}(k)-\bm{\Psi}^{'}_{min}(k) \\
+	&=\begin{bmatrix} \lVert{\bm{\Psi}_1(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \lVert{\bm{\Psi}_2(k)}\rVert_1 - \min \bm{\Psi}^{'}(k)\\ \vdots \\ \lVert{\bm{\Psi}_s(k)}\rVert_1 - \min \bm{\Psi}^{'}(k) \end{bmatrix} \leq \bm{\delta}(k)
+	\end{split}
 	\end{equation}
 in which the vector $\bm{\delta}(k) \in \R^s$ has elements all equal to the scalar value $\delta(k)$, which is computed from the measurement with the highest noise profile $\sigma_{max}$. The value of $\delta(k)$ is computed from the system parameter estimates and the maximum error due to measurement uncertainty. The maximum error due to the least precise sensor is computed as:
 	\begin{equation}
@@ -176,7 +183,7 @@ From \eqref{eq:End} and \eqref{eq:max_error}, we can compute the bound for the m
     -& \dots-\theta_p(k)e_{max}-\theta_{p+2}(k)u(k-1)  \\
 	& - \dots- \theta_{p+q+d}(k)u(k-q-d+1) \rVert  \nonumber
 	\end{align}
-However, using the aforementioned approach, an attack that is hiding within the noise profile may be undetectable. To deal with stealthy attacks within the noise, the mean of $N_p$ number of inputs is computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. The inputs within \eqref{eq:input_diff} is reformulated by:
+However, using the aforementioned approach, an attack that is hiding within the noise profile may be undetectable. To deal with stealthy attacks within the noise, the mean of $N_p$ number of inputs is computed. To detect stealthier attacks, the same steps from equations \eqref{eq:difference_matrix}-\eqref{eq:delta} are taken with two alterations. The inputs within \eqref{eq:input_diff} are reformulated by:
     % \begin{equation}
     %     \label{eq:input_diff2}
     %     \psi_{i,j}(k)=|\bar{u}^*_i(k)-\bar{u}^*_j(k)|
@@ -377,7 +384,7 @@ To gather more data there are two options: i) to sample data faster or ii) to re
 %To ensure the confidence region never intersects with an undesired state (e.g., an obstacle), we update the number of data samples for better estimation while also adapting the velocity.
 
 
-To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. The distance $d_p$ is computed in a worst case scenario, as if the vehicle navigates in the direction of the nearest undesired state $\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k) \rVert - d_p$. If an undesired region is within $C_{\bar{\bm{p}}^*|N} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N$ is computed as:
+To update the size of the confidence region, we compute the distance $d_p$ the vehicle can travel to the next time interval $k+1$. If an undesired region is within $C_{\bar{\bm{p}}^*|N} + \Delta(k)$ at the next predicted state $\bm{p}^*(k+1)$, the next value of $N$ is computed as:
     \begin{equation}
     \label{eq:N}
 	    N = round \left(c_p \frac{ \sigma_p }{ {\min \lVert \bm{p}_o - \bar{\bm{p}}^*(k+1) \rVert} -\Delta(k) } \right)^2
