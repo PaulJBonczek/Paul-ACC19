@@ -92,6 +92,10 @@ The model is initially defined by known parameters within the $\bm{A}$ and $\bm{
 	\bm{x}(k+1) &= \bm{A}_d\bm{x}(k) + \bm{B}_d\bm{u}(k) \\
 	\bm{y}&(k)=\bm{C}\bm{x}(k)
 	\end{split}
+	\end{equation}	
+	   \begin{equation}
+       \label{eq:discritzed_SS_model}
+	a_i=\int_0^{t_i} {\textrm{x}}_i \,\, dt
 	\end{equation}
 with $\bm{y}(k) \in \R^{s}$ described as the output measurement vector, $\bm{C} \in \R^{s\times n}$ is defined as the output matrix, while $\bm{A}_d \in \R^{n\times n}$ and $\bm{B}_d \in \R^{n\times m}$.
 
